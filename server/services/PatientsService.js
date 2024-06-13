@@ -1,3 +1,4 @@
+const { DATE } = require('sequelize');
 const PatientsModel = require('../models/PatientsModel');
 
 exports.findPatientById = (id) => {
@@ -24,30 +25,26 @@ exports.deletePatient = (id) => {
     });
 }
 
-
-exports.createPatient = async (firstName, lastName, HMOid) => {
+exports.createPatient = async (firstName, lastName, HMOid, phone) => {
     try {
         const uniqueNumber = await generateNumber();
         const data = {
             UniqeNumber: uniqueNumber,
             FirstName: firstName,
             LastName: lastName,
-            Phone: '0526589658',  // Example static phone number
-            HMOid: HMOid,  // Ensure HMOid is included
+            Phone: phone,
+            HMOid: HMOid,
             CheckIn: new Date(),
-            CheckOut: null,
-            Status: 1
+            CheckOut: new Date(), // You might want to set this to null initially
+            Status: true
         };
 
-        // Create MainTable entry
         const patientEnter = await PatientsModel.create(data);
-
         return patientEnter;
     } catch (error) {
         throw new Error(error.message);
     }
 };
-
 
 async function generateNumber() {
     const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -56,12 +53,11 @@ async function generateNumber() {
     const j = Math.floor(Math.random() * 26);
     const number = letters[j] + numbers[i];
 
-    const AllPatients = await exports.findAllPatients();
+    const allPatients = await PatientsModel.findAll();
 
-    if (!AllPatients.some(entry => entry.UniqeNumber === number)) {
+    if (!allPatients.some(patient => patient.UniqeNumber === number)) {
         return number;
     } else {
         return generateNumber();
     }
-
 }

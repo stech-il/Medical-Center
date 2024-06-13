@@ -38,8 +38,13 @@ exports.findAllPatients = async (req, res) => {
 
 exports.createPatient = async (req, res) => {
     try {
-        const { firstName, lastName, HMOid } = req.body;
-        const newPatient = await PatientsService.createPatient(firstName, lastName, HMOid);
+        const { firstName, lastName, HMOid, phone } = req.body;
+        if (!firstName || !lastName || !HMOid || !phone) {
+            return res.status(400).json({
+                message: 'Missing required fields'
+            });
+        }
+        const newPatient = await PatientsService.createPatient(firstName, lastName, HMOid, phone);
         return res.status(201).json({
             data: newPatient,
             message: 'Patient created successfully.'
@@ -50,7 +55,8 @@ exports.createPatient = async (req, res) => {
             error: error.message
         });
     }
-}
+};
+
 
 exports.updatePatient = async (req, res) => {
     try {
