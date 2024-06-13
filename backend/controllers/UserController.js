@@ -1,29 +1,29 @@
-import RoomModel from "../models/RoomModel.js";
+import UserModel from "../models/UserModel.js";
 
 
-export const getAllRooms = async (req, res) => {
+export const getAllUsers = async (req, res) => {
     try {
-        const rooms = await RoomModel.findAll()
-        res.json(rooms)
+        const users = await UserModel.findAll()
+        res.json(users)
     } catch (error) {
         res.json({message: error.message})
     }
 }
 
-export const getRoomByID = async (req, res) => {
+export const getUserByID = async (req, res) => {
     try {
-        const rooms = await RoomModel.findAll({
+        const users = await UserModel.findAll({
             where: {id: req.params.id}
         })
-        res.json(rooms[0])
+        res.json(users[0])
     } catch (error) {
         res.json({message: error.message})
     }
 }
 
-export const createRoom = async (req, res) => {
+export const createUser = async (req, res) => {
         try {
-            await RoomModel.create(req.body)
+            await UserModel.create(req.body)
             res.json({
                 "message":"created successfully!"
             })
@@ -32,9 +32,9 @@ export const createRoom = async (req, res) => {
         }
     }
 
-export const updateRoom = async(req, res) => {
+export const updateUser = async(req, res) => {
     try {
-        await RoomModel.update(req.body, {
+        await UserModel.update(req.body, {
             where: {id:req.params.id}
         })
         res.json({
@@ -46,9 +46,9 @@ export const updateRoom = async(req, res) => {
 }
 
 
-export const deleteRoom = async( req, res) => {
+export const deleteUser = async( req, res) => {
     try {
-        await RoomModel.destroy({
+        await UserModel.destroy({
             where: {id: req.params.id}
         })
         res.json({
