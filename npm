@@ -1,0 +1,8 @@
+The directory frontend contains files that could conflict:
+
+  package-lock.json
+  package.json
+  public/
+  src/
+
+Either try using a new directory name, or remove the files listed above.
