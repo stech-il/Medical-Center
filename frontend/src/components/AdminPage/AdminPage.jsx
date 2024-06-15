@@ -5,7 +5,7 @@ const AdminPage = () => {
 
     return (
         <>
-            <div>
+            <div style={{ direction:"rtl" }}>
                 <SidebarMenu />
             </div>
         </>

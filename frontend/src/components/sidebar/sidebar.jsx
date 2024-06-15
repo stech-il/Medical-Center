@@ -25,7 +25,8 @@ function SidebarMenu() {
     };
 
     return (
-        <Sidebar className='sidebar' collapsed={collapsed}>
+        <div className='sidebarContainer'>
+        <Sidebar className='sidebar' rtl={true} collapsed={collapsed} style={{ height: "100vh" }}>
             <Menu >
                 <MenuItem icon={<Home className='icon' />} >בית</MenuItem>
                 <MenuItem icon={<PeopleAltIcon className='icon' />}onClick={goToUsersPage}>משתמשים</MenuItem>
@@ -36,6 +37,7 @@ function SidebarMenu() {
             </Menu>
             <button className='menu-btn' onClick={handleToggleSidebar}>תפריט</button>
         </Sidebar>
+        </div>
     );
 }
 

@@ -14,6 +14,10 @@ const PagesNavigation = () => {
   const goToPatientEnterPage = () => {
     navigate('/patientEnter');
   };
+
+  const goToDoctorPage = () => {
+    navigate('/doctorPage');
+  };
   return (
     <>
     <div className='pagesContainer'>
@@ -23,7 +27,7 @@ const PagesNavigation = () => {
         <button onClick={goToPatientEnterPage} className='page-btn'>תור חדש</button>
         <button className='page-btn'>מוניטור</button>
         <button className='page-btn'>קבלה</button>
-        <button className='page-btn'>חדר רופא</button>
+        <button onClick={goToDoctorPage} className='page-btn'>חדר רופא</button>
         <button className='page-btn'>חדר טריאג</button>
         <button className='page-btn'>חדר טיפולים</button>
         <button className='page-btn'>חדר אקג</button>
