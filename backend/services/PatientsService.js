@@ -1,4 +1,3 @@
-const { DATE } = require('sequelize');
 const PatientsModel = require('../models/PatientsModel');
 
 exports.findPatientById = (id) => {
@@ -9,9 +8,6 @@ exports.findAllPatients = () => {
     return PatientsModel.findAll();
 }
 
-// exports.createPatient = (patientData) => {
-//     return PatientsModel.create(patientData);
-// }
 
 exports.updatePatient = (id, patientData) => {
     return PatientsModel.update(patientData, {
@@ -35,7 +31,7 @@ exports.createPatient = async (firstName, lastName, HMOid, phone) => {
             Phone: phone,
             HMOid: HMOid,
             CheckIn: new Date(),
-            CheckOut: new Date(), // You might want to set this to null initially
+            CheckOut: new Date(),
             Status: true
         };
 
@@ -50,10 +46,11 @@ async function generateNumber() {
     const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const numbers = '0123456789';
     const i = Math.floor(Math.random() * 10);
+    const k = Math.floor(Math.random() * 10);
     const j = Math.floor(Math.random() * 26);
-    const number = letters[j] + numbers[i];
+    const number = letters[j] + numbers[i] + numbers[k];
 
-    const allPatients = await PatientsModel.findAll();
+    const allPatients = await findAllPatients();
 
     if (!allPatients.some(patient => patient.UniqeNumber === number)) {
         return number;

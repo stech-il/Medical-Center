@@ -12,19 +12,19 @@ const PatientsModel = db.define("patients", {
     },
     LastName: {
         type: DataTypes.STRING,
-        allowNull: false // Change to false if it should be required
+        allowNull: false 
     },
     FirstName: {
         type: DataTypes.STRING,
-        allowNull: false // Change to false if it should be required
+        allowNull: false 
     },
     Phone: {
         type: DataTypes.STRING,
-        allowNull: false // Change to false if it should be required
+        allowNull: false 
     },
     HMOid: {
         type: DataTypes.INTEGER,
-        allowNull: false, // Ensure this is not nullable if it's a required foreign key
+        allowNull: false, 
         references: {
             model: HMOsModel,
             key: 'ID'

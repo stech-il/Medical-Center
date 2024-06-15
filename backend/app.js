@@ -1,9 +1,11 @@
 const express = require("express");
 const cors = require('cors');
 const db = require('./database/db.js');
+
 const HMOsRouter = require('./routes/HMOsRoutes.js');
 const PatientsRouter = require('./routes/PatientsRoutes.js');
-
+const UsersRouter = require('./routes/UserRoute.js');
+const RolesRouter = require('./routes/RolesRoutes.js');
 
 const app = express();
 
@@ -11,7 +13,8 @@ app.use(cors());
 app.use(express.json());
 app.use("/HMOs", HMOsRouter);
 app.use("/patients", PatientsRouter);
-
+app.use("/users", UsersRouter);
+app.use("/roles", RolesRouter);
 
 (async () => {
     try {

@@ -1,60 +1,92 @@
-import UserModel from "../models/UserModel.js";
+const UsersService = require('../services/UsersService');
 
-
-export const getAllUsers = async (req, res) => {
+exports.findUserById = async (req, res) => {
     try {
-        const users = await UserModel.findAll()
-        res.json(users)
-    } catch (error) {
-        res.json({message: error.message})
-    }
-}
-
-export const getUserByID = async (req, res) => {
-    try {
-        const users = await UserModel.findAll({
-            where: {id: req.params.id}
-        })
-        res.json(users[0])
-    } catch (error) {
-        res.json({message: error.message})
-    }
-}
-
-export const createUser = async (req, res) => {
-        try {
-            await UserModel.create(req.body)
-            res.json({
-                "message":"created successfully!"
-            })
-        } catch (error) {
-            res.json({message: error.message})
+        const user = await UsersService.findUserById(req.params.id);
+        if (user) {
+            return res.json({
+                data: user,
+                message: 'Success.'
+            });
+        } else {
+            return res.status(404).json({
+                message: 'User not found.'
+            });
         }
-    }
-
-export const updateUser = async(req, res) => {
-    try {
-        await UserModel.update(req.body, {
-            where: {id:req.params.id}
-        })
-        res.json({
-            "message" : "Updated successfully!"
-        })
     } catch (error) {
-        res.json({message: error.message})
+        return res.status(500).json({
+            message: 'Internal Server Error',
+            error: error.message
+        });
     }
 }
 
-
-export const deleteUser = async( req, res) => {
+exports.findAllUsers = async (req, res) => {
     try {
-        await UserModel.destroy({
-            where: {id: req.params.id}
-        })
-        res.json({
-            "message" : "deleted successfully"
-        })
+        const users = await UsersService.findAllUsers();
+        return res.json({
+            data: users,
+            message: 'Success.'
+        });
     } catch (error) {
-        res.json({message: error.message})
+        return res.status(500).json({
+            message: 'Internal Server Error',
+            error: error.message
+        });
+    }
+}
+
+exports.createUser = async (req, res) => {
+    try {
+        const newUser = await UsersService.createUser(req.body);
+        return res.status(201).json({
+            data: newUser,
+            message: 'User created successfully.'
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: 'Internal Server Error',
+            error: error.message
+        });
+    }
+}
+
+exports.updateUser = async (req, res) => {
+    try {
+        const updatedUser = await UsersService.updateUser(req.params.id, req.body);
+        if (updatedUser[0] === 1) { // Sequelize returns an array with the number of affected rows
+            return res.json({
+                message: 'User updated successfully.'
+            });
+        } else {
+            return res.status(404).json({
+                message: 'User not found.'
+            });
+        }
+    } catch (error) {
+        return res.status(500).json({
+            message: 'Internal Server Error',
+            error: error.message
+        });
+    }
+}
+
+exports.deleteUser = async (req, res) => {
+    try {
+        const deleted = await UsersService.deleteUser(req.params.id);
+        if (deleted) {
+            return res.json({
+                message: 'User deleted successfully.'
+            });
+        } else {
+            return res.status(404).json({
+                message: 'User not found.'
+            });
+        }
+    } catch (error) {
+        return res.status(500).json({
+            message: 'Internal Server Error',
+            error: error.message
+        });
     }
 }
