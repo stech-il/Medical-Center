@@ -1,13 +1,21 @@
-import express from 'express'
-// import { createBlog, deleteBlog, getAllBlogs, getBlog, updateBlog } from '../controllers/BlogController.js'
-import { getAllRooms } from '../controllers/RoomController.js'
+const express = require('express');
+const router = express.Router();
 
-const router = express.Router()
+const RoomsController = require('../controllers/RoomController');
 
-router.get('/', getAllRooms)
-// router.get('/:id', getBlog)
-// router.post('/', createBlog)
-// router.put('/:id', updateBlog)
-// router.delete('/:id', deleteBlog)
+// Get a single room by ID
+router.get('/:id', RoomsController.findRoomById);
 
-export default router
+// Get all rooms
+router.get('/', RoomsController.findAllRooms);
+
+// Create a new room
+router.post('/', RoomsController.createRoom);
+
+// Update a room by ID
+router.put('/:id', RoomsController.updateRoom);
+
+// Delete a room by ID
+router.delete('/:id', RoomsController.deleteRoom);
+
+module.exports = router;
