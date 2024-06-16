@@ -1,5 +1,6 @@
 const PatientsModel = require('../models/PatientsModel');
 
+
 exports.findPatientById = (id) => {
     return PatientsModel.findByPk(id);
 }
@@ -36,6 +37,7 @@ exports.createPatient = async (firstName, lastName, HMOid, phone) => {
         };
 
         const patientEnter = await PatientsModel.create(data);
+        
         return patientEnter;
     } catch (error) {
         throw new Error(error.message);
