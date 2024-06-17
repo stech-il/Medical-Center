@@ -4,6 +4,10 @@ exports.findRoomById = (id) => {
     return RoomsModel.findByPk(id);
 }
 
+exports.findRoomByName = (name) => {
+    return RoomsModel.findOne({name:name});
+}
+
 exports.findAllRooms = () => {
     return RoomsModel.findAll();
 }

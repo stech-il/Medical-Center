@@ -1,5 +1,6 @@
 const PatientModel = require('../models/PatientModel');
-
+const QueueService=require('./QueueService'); 
+const RoomService=require('./RoomSrevice')
 
 exports.findPatientById = (id) => {
     return PatientModel.findByPk(id);
@@ -37,6 +38,8 @@ exports.createPatient = async (firstName, lastName, HMOid, phone) => {
         };
 
         const patientEnter = await PatientModel.create(data);
+        const receptionRoomID=RoomService.findRoomByName('קבלה')
+        QueueService.createAppointment(patientEnter.ID,receptionRoomID)
         
         return patientEnter;
     } catch (error) {
@@ -52,7 +55,7 @@ async function generateNumber() {
     const j = Math.floor(Math.random() * 26);
     const number = letters[j] + numbers[i] + numbers[k];
 
-    const allPatients = await findAllPatients();
+    const allPatients = await PatientModel.findAll();
 
     if (!allPatients.some(patient => patient.UniqeNumber === number)) {
         return number;

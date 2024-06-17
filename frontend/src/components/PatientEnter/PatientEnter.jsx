@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import './PatientEnter.css';
 
 const PatientEnter = () => {
     const [patientName, setPatientName] = useState('');
     const [patientClinic, setPatientClinic] = useState('');
-    const [newPatient, setNewPatient] = useState([]);
+    const [newPatient, setNewPatient] = useState({});
     const [isConfirmationPressed1, setIsConfirmationPressed1] = useState(true);
     const [isConfirmationPressed2, setIsConfirmationPressed2] = useState(false);
     const [isConfirmationPressed3, setIsConfirmationPressed3] = useState(false);
@@ -23,7 +24,6 @@ const PatientEnter = () => {
     };
 
     const handleNameSubmit = () => {
-
         if (patientName.trim() === '') {
             alert('Please enter Name');
             return;
@@ -31,8 +31,6 @@ const PatientEnter = () => {
 
         setIsConfirmationPressed1(false);
         setIsConfirmationPressed2(true);
-
-
     };
 
     const handleClinicSelection = (selectedClinic) => {
@@ -40,26 +38,28 @@ const PatientEnter = () => {
     };
 
     const handleClinicSubmit = () => {
-
         if (patientName.trim() === '') {
             alert('Please enter Name');
             return;
         }
 
-        const apiUrl =  `${url}/main-table`;
+        const apiUrl = 'http://localhost:8000/patients'; // Update the API URL
         const requestData = {
-            name: patientName,
-            clinic: patientClinic,
+            firstName: patientName.split(' ')[0],
+            lastName: patientName.split(' ')[1] || '',
+            HMOid: 1, // Replace with actual HMO id
+            phone: '1234567890' // Replace with actual phone number
         };
 
         axios.post(apiUrl, requestData)
             .then(response => {
                 setNewPatient(response.data.data);
-                console.log(newPatient)
+                console.log(response.data.data);
             })
             .catch(error => {
                 console.error('Error submitting data:', error);
             });
+
         setIsConfirmationPressed2(false);
         setIsConfirmationPressed3(true);
 
@@ -76,15 +76,13 @@ const PatientEnter = () => {
         setTimeout(() => {
             setPatientName('');
             setPatientClinic('');
-            setNewPatient([])
+            setNewPatient({});
             setIsConfirmationPressed3(false);
             setIsConfirmationPressed1(true);
-
         }, 11000);
-
     };
-    return (
 
+    return (
         <>
             <div className='patientEnterCont'>
                 <div className='enterBoardCont'>
@@ -126,11 +124,8 @@ const PatientEnter = () => {
                                 <button className='continueBtn' onClick={handleNameSubmit}>
                                     המשך
                                 </button>
-
                             </div>
-
                         )}
-
 
                         {isConfirmationPressed2 && (
                             <div className='insertClinic'>
@@ -152,18 +147,17 @@ const PatientEnter = () => {
                             </div>
                         )}
 
-
                         {isConfirmationPressed3 && (
                             <div className='numberNote'>
                                 <div className='patientInfo'>
                                     <div className='numberCont'>
                                         <div>מספרך בתור:</div>
                                         <div className='uniqueNumber'>
-                                            {newPatient.uniqueNumber}
+                                            {newPatient.UniqeNumber}
                                         </div>
                                     </div>
-                                    <div className='moreDetails'>שם: {newPatient.name}</div>
-                                    <div className='moreDetails'>קופת חולים: {newPatient.clinic}</div>
+                                    <div className='moreDetails'>שם: {`${newPatient.FirstName} ${newPatient.LastName}`}</div>
+                                    <div className='moreDetails'>קופת חולים: {patientClinic}</div>
                                     <div className='moreDetails'>שעה: {currentTime}</div>
                                 </div>
                                 <div className='saveNumber'>
@@ -171,15 +165,10 @@ const PatientEnter = () => {
                                 </div>
                             </div>
                         )}
-
-
-
                     </div>
                 </div>
-
-            </div >
+            </div>
         </>
-
     );
 };
 
