@@ -1,5 +1,4 @@
-const QueuesModel = require('../models/QueueModel');
-const RoomModel = require('../models/RoomModel');
+const QueueModel = require('../models/QueueModel');
 
 //each patient can be in just 1 queue in certain time
 exports.findQueueByPatient = (patientId) => {
@@ -17,9 +16,9 @@ exports.findAllQueue = () => {
 }
 
 
-exports.updateQueue = (id, queueData) => {
+exports.updateQueue = (queueData) => {
     return QueueModel.update(queueData, {
-        where: { id: id }
+        where: { id: queueData.ID }
     });
 }
 
@@ -66,14 +65,15 @@ exports.moveBetweenRooms = async (patientId, newRoomId, place) => {
         else {
             priority = await this.getFirstInQueueByRoom(roomId) - 1;
         }
+        const queueId= this.findQueueByPatient(patientId).ID;
 
         const data = {
-            ID: this.findQueueByPatient(patientId),
+            ID: queueId,
             PatientId: patientId,
             RoomId: newRoomId,
             PariortyNumber: priority
         };
-        const appointmentUpdated = await QueueModel.update(data);
+        const appointmentUpdated = this.updateQueue(data);
 
         return appointmentUpdated;
     } catch (error) {

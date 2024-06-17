@@ -1,9 +1,9 @@
 const { DataTypes } = require('sequelize');
 const db = require('../database/db.js');
 const RoomModel = require('./RoomModel');
-const PatientsModel = require('./PatientsModel');
+const PatientModel = require('./PatientModel');
 
-const QueuesModel = db.define("queues", {
+const QueueModel = db.define("queues", {
     ID: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -13,7 +13,7 @@ const QueuesModel = db.define("queues", {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: PatientsModel,
+            model: PatientModel,
             key: 'ID'
         }
       },
@@ -32,4 +32,4 @@ const QueuesModel = db.define("queues", {
     }
 )
 
-module.exports = QueuesModel;
+module.exports = QueueModel;

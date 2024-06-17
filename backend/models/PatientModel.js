@@ -1,9 +1,9 @@
 const { DataTypes } = require('sequelize');
 const db = require('../database/db.js');
 
-const HMOsModel = require('./HMOsModel'); // Ensure the correct path
+const HMOModel = require('./HMOModel.js'); // Ensure the correct path
 
-const PatientsModel = db.define("patients", {
+const PatientModel = db.define("patients", {
     ID: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -26,7 +26,7 @@ const PatientsModel = db.define("patients", {
         type: DataTypes.INTEGER,
         allowNull: false, 
         references: {
-            model: HMOsModel,
+            model: HMOModel,
             key: 'ID'
         }
     },
@@ -54,4 +54,4 @@ const PatientsModel = db.define("patients", {
     timestamps: false
 });
 
-module.exports = PatientsModel;
+module.exports = PatientModel;

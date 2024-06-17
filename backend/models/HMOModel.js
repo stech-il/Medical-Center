@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const db = require('../database/db.js');
 
-const HMOs = db.define('HMOs', {
+const HMOModel = db.define('HMOs', {
     ID: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -16,4 +16,4 @@ const HMOs = db.define('HMOs', {
     timestamps: false
 });
 
-module.exports = HMOs;
+module.exports = HMOModel;

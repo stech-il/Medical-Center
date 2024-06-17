@@ -1,23 +1,23 @@
-const PatientsModel = require('../models/PatientsModel');
+const PatientModel = require('../models/PatientModel');
 
 
 exports.findPatientById = (id) => {
-    return PatientsModel.findByPk(id);
+    return PatientModel.findByPk(id);
 }
 
 exports.findAllPatients = () => {
-    return PatientsModel.findAll();
+    return PatientModel.findAll();
 }
 
 
 exports.updatePatient = (id, patientData) => {
-    return PatientsModel.update(patientData, {
+    return PatientModel.update(patientData, {
         where: { id: id }
     });
 }
 
 exports.deletePatient = (id) => {
-    return PatientsModel.destroy({
+    return PatientModel.destroy({
         where: { id: id }
     });
 }
@@ -36,7 +36,7 @@ exports.createPatient = async (firstName, lastName, HMOid, phone) => {
             Status: true
         };
 
-        const patientEnter = await PatientsModel.create(data);
+        const patientEnter = await PatientModel.create(data);
         
         return patientEnter;
     } catch (error) {

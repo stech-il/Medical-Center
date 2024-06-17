@@ -1,4 +1,4 @@
-const RolesModel = require('../models/RolesModel');
+const RolesModel = require('../models/RoleModel');
 
 exports.findRoleById = (id) => {
     return RolesModel.findByPk(id);

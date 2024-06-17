@@ -1,5 +1,5 @@
-const HMOsModel = require('../models/HMOsModel');
+const HMOModel = require('../models/HMOModel');
 
 exports.findHMOById = (id) => {
-    return HMOsModel.findByPk(id);
+    return HMOModel.findByPk(id);
 }

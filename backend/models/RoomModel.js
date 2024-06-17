@@ -1,8 +1,7 @@
 const { DataTypes } = require('sequelize');
 const db = require('../database/db.js');
-const RoomModel = require('./RoomModel');
 
-const RoomModel = db.define("users", {
+const RoomModel = db.define("rooms", {
     ID: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -13,25 +12,10 @@ const RoomModel = db.define("users", {
         type: DataTypes.STRING,
         allowNull: false
     },
-    RoomID: {
+    CurrentQueueNumber: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-            model: RoomsModel,
-            key: 'ID'
-        }
-    },
-    Password: {
-        type: DataTypes.STRING,
         allowNull: false
-    },
-    Email: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    Phone: {
-        type: DataTypes.STRING,
-        allowNull: false
+       
     },
     Status: {
         type: DataTypes.BOOLEAN,
@@ -39,7 +23,7 @@ const RoomModel = db.define("users", {
         defaultValue: true
     }
 }, {
-    tableName: 'Rooms',
+    tableName: 'rooms',
     timestamps: false
 });
 
