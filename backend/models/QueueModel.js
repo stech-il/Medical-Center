@@ -25,7 +25,7 @@ const QueueModel = db.define("queues", {
             key: 'ID'
         }
       },
-      PriorityNumber: {
+      PariortyNumber: {
         type: DataTypes.INTEGER,
         allowNull: false,
       }

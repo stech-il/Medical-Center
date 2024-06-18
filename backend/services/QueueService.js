@@ -28,44 +28,62 @@ exports.deleteQueue = (id) => {
     });
 }
 
-exports.getFirstInQueueByRoom = (roomId) => {
-    return QueueModel.find({ roomId }).sort({ pariortyNumber: 1 })[0];
+exports.getFirstInQueueByRoom = async (roomId) => {
+    return QueueModel.findOne({
+        where: { RoomId: roomId           
+         },
+        order: [['PariortyNumber', 'ASC']]
+    });
 }
 
-exports.getLastInQueueByRoom = (roomId) => {
-    return QueueModel.find({ roomId }).sort({ pariortyNumber: -1 })[0];
+exports.getLastInQueueByRoom = async (roomId) => {
+    return QueueModel.findOne({
+        where: { RoomId: roomId },
+        order: [['PariortyNumber', 'DESC']]
+    });
 }
 
 //regular appointment- to the last place in the queue
 exports.createAppointment = async (patientId, roomId) => {
     try {
+        console.log('Creating appointment for Patient ID:', patientId, 'in Room ID:', roomId);
 
         const lastInQueueByRoom = await this.getLastInQueueByRoom(roomId);
+        const lastPriorityNumber = lastInQueueByRoom ? lastInQueueByRoom.PariortyNumber : 0;
 
         const data = {
             PatientId: patientId,
             RoomId: roomId,
-            PariortyNumber: lastInQueueByRoom + 1
+            PariortyNumber: lastPriorityNumber + 1
         };
+        console.log('Queue data to be inserted:', data);
+
         const appointmentEnter = await QueueModel.create(data);
+        console.log('Appointment created:', appointmentEnter);
 
         return appointmentEnter;
     } catch (error) {
+        console.error('Error in createAppointment:', error.message);
         throw new Error(error.message);
     }
 };
 
-
 exports.moveBetweenRooms = async (patientId, newRoomId, place) => {
     try {
-        const priority = 0;
-        if (place == true) {
-            priority = await this.getLastInQueueByRoom(roomId) + 1;
+        let priority;
+        if (place === true) {
+            const lastInQueue = await this.getLastInQueueByRoom(newRoomId);
+            priority = lastInQueue ? lastInQueue.PariortyNumber + 1 : 1;
+        } else {
+            const firstInQueue = await this.getFirstInQueueByRoom(newRoomId);
+            priority = firstInQueue ? firstInQueue.PariortyNumber - 1 : 1;
         }
-        else {
-            priority = await this.getFirstInQueueByRoom(roomId) - 1;
+
+        const queue = await this.findQueueByPatient(patientId);
+        if (!queue || queue.length === 0) {
+            throw new Error('Queue not found for patient');
         }
-        const queueId= this.findQueueByPatient(patientId).ID;
+        const queueId = queue[0].ID;
 
         const data = {
             ID: queueId,
@@ -73,10 +91,11 @@ exports.moveBetweenRooms = async (patientId, newRoomId, place) => {
             RoomId: newRoomId,
             PariortyNumber: priority
         };
-        const appointmentUpdated = this.updateQueue(data);
+        const appointmentUpdated = await this.updateQueue(data);
 
         return appointmentUpdated;
     } catch (error) {
+        console.error('Error in moveBetweenRooms:', error.message);
         throw new Error(error.message);
     }
 }
