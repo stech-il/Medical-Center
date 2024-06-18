@@ -22,7 +22,6 @@ exports.deletePatient = (id) => {
         where: { id: id }
     });
 }
-
 exports.createPatient = async (firstName, lastName, HMOid, phone) => {
     try {
         const uniqueNumber = await generateNumber();
@@ -38,14 +37,24 @@ exports.createPatient = async (firstName, lastName, HMOid, phone) => {
         };
 
         const patientEnter = await PatientModel.create(data);
-        const receptionRoomID=RoomService.findRoomByName('קבלה')
-        QueueService.createAppointment(patientEnter.ID,receptionRoomID)
-        
+        console.log('Patient created:', patientEnter);
+
+        const receptionRoomID = await RoomService.findRoomByName('קבלה');
+        console.log('Reception Room ID:', receptionRoomID);
+
+        if (!receptionRoomID) {
+            throw new Error('Reception room not found or invalid ID');
+        }
+
+        await QueueService.createAppointment(patientEnter.ID, receptionRoomID);
+
         return patientEnter;
     } catch (error) {
+        console.error('Error in createPatient:', error.message);
         throw new Error(error.message);
     }
 };
+
 
 async function generateNumber() {
     const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -53,7 +62,7 @@ async function generateNumber() {
     const i = Math.floor(Math.random() * 10);
     const k = Math.floor(Math.random() * 10);
     const j = Math.floor(Math.random() * 26);
-    const number = letters[j] + numbers[i] + numbers[k];
+    const number = letters[j] +'-' +numbers[i] + numbers[k];
 
     const allPatients = await PatientModel.findAll();
 

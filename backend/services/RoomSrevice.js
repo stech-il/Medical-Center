@@ -3,10 +3,23 @@ const RoomsModel = require('../models/RoomModel');
 exports.findRoomById = (id) => {
     return RoomsModel.findByPk(id);
 }
+exports.findRoomByName = async (name) => {
+    try {
+        const room = await RoomsModel.findOne({
+            where: { Name: name }  // Ensure the column name matches your database schema
+        });
+        if (!room) {
+            throw new Error('Room not found');
+        }
+        console.log(`Room found: ${JSON.stringify(room)}`);
+        return room.ID;
+    } catch (error) {
+        console.error(`Error finding room by name: ${error.message}`);
+        throw error;
+    }
+};
 
-exports.findRoomByName = (name) => {
-    return RoomsModel.findOne({name:name});
-}
+
 
 exports.findAllRooms = () => {
     return RoomsModel.findAll();
