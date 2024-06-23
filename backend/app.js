@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require('cors');
 const db = require('./database/db.js');
+const createSocketServer =require('./services/SocketServer.js')
 
 const HMOsRouter = require('./routes/HMOsRoutes.js');
 const PatientsRouter = require('./routes/PatientsRoutes.js');
@@ -40,6 +41,13 @@ app.use((err, req, res, next) => {
     res.status(500).send('Something broke!');
 });
 
-app.listen(8000, () => {
-    console.log('Server UP running in http://localhost:8000/');
+
+const server = createSocketServer(app);
+
+server.listen(8000, () => {
+  console.log('Server UP running in http://localhost:8000/');
 });
+
+// app.listen(8000, () => {
+//     console.log('Server UP running in http://localhost:8000/');
+// });
