@@ -1,0 +1,15 @@
+.messagesMonitorContainer {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    width: 25%;
+    height: 80vh;
+    padding: 20px;
+    border-radius: 10px;
+}
+.messageItem{
+    background-color: rgb(234, 234, 234);
+    margin: 10px;
+    border-radius: 10px;
+    padding: 5px;
+}

@@ -17,5 +17,9 @@ router.put('/:id', QueueController.updateQueue);
 
 // Delete a patient by ID
 router.delete('/:id', QueueController.deleteQueue);
+router.get('/roomQueue/:id', QueueController.getQueueListByRoom);
+
+
+
 
 module.exports = router;
