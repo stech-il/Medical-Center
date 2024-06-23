@@ -23,3 +23,4 @@ const MessagesModel = db.define("messages", {
 
 module.exports = MessagesModel;
 
+

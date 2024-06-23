@@ -38,16 +38,16 @@ exports.findAllMessages = async (req, res) => {
 
 exports.createMessage = async (req, res) => {
     try {
-        const { message, status } = req.body;
+        const { message, status } = req.body; // Expecting content and status fields
         if (!message || !status) {
             return res.status(400).json({
-                message: 'Missing required fields'
+                message: 'Missing required fields: content and status are required.'
             });
         }
         const newMessage = await MessagesService.createMessage(message, status);
         return res.status(201).json({
             data: newMessage,
-            message: 'Patient created successfully.'
+            message: 'Message created successfully.'
         });
     } catch (error) {
         return res.status(500).json({
