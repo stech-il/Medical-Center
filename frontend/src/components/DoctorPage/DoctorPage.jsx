@@ -11,7 +11,8 @@ const DoctorPage = () => {
     const [currentPatient, setCurrentPatient] = useState([]);
 
     const moveRoom = (roomId) => {
-        const place = 1;
+        console.log("move room");
+        const place = true;
         //to change it by the right place-  
         //the doctor can move to the beginning of the queue or just the secretary? and if true, how he can do it?
         socket.emit("moveClientToAnotherRoom", currentPatient, roomId, place);
