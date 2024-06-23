@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const db = require('../database/db.js');
 
-const HMOModel = require('./HMOModel.js'); // Ensure the correct path
+const HMOModel = require('./HMOModel.js'); 
 
 const PatientModel = db.define("patients", {
     ID: {

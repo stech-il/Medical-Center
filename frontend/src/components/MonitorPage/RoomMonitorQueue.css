@@ -1,0 +1,68 @@
+.RoomMonitorQueueContainer {
+    display: flex;
+    flex-direction: column;
+    direction: rtl;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.currentMonitorPatient {
+    background-color: rgb(234, 234, 234);
+    width: 90%;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.currentPatientNumber {
+    color: #452af6;
+    font-size: 20pt;
+    font-weight: 700;
+}
+
+.nextPatientsContainer {
+    display: flex;
+    width: 90%;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #452af6;
+    border-radius: 10px;
+    width: 90%;
+    padding: 5px;
+    margin-top: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+.roomMonitorTitle {
+    font-size: 20pt;
+    font-weight: 700;
+    margin-bottom: 10px;
+
+
+}
+
+.next3MonitorPatients {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.numOfWaitPatients {
+    background-image: linear-gradient(to right, #4ca0f9 0%, #3762f0 51%, #368cdc 100%);
+    background-size: 200% auto;
+    border-radius: 100px;
+    color: white;
+    width: 50px;
+    margin-right: 5px;
+}
+
+.numOfWaitPatientsContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+    font-size: 10pt;
+}

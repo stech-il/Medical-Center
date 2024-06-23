@@ -1,60 +1,61 @@
-import RoomModel from "../models/RoomModel.js";
+const RoomsService = require('../services/RoomSrevice');
 
-
-export const getAllRooms = async (req, res) => {
+exports.getAllRooms = async (req, res) => {
     try {
-        const rooms = await RoomModel.findAll()
-        res.json(rooms)
+        const rooms = await RoomsService.findAllRooms();
+        res.json(rooms);
     } catch (error) {
-        res.json({message: error.message})
+        res.status(500).json({ message: error.message });
     }
 }
 
-export const getRoomByID = async (req, res) => {
+exports.getRoomByID = async (req, res) => {
     try {
-        const rooms = await RoomModel.findAll({
-            where: {id: req.params.id}
-        })
-        res.json(rooms[0])
-    } catch (error) {
-        res.json({message: error.message})
-    }
-}
-
-export const createRoom = async (req, res) => {
-        try {
-            await RoomModel.create(req.body)
-            res.json({
-                "message":"created successfully!"
-            })
-        } catch (error) {
-            res.json({message: error.message})
+        const room = await RoomsService.findRoomById(req.params.id);
+        if (room) {
+            res.json(room);
+        } else {
+            res.status(404).json({ message: 'Room not found' });
         }
-    }
-
-export const updateRoom = async(req, res) => {
-    try {
-        await RoomModel.update(req.body, {
-            where: {id:req.params.id}
-        })
-        res.json({
-            "message" : "Updated successfully!"
-        })
     } catch (error) {
-        res.json({message: error.message})
+        res.status(500).json({ message: error.message });
     }
 }
 
-
-export const deleteRoom = async( req, res) => {
+exports.createRoom = async (req, res) => {
     try {
-        await RoomModel.destroy({
-            where: {id: req.params.id}
-        })
-        res.json({
-            "message" : "deleted successfully"
-        })
+        const newRoom = await RoomsService.createRoom(req.body);
+        res.status(201).json({
+            message: "Room created successfully!",
+            data: newRoom
+        });
     } catch (error) {
-        res.json({message: error.message})
+        res.status(500).json({ message: error.message });
+    }
+}
+
+exports.updateRoom = async (req, res) => {
+    try {
+        const [updated] = await RoomsService.updateRoom(req.params.id, req.body);
+        if (updated) {
+            res.json({ message: "Room updated successfully!" });
+        } else {
+            res.status(404).json({ message: 'Room not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+exports.deleteRoom = async (req, res) => {
+    try {
+        const deleted = await RoomsService.deleteRoom(req.params.id);
+        if (deleted) {
+            res.json({ message: "Room deleted successfully" });
+        } else {
+            res.status(404).json({ message: 'Room not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 }
