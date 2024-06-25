@@ -62,17 +62,17 @@ exports.findAllUsers = async (req, res) => {
 
 exports.createUser = async (req, res) => {
     try {
-        bcrypt.genSalt(10, (err, salt) => {
-            if (!err) {
-                bcrypt.hash(req.body.Password, salt, function(err, hashPassword) {
-                    if (!err) {
-                        console.log("hashPassword ", hashPassword);
-                        req.body.Password = hashPassword;
-                        UsersService.createUser(req.body);
-                    }
-                });
-            }
-        });
+        const user = await UsersService.createUser(req.body);
+        if (user) {
+            return res.json({
+                data: user,
+                message: 'Success.'
+            });
+        } else {
+            return res.status(404).json({
+                message: 'Failed.'
+            });
+        }
         
         return res.status(201).json({
             data: req,
@@ -87,29 +87,17 @@ exports.createUser = async (req, res) => {
 }
 
 exports.userLogin = async (req, res) => {
-    // try {
-    //     const user = await UsersService.login(req.body.Email, req.body.Password);
-    //     return res.json({
-    //         data: user,
-    //         message: 'Success.'
-    //     });
-    // } catch (error) {
-    //     return res.status(500).json({
-    //         message: 'Internal Server Error',
-    //         error: error.message
-    //     });
-    // }
     try {
-        const { email, password } = req.body;
+        const email = req.body.Email;
+        const password = req.body.Password;
         const loggedIn = await UsersService.userLogin(email, password);
-        console.log(loggedIn);
         if (loggedIn) {
             return res.json({
                 message: 'Login successful'
             });
         } else {
             return res.status(401).json({
-                message: 'Login failed. Invalid credentials.'
+                message: 'Login failed. Wrong password.'
             });
         }
     } catch (error) {

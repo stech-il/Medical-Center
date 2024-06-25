@@ -12,7 +12,20 @@ exports.findAllUsers = () => {
 
 exports.createUser = async (userData) => {
     try {
-        console.log(userData);
+        const salt = await bcrypt.genSalt(10);
+
+        const hashPassword = await new Promise((resolve, reject) => {
+            bcrypt.hash(userData.Password, salt, function (err, hashedPassword) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(hashedPassword);
+                }
+            });
+        });
+
+        userData.Password = hashPassword;
+
         const newUser = await UsersModel.create(userData);
         return newUser;
     } catch (error) {
@@ -21,33 +34,23 @@ exports.createUser = async (userData) => {
 }
 
 exports.findUserByEmailAddress = (emailAddress) => {
-    return UsersModel.findOne({ Email: emailAddress });
+    return UsersModel.findOne({
+        where: {
+            Email: emailAddress
+        }
+    });
 }
 
 exports.userLogin = async (emailAddress, password) => {
-    // const user = this.findUserByEmailAddress(emailAddress);
-    // bcrypt.compare(password, user.Password, (err, res) => {
-    //     if (res === true) {
-    //         return true;
-    //     }
-    //     else {
-    //         return false;
-    //     }
-    // })
     try {
         const user = await this.findUserByEmailAddress(emailAddress);
         if (!user) {
             return false; // User not found
         }
-        console.log("true");
         const passwordMatch = await bcrypt.compare(password, user.Password);
-        console.log(passwordMatch);
-        if (passwordMatch === true) {
-            return true;
-        }
-        return false;
+        return passwordMatch;
     } catch (error) {
-        throw error; // Handle error appropriately
+        throw error;
     }
 }
 
