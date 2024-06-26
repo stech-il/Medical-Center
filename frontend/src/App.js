@@ -9,6 +9,9 @@ import PatientEnter from './components/PatientEnter/PatientEnter'
 import DoctorPage from './components/DoctorPage/DoctorPage'
 import MessagePage from './components/Messages/MessagePage'
 import MonitorPage from './components/MonitorPage/MonitorPage';
+
+import SignUp from './components/UserPage/UserSignUp';
+
 import logo from './logo.png'
 import './App.css';
 
@@ -28,7 +31,7 @@ function App() {
           <Route path="/doctorPage" element={<DoctorPage />} />
           <Route path="/messages" element={<MessagePage />} />
           <Route path="/monitor" element={<MonitorPage />} />
-
+          <Route path="/createUser" element={<SignUp />} />
 
         </Routes>
 

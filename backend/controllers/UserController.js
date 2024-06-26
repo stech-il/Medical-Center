@@ -66,7 +66,7 @@ exports.createUser = async (req, res) => {
         if (user) {
             return res.json({
                 data: user,
-                message: 'Success.'
+                message: 'User created successfully.'
             });
         } else {
             return res.status(404).json({
@@ -74,10 +74,6 @@ exports.createUser = async (req, res) => {
             });
         }
         
-        return res.status(201).json({
-            data: req,
-            message: 'User created successfully.'
-        });
     } catch (error) {
         return res.status(500).json({
             message: 'Internal Server Error',
