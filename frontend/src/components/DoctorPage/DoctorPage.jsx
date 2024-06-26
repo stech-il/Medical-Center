@@ -1,26 +1,12 @@
 import React from 'react';
-import { useState, useEffect } from "react";
 import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
 import VaccinesIcon from '@mui/icons-material/Vaccines';
 import ZoomOutMapIcon from '@mui/icons-material/ZoomOutMap';
-import socketIO from 'socket.io-client';
-import './DoctorPage.css'
+import useSocket from '../../clientServices/socketService.js';  // Import the custom hook
+import './DoctorPage.css';
 
 const DoctorPage = () => {
-    const socket = socketIO("http://localhost:8000");
-    const [currentPatient, setCurrentPatient] = useState([]);
-
-    const moveRoom = (roomId) => {
-        console.log("move room");
-        const place = true;
-        //to change it by the right place-  
-        //the doctor can move to the beginning of the queue or just the secretary? and if true, how he can do it?
-        socket.emit("moveClientToAnotherRoom", currentPatient, roomId, place);
-    };
-
-    socket.on("updateCurrentPatient", (newPatient) => {
-        setCurrentPatient([currentPatient, newPatient]);
-    });
+    const { currentPatient,nextPatient, moveRoom } = useSocket(1);
 
     return (
         <div className='doctorPageContainer'>
@@ -28,58 +14,39 @@ const DoctorPage = () => {
                 <h2>חדר רופא</h2>
                 <div className='queueDetails'>
                     <div className='currentPatient'>
-                        <div className='patientNumber'>2</div>
-                        <div className='patientName'>היוש</div>
+                        <div className='patientNumber'>{currentPatient.UniqueNumber}</div>
+                        <div className='patientName'>{currentPatient.FirstName} {currentPatient.LastName}</div>
                     </div>
                     <div className='nextPatient'>
-                        <span className='queueDetTitle'>מטופל הבא: </span>
-                        <div className='nextPatientName'>מה נשמע</div>
+                        <span className='queueDetTitle'>מטופל הבא </span>
+                        <div className='nextPatientNumber'>{nextPatient.UniqueNumber} : {nextPatient.FirstName} {nextPatient.LastName}</div>
+                        
                     </div>
                 </div>
-
-
 
                 <div className='allQueues'>
                     <div className='queuesList'>
-                        <button onClick={moveRoom(5)} className='moveQueue' >
+                        <button onClick={() => moveRoom(5)} className='moveQueue'>
                             <VaccinesIcon className='queueIcon' />
                             <span>העבר לקבלה</span>
                         </button>
-                        <div className='moveQueue' >
+                        <button onClick={() => moveRoom(4)} className='moveQueue'>
                             <MonitorHeartIcon className='queueIcon' />
                             <span>העבר לחדר אקג</span>
-                        </div>
-                        <div className='moveQueue' >
+                        </button>
+                        <button onClick={() => moveRoom(3)} className='moveQueue'>
                             <ZoomOutMapIcon className='queueIcon' />
                             <span>העבר לחדר טריאג</span>
-                        </div>
-                        <div className='moveQueue' >
+                        </button>
+                        <button onClick={() => moveRoom(2)} className='moveQueue'>
                             <VaccinesIcon className='queueIcon' />
                             <span>העבר לחדר טיפולים</span>
-                        </div>
+                        </button>
                     </div>
                 </div>
-
             </div>
         </div>
     );
 };
 
 export default DoctorPage;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

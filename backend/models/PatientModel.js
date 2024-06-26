@@ -40,7 +40,7 @@ const PatientModel = db.define("patients", {
         allowNull: true,
         defaultValue: null
     },
-    UniqeNumber: {
+    UniqueNumber: {
         type: DataTypes.STRING,
         allowNull: false
     },

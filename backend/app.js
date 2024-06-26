@@ -8,7 +8,7 @@ const PatientsRouter = require('./routes/PatientsRoutes.js');
 const UsersRouter = require('./routes/UserRoute.js');
 const RolesRouter = require('./routes/RolesRoutes.js');
 const MessagesRouter = require('./routes/MessagesRoutes.js')
-const RoonRouter=require('./routes/RoomRoute.js')
+const RoomRouter=require('./routes/RoomRoute.js')
 const QueueRouter=require('./routes/QueueRoute.js')
 
 
@@ -21,7 +21,7 @@ app.use("/patients", PatientsRouter);
 app.use("/users", UsersRouter);
 app.use("/roles", RolesRouter);
 app.use("/messages", MessagesRouter);
-app.use("/rooms", RoonRouter);
+app.use("/rooms", RoomRouter);
 app.use("/queues", QueueRouter);
 
 

@@ -37,6 +37,19 @@ exports.getQueueListByRoom = async (req, res) => {
     }
 };
 
+exports.getFirstInRoom = async (req, res) => {
+    try {
+        const roomId = req.params.id;
+        console.log(roomId)
+        const queueList = await QueueService.getFirstInQueueByRoom(roomId);
+        console.log('Queue list:', queueList); // Add logging here
+        res.json(queueList);
+    } catch (error) {
+        console.error('Error in controller:', error);
+        res.status(500).json({ message: 'Internal Server Error', error: error.message });
+    }
+};
+
 
 exports.findAllQueues = async (req, res) => {
     try {
