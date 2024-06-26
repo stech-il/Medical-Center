@@ -12,12 +12,10 @@ exports.findAllUsers = () => {
 
 exports.createUser = async (userData) => {
     try {
-        const user = this.findUserByEmailAddress(userData.Email);
+        const user = await this.findUserByEmailAddress(userData.Email);
 
-        if (user) {
-            return res.status(400).send({
-              message: "Failed! Email address already exist!"
-            });
+        if(user) {
+            return 'Email already Exist';
         }
 
         const salt = await bcrypt.genSalt(10);
@@ -33,7 +31,6 @@ exports.createUser = async (userData) => {
         });
 
         userData.Password = hashPassword;
-
         const newUser = await UsersModel.create(userData);
         return newUser;
     } catch (error) {

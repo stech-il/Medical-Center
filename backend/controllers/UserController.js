@@ -1,7 +1,4 @@
-const UsersModel = require('../models/UserModel');
 const UsersService = require('../services/UsersService');
-
-const bcrypt = require('bcryptjs');
 
 exports.findUserById = async (req, res) => {
     try {
@@ -63,6 +60,10 @@ exports.findAllUsers = async (req, res) => {
 exports.createUser = async (req, res) => {
     try {
         const user = await UsersService.createUser(req.body);
+
+        if (res == false) {
+            return 'Email Exist';
+        }
         if (user) {
             return res.json({
                 data: user,
@@ -73,7 +74,6 @@ exports.createUser = async (req, res) => {
                 message: 'Failed.'
             });
         }
-        
     } catch (error) {
         return res.status(500).json({
             message: 'Internal Server Error',
