@@ -1,6 +1,22 @@
 const QueueModel = require('../models/QueueModel');
+const PatientModel = require('../models/PatientModel');
+// Define the association
+QueueModel.belongsTo(PatientModel, { foreignKey: 'PatientId' });
+PatientModel.hasMany(QueueModel, { foreignKey: 'PatientId' });
 
-//each patient can be in just 1 queue in certain time
+// Fetch queue list by room with patient details
+exports.getQueueListByRoom = async (roomId) => {
+    return QueueModel.findAll({
+        where: { RoomId: roomId },
+        include: [
+            {
+                model: PatientModel,
+                attributes: ['UniqeNumber']  // Use the correct field name here
+            }
+        ],
+        order: [['PariortyNumber', 'ASC']]
+    });
+}
 exports.findQueueByPatient = (patientId) => {
     return QueueModel.findAll({
         where: { PatientId: patientId }
@@ -28,10 +44,12 @@ exports.deleteQueue = (id) => {
     });
 }
 
+
 exports.getFirstInQueueByRoom = async (roomId) => {
     return QueueModel.findOne({
-        where: { RoomId: roomId           
-         },
+        where: {
+            RoomId: roomId
+        },
         order: [['PariortyNumber', 'ASC']]
     });
 }

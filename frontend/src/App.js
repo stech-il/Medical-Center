@@ -7,6 +7,8 @@ import UsersControl from './components/AdminPage/usersControl/usersControl'
 import PagesNavigation from './components/HomePage/pagesNavigate/pagesNavigate'
 import PatientEnter from './components/PatientEnter/PatientEnter'
 import DoctorPage from './components/DoctorPage/DoctorPage'
+import MessagePage from './components/Messages/MessagePage'
+import MonitorPage from './components/MonitorPage/MonitorPage';
 import logo from './logo.png'
 import './App.css';
 
@@ -24,6 +26,10 @@ function App() {
           <Route path="/users" element={<UsersControl />} />
           <Route path="/patientEnter" element={<PatientEnter />} />
           <Route path="/doctorPage" element={<DoctorPage />} />
+          <Route path="/messages" element={<MessagePage />} />
+          <Route path="/monitor" element={<MonitorPage />} />
+
+
         </Routes>
 
       </div>
