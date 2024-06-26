@@ -1,7 +1,4 @@
-const UsersModel = require('../models/UserModel');
 const UsersService = require('../services/UsersService');
-
-const bcrypt = require('bcryptjs');
 
 exports.findUserById = async (req, res) => {
     try {
