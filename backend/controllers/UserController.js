@@ -73,11 +73,6 @@ exports.createUser = async (req, res) => {
                 message: 'Failed.'
             });
         }
-        
-        return res.status(201).json({
-            data: req,
-            message: 'User created successfully.'
-        });
     } catch (error) {
         return res.status(500).json({
             message: 'Internal Server Error',
