@@ -62,7 +62,11 @@ exports.findAllUsers = async (req, res) => {
 
 exports.createUser = async (req, res) => {
     try {
+        console.log("1 controller");
+
         const user = await UsersService.createUser(req.body);
+        console.log("2 controller");
+
         if (user) {
             return res.json({
                 data: user,

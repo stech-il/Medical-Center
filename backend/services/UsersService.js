@@ -13,14 +13,15 @@ exports.findAllUsers = () => {
 exports.createUser = async (userData) => {
     try {
         const user = this.findUserByEmailAddress(userData.Email);
-
-        if (user) {
-            return res.status(400).send({
-              message: "Failed! Email address already exist!"
-            });
+        
+        if (user == undefined) {
+            console.log("if");
+            return null;
         }
+        console.log("1 service");
 
         const salt = await bcrypt.genSalt(10);
+        console.log("2 service");
 
         const hashPassword = await new Promise((resolve, reject) => {
             bcrypt.hash(userData.Password, salt, function (err, hashedPassword) {
@@ -33,7 +34,7 @@ exports.createUser = async (userData) => {
         });
 
         userData.Password = hashPassword;
-
+        console.log("1");
         const newUser = await UsersModel.create(userData);
         return newUser;
     } catch (error) {
@@ -42,6 +43,8 @@ exports.createUser = async (userData) => {
 }
 
 exports.findUserByEmailAddress = (emailAddress) => {
+    console.log("email");
+
     return UsersModel.findOne({
         where: {
             Email: emailAddress
