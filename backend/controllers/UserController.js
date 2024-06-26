@@ -63,7 +63,10 @@ exports.findAllUsers = async (req, res) => {
 exports.createUser = async (req, res) => {
     try {
         const user = await UsersService.createUser(req.body);
-        
+
+        if (res == false) {
+            return 'Email Exist';
+        }
         if (user) {
             return res.json({
                 data: user,

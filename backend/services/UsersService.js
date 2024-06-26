@@ -12,26 +12,27 @@ exports.findAllUsers = () => {
 
 exports.createUser = async (userData) => {
     try {
-        const user = this.findUserByEmailAddress(userData.Email);
+        const user = await this.findUserByEmailAddress(userData.Email);
 
-        if (!user) {
-            const salt = await bcrypt.genSalt(10);
-
-            const hashPassword = await new Promise((resolve, reject) => {
-                bcrypt.hash(userData.Password, salt, function (err, hashedPassword) {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve(hashedPassword);
-                    }
-                });
-            });
-
-            userData.Password = hashPassword;
-            const newUser = await UsersModel.create(userData);
-            return newUser;
+        if(user) {
+            return 'Email already Exist';
         }
-        return null;
+
+        const salt = await bcrypt.genSalt(10);
+
+        const hashPassword = await new Promise((resolve, reject) => {
+            bcrypt.hash(userData.Password, salt, function (err, hashedPassword) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(hashedPassword);
+                }
+            });
+        });
+
+        userData.Password = hashPassword;
+        const newUser = await UsersModel.create(userData);
+        return newUser;
     } catch (error) {
         throw new Error(error.message);
     }
