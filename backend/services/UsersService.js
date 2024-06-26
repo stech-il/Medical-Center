@@ -13,38 +13,31 @@ exports.findAllUsers = () => {
 exports.createUser = async (userData) => {
     try {
         const user = this.findUserByEmailAddress(userData.Email);
-        
-        if (user == undefined) {
-            console.log("if");
-            return null;
-        }
-        console.log("1 service");
 
-        const salt = await bcrypt.genSalt(10);
-        console.log("2 service");
+        if (!user) {
+            const salt = await bcrypt.genSalt(10);
 
-        const hashPassword = await new Promise((resolve, reject) => {
-            bcrypt.hash(userData.Password, salt, function (err, hashedPassword) {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(hashedPassword);
-                }
+            const hashPassword = await new Promise((resolve, reject) => {
+                bcrypt.hash(userData.Password, salt, function (err, hashedPassword) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(hashedPassword);
+                    }
+                });
             });
-        });
 
-        userData.Password = hashPassword;
-        console.log("1");
-        const newUser = await UsersModel.create(userData);
-        return newUser;
+            userData.Password = hashPassword;
+            const newUser = await UsersModel.create(userData);
+            return newUser;
+        }
+        return null;
     } catch (error) {
         throw new Error(error.message);
     }
 }
 
 exports.findUserByEmailAddress = (emailAddress) => {
-    console.log("email");
-
     return UsersModel.findOne({
         where: {
             Email: emailAddress
