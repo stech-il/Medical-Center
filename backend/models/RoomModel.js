@@ -15,7 +15,6 @@ const RoomModel = db.define("rooms", {
     CurrentQueueNumber: {
         type: DataTypes.INTEGER,
         allowNull: false
-       
     },
     Status: {
         type: DataTypes.BOOLEAN,
@@ -23,7 +22,7 @@ const RoomModel = db.define("rooms", {
         defaultValue: true
     }
 }, {
-    tableName: 'rooms',
+    tableName: 'Rooms',
     timestamps: false
 });
 

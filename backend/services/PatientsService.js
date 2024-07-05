@@ -1,6 +1,43 @@
 const PatientModel = require('../models/PatientModel');
 const QueueService=require('./QueueService'); 
 const RoomService=require('./RoomSrevice')
+const QueueModel = require('../models/QueueModel');
+const RoomModel = require('../models/RoomModel');
+
+QueueModel.belongsTo(PatientModel, { foreignKey: 'PatientId' });
+PatientModel.hasMany(QueueModel, { foreignKey: 'PatientId' });
+
+QueueModel.belongsTo(RoomModel, { foreignKey: 'RoomId' });
+RoomModel.hasMany(QueueModel, { foreignKey: 'RoomId' });
+
+exports.getAllPatientsWithQueueDetails = async () => {
+    try {
+        const patients = await PatientModel.findAll({
+            include: [
+                {
+                    model: QueueModel,
+                    attributes: ['PariortyNumber', 'RoomId'],
+                    include: [
+                        {
+                            model: RoomModel,
+                            attributes: ['Name']
+                        }
+                    ]
+                }
+            ],
+        });
+
+        if (!patients || patients.length === 0) {
+            throw new Error('Patient not found.');
+        }
+
+        return patients;
+    } catch (error) {
+        console.error('Error fetching patients with queue details:', error.message);
+        throw new Error('Patient not found.');
+    }
+};
+
 
 exports.findPatientById = (id) => {
     return PatientModel.findByPk(id);

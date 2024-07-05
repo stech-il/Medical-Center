@@ -32,14 +32,14 @@ const RoomMonitorQueue = ({ id, name }) => {
 
                         <div className='next3MonitorPatients'>
                             <div>הבאים בתור:</div>
-                            {queue[1] && <div>{queue[1].patient.UniqeNumber}</div>}
-                            {queue[2] && <div>{queue[2].patient.UniqeNumber}</div>}
-                            {queue[3] && <div>{queue[3].patient.UniqeNumber}</div>}
+                            {queue[1] && <div className='next'>{queue[1].patient.UniqeNumber}</div>}
+                            {queue[2] && <div className='next'> {queue[2].patient.UniqeNumber}</div>}
+                            {queue[3] && <div className='next'>{queue[3].patient.UniqeNumber}</div>}
                         </div>
                     </div>
                     <div className='numOfWaitPatientsContainer'>
                         <div>מספר ממתינים</div>
-                        <div className='numOfWaitPatients'>{queue.length}</div>
+                        <div className='numOfWaitPatients'>{queue.length-1}</div>
                     </div>
                 </>
             ) : (

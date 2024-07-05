@@ -4,6 +4,7 @@ import RoomMonitorQueue from './roomMonitorQueue';
 import { getAllRooms } from '../../clientServices/RoomService';
 
 import MonitorMessages from './MonitorMessages'
+import background from "./background.jpg";
 
 const MonitorPage = () => {
     const [rooms, setRooms] = useState([]);
@@ -25,7 +26,7 @@ const MonitorPage = () => {
 
    
     return (
-        <div className='monitorPageContainer'>
+        <div className='monitorPageContainer'  style={{ backgroundImage: `url(${background})` ,backgroundSize:'100%'}}>
             <div className='queuesRoomsMonitorContainer'>
                 {rooms.length > 0 ? (
                     rooms.map((room) => (

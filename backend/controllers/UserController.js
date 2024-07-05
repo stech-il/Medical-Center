@@ -70,6 +70,17 @@ exports.updateUser = async (req, res) => {
         });
     }
 }
+exports.getPatientsWithQueueDetails = async (req, res) => {
+    try {
+       
+        const queueList = await QueueService.getQueueListByRoom(roomId);
+        console.log('Queue list:', queueList); // Add logging here
+        res.json(queueList);
+    } catch (error) {
+        console.error('Error in controller:', error);
+        res.status(500).json({ message: 'Internal Server Error', error: error.message });
+    }
+};
 
 exports.deleteUser = async (req, res) => {
     try {

@@ -9,6 +9,7 @@ import PatientEnter from './components/PatientEnter/PatientEnter'
 import DoctorPage from './components/DoctorPage/DoctorPage'
 import MessagePage from './components/Messages/MessagePage'
 import MonitorPage from './components/MonitorPage/MonitorPage';
+import QueueManagmentPage from './components/QueuesManagment/QueuesManagmentPage';
 import logo from './logo.png'
 import './App.css';
 
@@ -25,11 +26,10 @@ function App() {
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/users" element={<UsersControl />} />
           <Route path="/patientEnter" element={<PatientEnter />} />
-          <Route path="/doctorPage" element={<DoctorPage />} />
+          <Route path="/doctor" element={<DoctorPage />} />
           <Route path="/messages" element={<MessagePage />} />
           <Route path="/monitor" element={<MonitorPage />} />
-
-
+          <Route path="/QueueManagment" element={<QueueManagmentPage />} />
         </Routes>
 
       </div>
