@@ -51,9 +51,6 @@ const createSocketServer = (app) => {
                     //update the new room next client- if the movement is to the beginning of the queue
                     nextClient = await queueService.getSecondInQueueByRoom(newRoomId);
                     io.to(getKeyByValue(clientRooms,newRoomId)).emit("updateNextPatient",nextClient ? nextClient.patient : null);
-                    console.log(newRoomId);
-                    console.log("new room id client id",getKeyByValue(clientRooms,newRoomId));
-                    console.log("next client",nextClient.patient ? nextClient.patient : null);
                     //update the monitor- 2 rooms
                     const updatedQueue1 = await queueService.getQueueListByRoom(newRoomId);
                     io.to(getKeyByValue(clientRooms, "monitor")).emit("queueUpdate", newRoomId, updatedQueue1);

@@ -154,7 +154,7 @@ const QueueManagmentPage = () => {
                                     <div className='detailTitle'>מספר מטופל</div>
                                 </div>
                                 <div className='detailProperty'>
-                                    {selectedPatient ? selectedPatient.UniqeNumber : '---'}
+                                    {selectedPatient ? selectedPatient.UniqueNumber : '---'}
                                 </div>
                             </div>
                             <div className='patientDetail'>
@@ -172,7 +172,7 @@ const QueueManagmentPage = () => {
                                     <div className='detailTitle'>מיקום בתור</div>
                                 </div>
                                 <div className='detailProperty'>
-                                    {selectedPatient && selectedPatient.queues.length > 0 ? selectedPatient.queues[0].PariortyNumber : '---'}
+                                    {selectedPatient && selectedPatient.queues.length > 0 ? selectedPatient.queues[0].PriorityNumber : '---'}
                                 </div>
                             </div>
                         </div>
