@@ -1,23 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import './RoomMonitorQueue.css';
-import { getQueueListByRoom } from '../../clientServices/QueueService';
 
-const RoomMonitorQueue = ({ id, name }) => {
-    const [queue, setQueue] = useState([]);
-
+const RoomMonitorQueue = ({ id, name, subscribeToRoom, queuesByRoom ,socket}) => {
+    const queue = queuesByRoom[id] || [];
     useEffect(() => {
-        const fetchQueue = async () => {
-            try {
-                const response = await getQueueListByRoom(id);
-                console.log(response.data);
-                setQueue(response.data);
-            } catch (error) {
-                console.error('Error fetching queue:', error);
-            }
-        };
-
-        fetchQueue();
-    }, [id]);
+    subscribeToRoom(id);
+}, [subscribeToRoom, id]);
 
     return (
         <div className='RoomMonitorQueueContainer'>
@@ -25,25 +13,26 @@ const RoomMonitorQueue = ({ id, name }) => {
             {queue.length > 0 ? (
                 <>
                     <div className='currentMonitorPatient'>
-                        <div className='currentPatientNumber'>  {queue[0] && <div>{queue[0].patient.UniqeNumber}</div>}</div>
-
+                        <div className='currentPatientNumber'>
+                            {queue[0] && <div>{queue[0].patient.UniqueNumber}</div>}
+                        </div>
                     </div>
                     <div className='nextPatientsContainer'>
-
                         <div className='next3MonitorPatients'>
                             <div>הבאים בתור:</div>
-                            {queue[1] && <div>{queue[1].patient.UniqeNumber}</div>}
-                            {queue[2] && <div>{queue[2].patient.UniqeNumber}</div>}
-                            {queue[3] && <div>{queue[3].patient.UniqeNumber}</div>}
+                            {queue[1] && <div>{queue[1].patient.UniqueNumber}</div>}
+                            {queue[2] && <div>{queue[2].patient.UniqueNumber}</div>}
+                            {queue[3] && <div>{queue[3].patient.UniqueNumber}</div>}
                         </div>
                     </div>
                     <div className='numOfWaitPatientsContainer'>
                         <div>מספר ממתינים</div>
-                        <div className='numOfWaitPatients'>{queue.length}</div>
+                        {/* decrease the current patient */}
+                        <div className='numOfWaitPatients'>{(queue.length)-1}</div>  
                     </div>
                 </>
             ) : (
-                <p>תור ריק</p>
+                <p>אין ממתינים</p>
             )}
         </div>
     );

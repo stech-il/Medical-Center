@@ -6,16 +6,22 @@ PatientModel.hasMany(QueueModel, { foreignKey: 'PatientId' });
 
 // Fetch queue list by room with patient details
 exports.getQueueListByRoom = async (roomId) => {
-    return QueueModel.findAll({
-        where: { RoomId: roomId },
-        include: [
-            {
-                model: PatientModel,
-                attributes: ['UniqueNumber']  // Use the correct field name here
-            }
-        ],
-        order: [['PriorityNumber', 'ASC']]
-    });
+    try {
+        const queueList = await QueueModel.findAll({
+            where: { RoomId: roomId },
+            include: [
+                {
+                    model: PatientModel,
+                    attributes: ['UniqueNumber','FirstName','LastName','ID']
+                }
+            ],
+            order: [['PriorityNumber', 'ASC']]
+        });
+        return queueList;
+    } catch (error) {
+        console.error('Error in getQueueByRoom:', error.message);
+        return null;
+    }
 }
 exports.findQueueByPatient = (patientId) => {
     return QueueModel.findAll({
@@ -68,7 +74,6 @@ exports.getFirstInQueueByRoom = async (roomId) => {
         return null;
     }
 }
-
 
 
 exports.getSecondInQueueByRoom = async (roomId) => {

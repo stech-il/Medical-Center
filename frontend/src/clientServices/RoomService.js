@@ -7,7 +7,7 @@ export const getAllRooms = async () => {
 };
 
 export const getRoomById = async (id) => {
-    return axios.get(`${API_URL}/${id}`);
+    return (await axios.get(`${API_URL}/${id}`));
 };
 
 export const createRoom = async (name, description) => {
