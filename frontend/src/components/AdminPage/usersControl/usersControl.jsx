@@ -10,15 +10,19 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 function MyVerticallyCenteredModal(props) {
     const [newUser, setNewUser] = useState({
         Name: '',
-        RoleID: '',
+        RoleID: 0,
         Password: '',
         Email: '',
-        Phone: ''
+        Phone: '',
+        Status: true
     });
 
     const handleCreateUser = async () => {
         try {
-            await createUser(newUser);
+            var ans = await createUser(newUser);
+            if(ans.data == 'Email already Exist') {
+                alert('Email already Exist');
+            }
             props.onHide();
             props.refreshUsers();
         } catch (error) {

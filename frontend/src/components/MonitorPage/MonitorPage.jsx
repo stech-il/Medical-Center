@@ -4,11 +4,13 @@ import RoomMonitorQueue from './roomMonitorQueue';
 import { getAllRooms } from '../../clientServices/RoomService';
 import useMonitorSocket from '../../clientServices/MonitorSocket';
 import MonitorMessages from './MonitorMessages';
+import background from "./background.jpg";
 
 const MonitorPage = () => {
     const [rooms, setRooms] = useState([]);
     const socketUrl = "http://localhost:8000";  // Replace with your server address
     const { subscribeToRoom, queuesByRoom,socket } = useMonitorSocket(socketUrl);
+    const [currentDate, setCurrentDate] = useState('');
 
     useEffect(() => {
         console.log("monitorPage");
@@ -23,31 +25,44 @@ const MonitorPage = () => {
         };
 
         fetchRooms();
+
+
+        const updateDate = () => {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const formattedDate = now.toLocaleDateString('he-IL', options);
+            setCurrentDate(formattedDate);
+        };
+
+        updateDate();
+        const intervalId = setInterval(updateDate, 60000); // Update every minute
+
+        return () => clearInterval(intervalId); // Cleanup interval on component unmount
     }, []);
 
     return (
-        <div className='monitorPageContainer'>
-            <div className='queuesRoomsMonitorContainer'>
-                {rooms.length > 0 ? (
-                    rooms.map((room) => (
-                        <div
-                            key={room.ID}
-                            className='roomMonitorContainer'
-                        >
-                            <RoomMonitorQueue
-                                id={room.ID}
+        <div className='monitorPageContainerFull' style={{ backgroundImage: `url(${background})`, backgroundSize: '100%' }}>
+            <div className='monitorPageContainer' >
+                <MonitorMessages />
+
+                <div className='queuesRoomsMonitorContainer'>
+                    {rooms.length > 0 ? (
+                        rooms.map((room) => (
+                            <div key={room.ID} className='roomMonitorContainer'>
+                                <RoomMonitorQueue id={room.ID}
                                 name={room.Name}
                                 subscribeToRoom={subscribeToRoom}
                                 queuesByRoom={queuesByRoom}
-                                socket={socket}
-                            />
-                        </div>
-                    ))
-                ) : (
-                    <p>No rooms available.</p>
-                )}
+                                socket={socket} />
+                            </div>
+                        ))
+                    ) : (
+                        <p>No rooms available.</p>
+                    )}
+                </div>
+
             </div>
-            <MonitorMessages />
+            <div className='dateDisplay'>{currentDate}</div>
         </div>
     );
 };

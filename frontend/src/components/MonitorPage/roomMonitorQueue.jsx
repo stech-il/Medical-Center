@@ -20,15 +20,15 @@ const RoomMonitorQueue = ({ id, name, subscribeToRoom, queuesByRoom ,socket}) =>
                     <div className='nextPatientsContainer'>
                         <div className='next3MonitorPatients'>
                             <div>הבאים בתור:</div>
-                            {queue[1] && <div>{queue[1].patient.UniqueNumber}</div>}
-                            {queue[2] && <div>{queue[2].patient.UniqueNumber}</div>}
-                            {queue[3] && <div>{queue[3].patient.UniqueNumber}</div>}
+                            {queue[1] && <div className='next'>{queue[1].patient.UniqueNumber}</div>}
+                            {queue[2] && <div className='next'> {queue[2].patient.UniqueNumber}</div>}
+                            {queue[3] && <div className='next'>{queue[3].patient.UniqueNumber}</div>}
                         </div>
                     </div>
                     <div className='numOfWaitPatientsContainer'>
                         <div>מספר ממתינים</div>
                         {/* decrease the current patient */}
-                        <div className='numOfWaitPatients'>{(queue.length)-1}</div>  
+                        <div className='numOfWaitPatients'>{queue.length-1}</div>  
                     </div>
                 </>
             ) : (

@@ -19,24 +19,26 @@ const MonitorMessages = () => {
         fetchMessages();
     }, []);
 
-
     const activeMessages = messages.filter(message => message.Status);
 
     return (
         <>
             {messages.length > 0 && (
-                <div className='messagesMonitorContainer'>
-                    <div className='roomMonitorTitle'>הודעות</div>
+                <div className='messageDisplay'>
+                    <div className='messagesMonitorTitle'>הודעות</div>
 
-                    <div className='messageList'>
-                        {activeMessages.map(message => (
-                            <div key={message.ID} className='messageItem'>
-                                {message.Message}
-                            </div>
-                        ))}
+                    <div className='messagesMonitorContainer'>
+                        <div className='messageList'>
+                            {activeMessages.map(message => (
+                                <div key={message.ID} className='messageItem'>
+                                    {message.Message}
+                                </div>
+                            ))}
+                        </div>
                     </div>
+                </div>
 
-                </div>)}
+            )}
         </>
     );
 };

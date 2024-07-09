@@ -10,6 +10,14 @@ import DoctorPage from './components/DoctorPage/DoctorPage';
 import MessagePage from './components/Messages/MessagePage';
 import MonitorPage from './components/MonitorPage/MonitorPage';
 import logo from './logo.png';
+import UserLogin from './components/AdminPage/usersControl/usersLoginControl';
+
+
+import SignUp from './components/UserPage/UserSignUp';
+
+import QueueManagmentPage from './components/QueuesManagment/QueuesManagmentPage';
+import logo from './logo.png'
+
 import './App.css';
 
 function App() {
@@ -21,11 +29,15 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/pagesNavigate" element={<PagesNavigation />} />
           <Route path="/admin" element={<AdminPage />} />
+          <Route path="/userLogin" element={<UserLogin />} />
           <Route path="/users" element={<UsersControl />} />
           <Route path="/patientEnter" element={<PatientEnter />} />
           <Route path="/doctorPage/:id" element={<DoctorPage />} />
           <Route path="/messages" element={<MessagePage />} />
           <Route path="/monitor" element={<MonitorPage />} />
+          <Route path="/createUser" element={<SignUp />} />
+          <Route path="/QueueManagment" element={<QueueManagmentPage />} />
+
         </Routes>
       </div>
     </Router>

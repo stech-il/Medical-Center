@@ -11,6 +11,10 @@ const PagesNavigation = () => {
     navigate('/admin');
   };
 
+  const goToUserLoginPage = () => {
+    navigate('/userLogin');
+  }
+
   const goToPatientEnterPage = () => {
     navigate('/patientEnter');
   };
@@ -28,6 +32,7 @@ const PagesNavigation = () => {
       <h2>בחר עמוד</h2>
       <div className='pagesBtnsContainer'>
         <button onClick={goToAdminPage} className='page-btn'>מנהל</button>
+        <button onClick={goToUserLoginPage} className='page-btn'>כניסת משתמש</button>
         <button onClick={goToPatientEnterPage} className='page-btn'>תור חדש</button>
         <button className='page-btn' onClick={goToMonitorPage}>מוניטור</button>
         <button onClick={()=>goToDoctorPage(5)} className='page-btn'>קבלה</button>
