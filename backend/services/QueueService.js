@@ -7,16 +7,22 @@ PatientModel.hasMany(QueueModel, { foreignKey: 'PatientId' });
 
 // Fetch queue list by room with patient details
 exports.getQueueListByRoom = async (roomId) => {
-    return QueueModel.findAll({
-        where: { RoomId: roomId },
-        include: [
-            {
-                model: PatientModel,
-                attributes: ['UniqeNumber']
-            }
-        ],
-        order: [['PariortyNumber', 'ASC']]
-    });
+    try {
+        const queueList = await QueueModel.findAll({
+            where: { RoomId: roomId },
+            include: [
+                {
+                    model: PatientModel,
+                    attributes: ['UniqueNumber','FirstName','LastName','ID']
+                }
+            ],
+            order: [['PriorityNumber', 'ASC']]
+        });
+        return queueList;
+    } catch (error) {
+        console.error('Error in getQueueByRoom:', error.message);
+        return null;
+    }
 }
 
 exports.findQueueByPatient = (patientId) => {
@@ -37,43 +43,84 @@ exports.createQueue = (queueData) => {
     return QueueModel.create(queueData);
 }
 
-exports.updateQueue = (id, queueData) => {
+
+exports.updateQueue = (queueData) => {
+    console.log(queueData);
     return QueueModel.update(queueData, {
-        where: { id: id }
+        where: { ID: queueData.ID }
+
     });
 }
 
 exports.deleteQueue = (id) => {
     return QueueModel.destroy({
-        where: { id: id }
+        where: { ID: id }
     });
 }
 
 exports.getFirstInQueueByRoom = async (roomId) => {
-    return QueueModel.findOne({
-        where: {
-            RoomId: roomId
-        },
-        order: [['PariortyNumber', 'ASC']]
-    });
+    try {
+        const queueList = await QueueModel.findAll({
+            where: { RoomId: roomId },
+            include: [
+                {
+                    model: PatientModel,
+                    attributes: ['UniqueNumber','FirstName','LastName','ID']
+                }
+            ],
+            order: [['PriorityNumber', 'ASC']]
+        });
+        if (queueList && queueList.length > 0) {
+            return queueList[0]; // Access the first element of the array
+        } else {
+            return null; // Return null if the array is empty or undefined
+        }
+    } catch (error) {
+        console.error('Error in getFirstInQueueByRoom:', error.message);
+        return null;
+    }
+}
+
+
+exports.getSecondInQueueByRoom = async (roomId) => {
+    try {
+        const queueList = await QueueModel.findAll({
+            where: { RoomId: roomId },
+            include: [
+                {
+                    model: PatientModel,
+                    attributes: ['UniqueNumber','FirstName','LastName','ID']
+                }
+            ],
+            order: [['PriorityNumber', 'ASC']]
+        });
+        if (queueList && queueList.length > 1) {
+            return queueList[1]; // Access the first element of the array
+        } else {
+            return null; // Return null if the array is empty or undefined
+        }
+    } catch (error) {
+        console.error('Error in getFirstInQueueByRoom:', error.message);
+        return null;
+    }
 }
 
 exports.getLastInQueueByRoom = async (roomId) => {
-    return QueueModel.findOne({
+    return await QueueModel.findOne({
         where: { RoomId: roomId },
-        order: [['PariortyNumber', 'DESC']]
+        order: [['PriorityNumber', 'DESC']]
     });
 }
 
 exports.createAppointment = async (patientId, roomId) => {
     try {
         const lastInQueueByRoom = await this.getLastInQueueByRoom(roomId);
-        const lastPriorityNumber = lastInQueueByRoom ? lastInQueueByRoom.PariortyNumber : 0;
+        const lastPriorityNumber = lastInQueueByRoom ? lastInQueueByRoom.PriorityNumber : 0;
 
         const data = {
             PatientId: patientId,
             RoomId: roomId,
-            PariortyNumber: lastPriorityNumber + 1
+            PriorityNumber: lastPriorityNumber + 1
         };
 
         const appointmentEnter = await QueueModel.create(data);
@@ -84,32 +131,47 @@ exports.createAppointment = async (patientId, roomId) => {
 }
 
 exports.moveBetweenRooms = async (patientId, newRoomId, place) => {
-    try {
+    try {        
         let priority;
         if (place === true) {
             const lastInQueue = await this.getLastInQueueByRoom(newRoomId);
-            priority = lastInQueue ? lastInQueue.PariortyNumber + 1 : 1;
+            priority = lastInQueue ? lastInQueue.PriorityNumber + 1 : 1;
         } else {
             const firstInQueue = await this.getFirstInQueueByRoom(newRoomId);
-            priority = firstInQueue ? firstInQueue.PariortyNumber - 1 : 1;
+            priority = firstInQueue ? firstInQueue.PriorityNumber - 1 : 1;
         }
 
         const queue = await this.findQueueByPatient(patientId);
         if (!queue || queue.length === 0) {
             throw new Error('Queue not found for patient');
         }
+        
         const queueId = queue[0].ID;
 
         const data = {
             ID: queueId,
             PatientId: patientId,
             RoomId: newRoomId,
-            PariortyNumber: priority
+            PriorityNumber: priority
         };
-        const appointmentUpdated = await this.updateQueue(queueId, data);
+        const appointmentUpdated = await this.updateQueue(data);
+
 
         return appointmentUpdated;
     } catch (error) {
+        throw new Error(error.message);
+    }
+}
+
+exports.findQueueByRoom = async (roomId) => {
+    try {
+        return QueueModel.findAll({
+            where: { RoomId: roomId },
+            order: [['PriorityNumber', 'ASC']]
+        });
+
+    } catch (error) {
+        console.log(error.message);
         throw new Error(error.message);
     }
 }
