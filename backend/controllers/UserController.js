@@ -67,7 +67,7 @@ exports.createUser = async (req, res) => {
         if (user) {
             return res.json({
                 data: user,
-                message: 'Success.'
+                message: 'User created successfully.'
             });
         } else {
             return res.status(404).json({
