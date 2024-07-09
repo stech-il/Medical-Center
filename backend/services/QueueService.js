@@ -1,5 +1,6 @@
 const QueueModel = require('../models/QueueModel');
 const PatientModel = require('../models/PatientModel');
+
 // Define the association
 QueueModel.belongsTo(PatientModel, { foreignKey: 'PatientId' });
 PatientModel.hasMany(QueueModel, { foreignKey: 'PatientId' });
@@ -11,12 +12,13 @@ exports.getQueueListByRoom = async (roomId) => {
         include: [
             {
                 model: PatientModel,
-                attributes: ['UniqeNumber']  // Use the correct field name here
+                attributes: ['UniqeNumber']
             }
         ],
         order: [['PariortyNumber', 'ASC']]
     });
 }
+
 exports.findQueueByPatient = (patientId) => {
     return QueueModel.findAll({
         where: { PatientId: patientId }
@@ -31,10 +33,13 @@ exports.findAllQueue = () => {
     return QueueModel.findAll();
 }
 
+exports.createQueue = (queueData) => {
+    return QueueModel.create(queueData);
+}
 
-exports.updateQueue = (queueData) => {
+exports.updateQueue = (id, queueData) => {
     return QueueModel.update(queueData, {
-        where: { id: queueData.ID }
+        where: { id: id }
     });
 }
 
@@ -43,7 +48,6 @@ exports.deleteQueue = (id) => {
         where: { id: id }
     });
 }
-
 
 exports.getFirstInQueueByRoom = async (roomId) => {
     return QueueModel.findOne({
@@ -61,11 +65,8 @@ exports.getLastInQueueByRoom = async (roomId) => {
     });
 }
 
-//regular appointment- to the last place in the queue
 exports.createAppointment = async (patientId, roomId) => {
     try {
-        console.log('Creating appointment for Patient ID:', patientId, 'in Room ID:', roomId);
-
         const lastInQueueByRoom = await this.getLastInQueueByRoom(roomId);
         const lastPriorityNumber = lastInQueueByRoom ? lastInQueueByRoom.PariortyNumber : 0;
 
@@ -74,17 +75,13 @@ exports.createAppointment = async (patientId, roomId) => {
             RoomId: roomId,
             PariortyNumber: lastPriorityNumber + 1
         };
-        console.log('Queue data to be inserted:', data);
 
         const appointmentEnter = await QueueModel.create(data);
-        console.log('Appointment created:', appointmentEnter);
-
         return appointmentEnter;
     } catch (error) {
-        console.error('Error in createAppointment:', error.message);
         throw new Error(error.message);
     }
-};
+}
 
 exports.moveBetweenRooms = async (patientId, newRoomId, place) => {
     try {
@@ -109,11 +106,10 @@ exports.moveBetweenRooms = async (patientId, newRoomId, place) => {
             RoomId: newRoomId,
             PariortyNumber: priority
         };
-        const appointmentUpdated = await this.updateQueue(data);
+        const appointmentUpdated = await this.updateQueue(queueId, data);
 
         return appointmentUpdated;
     } catch (error) {
-        console.error('Error in moveBetweenRooms:', error.message);
         throw new Error(error.message);
     }
 }

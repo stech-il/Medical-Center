@@ -1,22 +1,26 @@
+
+.monitorPageContainerFull {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+
+    height: 100vh;
+
+}
+
+
 .monitorPageContainer {
     display: flex;
     flex-direction: row-reverse;
     align-items: center;
     justify-content: center;
-    padding: 20px;
-    background-image: linear-gradient(to right, #36D1DC 0%, #1c33de 51%, #36D1DC 100%);
-    text-align: center;
-    text-transform: uppercase;
-    transition: 0.5s;
-    background-size: 200% auto;
-    box-shadow: 0 0 20px #eee;
-    font-weight: 600;
-    font-size: 13pt;
-    height: 100vh;
+
 
 }
 
-  
+
 
 .queuesRoomsMonitorContainer {
     display: flex;
@@ -26,11 +30,23 @@
 }
 
 .roomMonitorContainer {
-    width:25%;
-    background-color: white;
     border-radius: 10px;
     margin: 20px;
-    height: 300px;
-    padding: 20px;
+    width: 350px;
+    background-color: white;
+    box-shadow: 1px 6px 20px 0px #696969;
+
+
+
+
+
+
+ 
 }
 
+
+.dateDisplay{
+    color: white;
+    font-weight: 700;
+    font-size: 18pt;
+}

@@ -3,6 +3,7 @@ import './MessagePage.css';
 import MessageItem from './MessageItem';
 import { getAllMessages, createMessage } from '../../clientServices/MessagesService';
 import NewMessageModal from './NewMessageModal';
+import Sidebar from '../sidebar/sidebar'
 
 const MessagePage = () => {
     const [allMessages, setAllMessages] = useState([]);
@@ -36,9 +37,11 @@ const MessagePage = () => {
 
     return (
         <div className='MessagePageContainer'>
+            <Sidebar />
+
             {!showModal && (
                 <>
-                   <h2>הודעות מערכת</h2>
+                    <h2>הודעות מערכת</h2>
 
                     <button className='newMsg-Btn' onClick={() => setShowModal(true)}>הודעה חדשה</button>
 
