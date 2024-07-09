@@ -1,29 +1,39 @@
 const PatientsService = require('../services/PatientsService');
 
-exports.findPatientById = async (req, res) => {
+exports.getPatientById = async (req, res) => {
+    const { id } = req.params;
+    console.log('Patient ID:', id);  // Log the ID to verify
     try {
-        const patient = await PatientsService.findPatientById(req.params.id);
-        if (patient) {
-            return res.json({
-                data: patient,
-                message: 'Success.'
-            });
-        } else {
-            return res.status(404).json({
-                message: 'Patient not found.'
-            });
+        const patient = await PatientsService.findPatientById(id);
+        if (!patient) {
+            return res.status(404).json({ message: "Patient not found." });
         }
+        return res.status(200).json(patient);
+    } catch (error) {
+        console.error('Error fetching patient:', error);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+};
+
+exports.findAllPatients = async (req, res) => {
+    try {
+        const patients = await PatientsService.findAllPatients();
+        return res.json({
+            data: patients,
+            message: 'Success.'
+        });
     } catch (error) {
         return res.status(500).json({
             message: 'Internal Server Error',
             error: error.message
         });
     }
+
 }
 
-exports.findAllPatients = async (req, res) => {
+exports.getAllPatientsWithQueueDetails = async (req, res) => {
     try {
-        const patients = await PatientsService.findAllPatients();
+        const patients = await PatientsService.getAllPatientsWithQueueDetails();
         return res.json({
             data: patients,
             message: 'Success.'

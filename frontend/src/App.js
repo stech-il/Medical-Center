@@ -13,6 +13,7 @@ import MonitorPage from './components/MonitorPage/MonitorPage';
 
 import SignUp from './components/UserPage/UserSignUp';
 
+import QueueManagmentPage from './components/QueuesManagment/QueuesManagmentPage';
 import logo from './logo.png'
 import './App.css';
 
@@ -30,11 +31,12 @@ function App() {
           <Route path="/userLogin" element={<UserLogin />} />
           <Route path="/users" element={<UsersControl />} />
           <Route path="/patientEnter" element={<PatientEnter />} />
-          <Route path="/doctorPage" element={<DoctorPage />} />
+          <Route path="/doctor" element={<DoctorPage />} />
           <Route path="/messages" element={<MessagePage />} />
           <Route path="/monitor" element={<MonitorPage />} />
           <Route path="/createUser" element={<SignUp />} />
 
+          <Route path="/QueueManagment" element={<QueueManagmentPage />} />
         </Routes>
 
       </div>
