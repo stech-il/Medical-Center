@@ -82,14 +82,14 @@ export default function PatientsTable({ onSelectPatient }) {
     return (
         <div>
             <TextField
-                label="Search"
+                label="חיפוש"
                 variant="outlined"
                 fullWidth
                 margin="normal"
                 value={searchQuery}
                 onChange={handleSearchChange}
             />
-            <TableContainer component={Paper} sx={{ maxHeight: 400 }}>
+            <TableContainer component={Paper} sx={{ maxHeight: 300 }}>
                 <Table stickyHeader aria-label="sticky table" sx={{ minWidth: 650 }}>
                     <TableHead>
                         <TableRow>
@@ -167,7 +167,7 @@ export default function PatientsTable({ onSelectPatient }) {
                                 <TableCell align="center">
                                     {patient.queues.length > 0 ? patient.queues[0].PariortyNumber : 'N/A'}
                                 </TableCell>
-                                <TableCell align="center">{patient.HMOid}</TableCell>
+                                <TableCell align="center">{patient.HMO.Name}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

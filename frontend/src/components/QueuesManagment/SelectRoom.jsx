@@ -5,7 +5,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { getAllRooms } from '../../clientServices/RoomService';
 
-export default function SelectRoom() {
+export default function SelectRoom({ onSelectRoom }) {
     const [rooms, setRooms] = useState([]);
     const [selectedRoom, setSelectedRoom] = useState('');
 
@@ -23,7 +23,10 @@ export default function SelectRoom() {
     }, []);
 
     const handleChange = (event) => {
-        setSelectedRoom(event.target.value);
+        const roomName = event.target.value;
+        setSelectedRoom(roomName);
+        const room = rooms.find(r => r.Name === roomName);
+        onSelectRoom(room); // Pass the selected room object to the parent component
     };
 
     return (

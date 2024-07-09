@@ -10,7 +10,7 @@ import MonitorIcon from '@mui/icons-material/Monitor';
 
 import './sidebar.css'
 function SidebarMenu() {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
 
   const handleToggleSidebar = () => {
     setCollapsed(!collapsed);

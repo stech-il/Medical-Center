@@ -1,14 +1,14 @@
 .queueManagmentContainer {
     display: flex;
     align-items: center;
-    height: 100vh;
     flex-direction: column;
     direction: rtl;
+    background-color: #f1f7ff;
 }
 
 .actionOfPatientContainer {
     display: flex;
-   
+
 
 }
 
@@ -17,7 +17,7 @@
     margin: 10px;
     background-image: linear-gradient(to right, #4ca0f9 0%, #3762f0 51%, #368cdc 100%);
     background-size: 200% auto;
-    border-radius: 100px;
+    border-radius: 10px;
     padding: 5px;
     width: 130px;
     font-size: 10pt;
@@ -30,7 +30,7 @@
 
 
 .patientDetail {
-    background-color: #ffffff;
+    background-color: #f1f7ff;
     padding: 10px;
     text-align: center;
     font-weight: 500;
@@ -41,7 +41,7 @@
     width: 200px;
     align-items: center;
     justify-content: center;
-    box-shadow: 0px 0px 20px 0px #e8e8e8;
+    /* box-shadow: 0px 0px 20px 0px #e8e8e8; */
 }
 
 .finishTreatment {
@@ -62,7 +62,7 @@
 
 
 .detailProperty {
-    background-color: #edf2fa;
+    background-color: #ffffff;
     color: #396af1;
     width: 100%;
     border-radius: 10px;
@@ -74,11 +74,14 @@
     margin-left: 5px;
 }
 
-.patientsDetailsTableContainer {
-    background-color: #f2f4f4;
-    padding: 40px;
-    border-radius: 20px;
-    margin: 20px;
+.patientsDetailsTableContainer,
+.roomsDetailsTableContainer {
+    background-color: #ffffff;
+    padding: 0px 40px 40px 40px;
+    border-radius: 8px;
+    margin: 40px;
+    width: 70%;
+
 }
 
 .patientsDetailsTableCont {
@@ -94,8 +97,22 @@
     background-color: white;
     border-radius: 10px;
     margin-top: 20px;
-    box-shadow: 0px 1px 13px 1px #eaeaea;
+    box-shadow: 0px 1px 8px 1px #efefef;
     justify-content: center;
+
+}
+
+.moreOperationCont {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border-radius: 10px;
+    margin-top: 20px;
+    box-shadow: 0px 1px 8px 1px #efefef;
+    justify-content: flex-start;
+    padding: 10px;
+    justify-content: flex-start;
+    padding: 10px;
 
 }
 
@@ -115,4 +132,33 @@
 /* ---------------------------------------------------------------------------------- */
 
 
+.moreOperation {
+    border-radius: 100px;
+    background-color: white;
+    border: 1px solid #f03737;
+    margin: 10px;
 
+    padding: 5px;
+    width: 150px;
+    font-size: 10pt;
+    text-align: center;
+    font-weight: 500;
+}
+
+.moreOperation:hover {
+    background-color: rgb(255, 234, 234);
+
+}
+
+.managmentTitle {
+    font-weight: 700;
+    margin-bottom: 50px;
+    border-bottom-left-radius: 100px;
+    border-bottom-right-radius: 100px;
+    background-image: linear-gradient(to right, #4ca0f9 0%, #3762f0 51%, #368cdc 100%);
+    background-size: 200% auto;
+    color: white;
+    width: 20%;
+    padding: 8px;
+
+}

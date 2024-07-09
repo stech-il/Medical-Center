@@ -1,6 +1,4 @@
 const QueueService = require('../services/QueueService');
-const RoomServise = require('../services/RoomSrevice');
-
 
 exports.findQueueById = async (req, res) => {
     try {
@@ -23,22 +21,15 @@ exports.findQueueById = async (req, res) => {
     }
 }
 
-
 exports.getQueueListByRoom = async (req, res) => {
     try {
         const roomId = req.params.id;
-        console.log(roomId)
         const queueList = await QueueService.getQueueListByRoom(roomId);
-        console.log('Queue list:', queueList); // Add logging here
         res.json(queueList);
     } catch (error) {
-        console.error('Error in controller:', error);
         res.status(500).json({ message: 'Internal Server Error', error: error.message });
     }
-};
-
-
-
+}
 
 exports.findAllQueues = async (req, res) => {
     try {
@@ -102,6 +93,83 @@ exports.deleteQueue = async (req, res) => {
                 message: 'Queue not found.'
             });
         }
+    } catch (error) {
+        return res.status(500).json({
+            message: 'Internal Server Error',
+            error: error.message
+        });
+    }
+}
+
+exports.findQueueByPatient = async (req, res) => {
+    try {
+        const queues = await QueueService.findQueueByPatient(req.params.patientId);
+        return res.json({
+            data: queues,
+            message: 'Success.'
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: 'Internal Server Error',
+            error: error.message
+        });
+    }
+}
+
+exports.getFirstInQueueByRoom = async (req, res) => {
+    try {
+        const queue = await QueueService.getFirstInQueueByRoom(req.params.roomId);
+        return res.json({
+            data: queue,
+            message: 'Success.'
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: 'Internal Server Error',
+            error: error.message
+        });
+    }
+}
+
+exports.getLastInQueueByRoom = async (req, res) => {
+    try {
+        const queue = await QueueService.getLastInQueueByRoom(req.params.roomId);
+        return res.json({
+            data: queue,
+            message: 'Success.'
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: 'Internal Server Error',
+            error: error.message
+        });
+    }
+}
+
+exports.createAppointment = async (req, res) => {
+    try {
+        const { patientId, roomId } = req.body;
+        const appointment = await QueueService.createAppointment(patientId, roomId);
+        return res.status(201).json({
+            data: appointment,
+            message: 'Appointment created successfully.'
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: 'Internal Server Error',
+            error: error.message
+        });
+    }
+}
+
+exports.moveBetweenRooms = async (req, res) => {
+    try {
+        const { patientId, newRoomId, place } = req.body;
+        const updatedQueue = await QueueService.moveBetweenRooms(patientId, newRoomId, place);
+        return res.json({
+            data: updatedQueue,
+            message: 'Patient moved between rooms successfully.'
+        });
     } catch (error) {
         return res.status(500).json({
             message: 'Internal Server Error',

@@ -1,11 +1,22 @@
-.monitorPageContainer {
+
+.monitorPageContainerFull {
     display: flex;
-    flex-direction: row-reverse;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     padding: 20px;
 
     height: 100vh;
+
+}
+
+
+.monitorPageContainer {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: center;
+
 
 }
 
@@ -31,4 +42,11 @@
 
 
  
+}
+
+
+.dateDisplay{
+    color: white;
+    font-weight: 700;
+    font-size: 18pt;
 }

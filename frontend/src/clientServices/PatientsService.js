@@ -19,5 +19,5 @@ export const updatePatient = async (id, data) => {
 };
 
 export const deletePatient = async (id) => {
-    return axios.delete(`${API_URL}/patients/${id}`);
+    return axios.delete(`${API_URL}/${id}`);
 };
