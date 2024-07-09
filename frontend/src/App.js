@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import AdminPage from './components/AdminPage/AdminPage';
 import HomePage from './components/HomePage/HomePage';
 import UsersControl from './components/AdminPage/usersControl/usersControl'
+import UserLogin from './components/AdminPage/usersControl/usersLoginControl';
 import PagesNavigation from './components/HomePage/pagesNavigate/pagesNavigate'
 import PatientEnter from './components/PatientEnter/PatientEnter'
 import DoctorPage from './components/DoctorPage/DoctorPage'
@@ -26,6 +27,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/pagesNavigate" element={<PagesNavigation />} />
           <Route path="/admin" element={<AdminPage />} />
+          <Route path="/userLogin" element={<UserLogin />} />
           <Route path="/users" element={<UsersControl />} />
           <Route path="/patientEnter" element={<PatientEnter />} />
           <Route path="/doctorPage" element={<DoctorPage />} />
