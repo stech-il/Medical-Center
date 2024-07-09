@@ -10,9 +10,13 @@ import PatientEnter from './components/PatientEnter/PatientEnter'
 import DoctorPage from './components/DoctorPage/DoctorPage'
 import MessagePage from './components/Messages/MessagePage'
 import MonitorPage from './components/MonitorPage/MonitorPage';
+<<<<<<< HEAD
 
 import SignUp from './components/UserPage/UserSignUp';
 
+=======
+import QueueManagmentPage from './components/QueuesManagment/QueuesManagmentPage';
+>>>>>>> fe450d3df42f489446ee3082a1c8ec439961f97b
 import logo from './logo.png'
 import './App.css';
 
@@ -30,11 +34,15 @@ function App() {
           <Route path="/userLogin" element={<UserLogin />} />
           <Route path="/users" element={<UsersControl />} />
           <Route path="/patientEnter" element={<PatientEnter />} />
-          <Route path="/doctorPage" element={<DoctorPage />} />
+          <Route path="/doctor" element={<DoctorPage />} />
           <Route path="/messages" element={<MessagePage />} />
           <Route path="/monitor" element={<MonitorPage />} />
+<<<<<<< HEAD
           <Route path="/createUser" element={<SignUp />} />
 
+=======
+          <Route path="/QueueManagment" element={<QueueManagmentPage />} />
+>>>>>>> fe450d3df42f489446ee3082a1c8ec439961f97b
         </Routes>
 
       </div>
