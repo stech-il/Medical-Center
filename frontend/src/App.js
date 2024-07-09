@@ -9,14 +9,13 @@ import PatientEnter from './components/PatientEnter/PatientEnter';
 import DoctorPage from './components/DoctorPage/DoctorPage';
 import MessagePage from './components/Messages/MessagePage';
 import MonitorPage from './components/MonitorPage/MonitorPage';
-import logo from './logo.png';
 import UserLogin from './components/AdminPage/usersControl/usersLoginControl';
 
 
 import SignUp from './components/UserPage/UserSignUp';
 
 import QueueManagmentPage from './components/QueuesManagment/QueuesManagmentPage';
-import logo from './logo.png'
+import logo from './logo.png';
 
 import './App.css';
 
