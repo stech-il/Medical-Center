@@ -19,8 +19,8 @@ const PagesNavigation = () => {
     navigate('/patientEnter');
   };
 
-  const goToDoctorPage = () => {
-    navigate('/doctorPage');
+  const goToDoctorPage = (id) => {
+    navigate(`/doctorPage/${id}`);
   };
         
   const goToMonitorPage = () => {
@@ -35,11 +35,11 @@ const PagesNavigation = () => {
         <button onClick={goToUserLoginPage} className='page-btn'>כניסת משתמש</button>
         <button onClick={goToPatientEnterPage} className='page-btn'>תור חדש</button>
         <button className='page-btn' onClick={goToMonitorPage}>מוניטור</button>
-        <button className='page-btn'>קבלה</button>
-        <button onClick={goToDoctorPage} className='page-btn'>חדר רופא</button>
-        <button className='page-btn'>חדר טריאג</button>
-        <button className='page-btn'>חדר טיפולים</button>
-        <button className='page-btn'>חדר אקג</button>
+        <button onClick={()=>goToDoctorPage(5)} className='page-btn'>קבלה</button>
+        <button onClick={()=>goToDoctorPage(1)} className='page-btn'>חדר רופא</button>
+        <button onClick={()=>goToDoctorPage(3)} className='page-btn'>חדר טריאג</button>
+        <button onClick={()=>goToDoctorPage(2)} className='page-btn'>חדר טיפולים</button>
+        <button onClick={()=>goToDoctorPage(4)} className='page-btn'>חדר אקג</button>
       </div>
     </div>
     </>

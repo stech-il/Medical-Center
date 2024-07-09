@@ -5,6 +5,10 @@ const QueueController = require('../controllers/QueueController');
 // Get a single patient by ID
 router.get('/:id', QueueController.findQueueById);
 
+//Get the first patient in queue of room
+router.get('/firstInRoom/:id',QueueController.getFirstInRoom);
+router.get('/roomQueue/:id', QueueController.getQueueListByRoom);
+
 // Get all patients
 router.get('/', QueueController.findAllQueues);
 

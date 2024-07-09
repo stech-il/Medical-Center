@@ -23,12 +23,11 @@ const QueueModel = db.define("queues", {
         references: {
             model: RoomModel,
             key: 'ID'
-        }
-    },
+        },
     PariortyNumber: {
+
         type: DataTypes.INTEGER,
         allowNull: false,
-    }
 }, {
     tableName: 'Queues',
     timestamps: false
