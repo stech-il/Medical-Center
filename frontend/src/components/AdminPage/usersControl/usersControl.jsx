@@ -3,6 +3,7 @@ import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { getUsers, createUser } from '../../../clientServices/UserService';
+import { getRoles } from '../../../clientServices/RoleService';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -17,10 +18,31 @@ function MyVerticallyCenteredModal(props) {
         Status: true
     });
 
+    const [roles, setRoles] = useState([]);
+
+    const fetchRoles = async () => {
+        try {
+            const response = await getRoles();
+            setRoles(response.data);
+        } catch (error) {
+            console.error('Error fetching users:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchRoles();
+    }, []);
+
+    const checkRole = async () => {
+        if (newUser.RoleID === 0) {
+            alert("Choose role");
+        }
+    }
+
     const handleCreateUser = async () => {
         try {
             var ans = await createUser(newUser);
-            if(ans.data == 'Email already Exist') {
+            if (ans.data === 'Email already Exist') {
                 alert('Email already Exist');
             }
             props.onHide();
@@ -50,12 +72,29 @@ function MyVerticallyCenteredModal(props) {
                         value={newUser.Name}
                         onChange={(e) => setNewUser({ ...newUser, Name: e.target.value })}
                     />
-                    <input
+                    {/* <input
                         type="number"
                         placeholder="Role ID"
                         value={newUser.RoleID}
                         onChange={(e) => setNewUser({ ...newUser, RoleID: e.target.value })}
-                    />
+                    /> */}
+                    {roles ? (
+                        <select
+                            value={newUser.RoleID}
+                            onChange={(e) => setNewUser({ ...newUser, RoleID: e.target.value })}
+                        >
+                            <option key={0} value={0}>
+                                Role
+                            </option>
+                            {roles.map((role) => (
+                                <option key={role.ID} value={role.ID}>
+                                    {role.Role}
+                                </option>
+                            ))}
+                        </select>
+                    ) : (
+                        <p>Loading roles...</p>
+                    )}
                     <input
                         type="password"
                         placeholder="Password"

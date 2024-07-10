@@ -17,10 +17,6 @@ import logo from './logo.png';
 
 import UserLogin from './components/AdminPage/usersControl/usersLoginControl';
 
-import SignUp from './components/UserPage/UserSignUp';
-
-import QueueManagmentPage from './components/QueuesManagment/QueuesManagmentPage';
-
 import './App.css';
 
 function App() {
@@ -38,7 +34,6 @@ function App() {
           <Route path="/doctorPage/:id" element={<DoctorPage />} />
           <Route path="/messages" element={<MessagePage />} />
           <Route path="/monitor" element={<MonitorPage />} />
-          <Route path="/createUser" element={<SignUp />} />
           <Route path="/createUser" element={<SignUp />} />
           <Route path="/QueueManagment" element={<QueueManagmentPage />} />
         </Routes>
