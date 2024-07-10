@@ -27,7 +27,7 @@ exports.getAllPatientsWithQueueDetails = async () => {
                 },
                 {
                     model: QueueModel,
-                    attributes: ['PariortyNumber', 'RoomId'],
+                    attributes: ['PriorityNumber', 'RoomId'],
                     include: [
                         {
                             model: RoomModel,
@@ -74,7 +74,7 @@ exports.createPatient = async (firstName, lastName, HMOid, phone) => {
     try {
         const uniqueNumber = await generateNumber();
         const data = {
-            UniqeNumber: uniqueNumber,
+            UniqueNumber: uniqueNumber,
             FirstName: firstName,
             LastName: lastName,
             Phone: phone,
@@ -114,7 +114,7 @@ async function generateNumber() {
 
     const allPatients = await PatientModel.findAll();
 
-    if (!allPatients.some(patient => patient.UniqeNumber === number)) {
+    if (!allPatients.some(patient => patient.UniqueNumber === number)) {
         return number;
     } else {
         return generateNumber();

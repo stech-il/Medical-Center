@@ -49,9 +49,9 @@ export default function PatientsTable({ onSelectPatient }) {
 
     const filteredPatients = patients.filter((patient) => {
         const fullName = `${patient.FirstName} ${patient.LastName}`.toLowerCase();
-        const uniqueNumber = (patient.UniqeNumber || '').toLowerCase();
+        const uniqueNumber = (patient.UniqueNumber || '').toLowerCase();
         const roomName = patient.queues.length > 0 ? (patient.queues[0].room.Name || '').toLowerCase() : '';
-        const priorityNumber = patient.queues.length > 0 ? (patient.queues[0].PariortyNumber || '').toString().toLowerCase() : '';
+        const priorityNumber = patient.queues.length > 0 ? (patient.queues[0].PriorityNumber || '').toString().toLowerCase() : '';
         // const hmoId = (patient.HMOid || '').toLowerCase();
 
         return (
@@ -70,9 +70,9 @@ export default function PatientsTable({ onSelectPatient }) {
             const aRoom = a.queues.length > 0 ? a.queues[0].room.Name : '';
             const bRoom = b.queues.length > 0 ? b.queues[0].room.Name : '';
             return order === 'asc' ? aRoom.localeCompare(bRoom) : bRoom.localeCompare(aRoom);
-        } else if (orderBy === 'PariortyNumber') {
-            const aNumber = a.queues.length > 0 ? a.queues[0].PariortyNumber : '';
-            const bNumber = b.queues.length > 0 ? b.queues[0].PariortyNumber : '';
+        } else if (orderBy === 'PriorityNumber') {
+            const aNumber = a.queues.length > 0 ? a.queues[0].PriorityNumber : '';
+            const bNumber = b.queues.length > 0 ? b.queues[0].priorityNumber : '';
             return order === 'asc' ? aNumber - bNumber : bNumber - aNumber;
         } else {
             return order === 'asc' ? a[orderBy] - b[orderBy] : b[orderBy] - a[orderBy];
@@ -105,9 +105,9 @@ export default function PatientsTable({ onSelectPatient }) {
                             </TableCell>
                             <TableCell align="center">
                                 <TableSortLabel
-                                    active={orderBy === 'UniqeNumber'}
-                                    direction={orderBy === 'UniqeNumber' ? order : 'asc'}
-                                    onClick={() => handleRequestSort('UniqeNumber')}
+                                    active={orderBy === 'UniqueNumber'}
+                                    direction={orderBy === 'UniqueNumber' ? order : 'asc'}
+                                    onClick={() => handleRequestSort('UniqueNumber')}
                                 >
                                     מספר יחודי
                                 </TableSortLabel>
@@ -123,9 +123,9 @@ export default function PatientsTable({ onSelectPatient }) {
                             </TableCell>
                             <TableCell align="center">
                                 <TableSortLabel
-                                    active={orderBy === 'PariortyNumber'}
-                                    direction={orderBy === 'PariortyNumber' ? order : 'asc'}
-                                    onClick={() => handleRequestSort('PariortyNumber')}
+                                    active={orderBy === 'PriorityNumber'}
+                                    direction={orderBy === 'PriorityNumber' ? order : 'asc'}
+                                    onClick={() => handleRequestSort('PriorityNumber')}
                                 >
                                     מספר בתור
                                 </TableSortLabel>
@@ -160,12 +160,12 @@ export default function PatientsTable({ onSelectPatient }) {
                                 <TableCell align="center">
                                     {patient.FirstName} {patient.LastName}
                                 </TableCell>
-                                <TableCell align="center">{patient.UniqeNumber}</TableCell>
+                                <TableCell align="center">{patient.UniqueNumber}</TableCell>
                                 <TableCell align="center">
                                     {patient.queues.length > 0 ? patient.queues[0].room.Name : 'N/A'}
                                 </TableCell>
                                 <TableCell align="center">
-                                    {patient.queues.length > 0 ? patient.queues[0].PariortyNumber : 'N/A'}
+                                    {patient.queues.length > 0 ? patient.queues[0].PriorityNumber : 'N/A'}
                                 </TableCell>
                                 <TableCell align="center">{patient.HMO.Name}</TableCell>
                             </TableRow>
