@@ -10,7 +10,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 function MyVerticallyCenteredModal(props) {
     const [newUser, setNewUser] = useState({
         Name: '',
-        RoleID: 0,
+        RoleID: '',
         Password: '',
         Email: '',
         Phone: '',

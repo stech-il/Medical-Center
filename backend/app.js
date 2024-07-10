@@ -1,16 +1,18 @@
 const express = require("express");
 const cors = require('cors');
 const db = require('./database/db.js');
-const createSocketServer =require('./services/SocketServer.js')
+const createSocketServer = require('./services/SocketServer.js')
 
 const HMOsRouter = require('./routes/HMOsRoutes.js');
 const PatientsRouter = require('./routes/PatientsRoutes.js');
 const UsersRouter = require('./routes/UserRoute.js');
 const RolesRouter = require('./routes/RolesRoutes.js');
 const MessagesRouter = require('./routes/MessagesRoutes.js')
-const RoomRouter=require('./routes/RoomRoute.js')
-const QueueRouter=require('./routes/QueueRoute.js')
+const RoomRouter = require('./routes/RoomRoute.js')
+const QueueRouter = require('./routes/QueueRoute.js')
 
+const session = require('express-session');
+const bodyParser = require('body-parser');
 
 const app = express();
 
@@ -24,7 +26,13 @@ app.use("/messages", MessagesRouter);
 app.use("/rooms", RoomRouter);
 app.use("/queues", QueueRouter);
 
+app.use(session({
+    secret: 'userDetails', // Replace with your actual secret
+    resave: false,
+    saveUninitialized: true
+}));
 
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
 (async () => {
@@ -45,7 +53,7 @@ app.use((err, req, res, next) => {
 const server = createSocketServer(app);
 
 server.listen(8000, () => {
-  console.log('Server UP running in http://localhost:8000/');
+    console.log('Server UP running in http://localhost:8000/');
 });
 
 // app.listen(8000, () => {

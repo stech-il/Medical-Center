@@ -1,5 +1,7 @@
 const UsersService = require('../services/UsersService');
 
+const express = require('express');
+
 exports.findUserById = async (req, res) => {
     try {
         const user = await UsersService.findUserById(req.params.id);
@@ -64,15 +66,17 @@ exports.createUser = async (req, res) => {
         if (res == false) {
             return 'Email Exist';
         }
-        if (user) {
-            return res.json({
-                data: user,
-                message: 'User created successfully.'
-            });
-        } else {
-            return res.status(404).json({
-                message: 'Failed.'
-            });
+        else {
+            if (user) {
+                return res.json({
+                    data: user,
+                    message: 'User created successfully.'
+                });
+            } else {
+                return res.status(404).json({
+                    message: 'Failed.'
+                });
+            }
         }
     } catch (error) {
         return res.status(500).json({
@@ -88,6 +92,9 @@ exports.userLogin = async (req, res) => {
         const password = req.body.Password;
         const loggedIn = await UsersService.userLogin(email, password);
         if (loggedIn) {
+            req.session.userEmail = email;
+            req.session.userPassword = password;
+            console.log("req.session.userEmail", req.session.userEmail);
             return res.json({
                 message: 'Login successful'
             });
@@ -125,7 +132,7 @@ exports.updateUser = async (req, res) => {
 }
 exports.getPatientsWithQueueDetails = async (req, res) => {
     try {
-       
+
         const queueList = await QueueService.getQueueListByRoom(roomId);
         console.log('Queue list:', queueList); // Add logging here
         res.json(queueList);

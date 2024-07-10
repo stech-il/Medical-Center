@@ -15,7 +15,7 @@ exports.createUser = async (userData) => {
         const user = await this.findUserByEmailAddress(userData.Email);
 
         if(user) {
-            return 'Email already Exist';
+            return false;
         }
 
         const salt = await bcrypt.genSalt(10);
