@@ -58,22 +58,22 @@ This project is a real-time queue management system designed for a medical cente
 ### Steps
 
 1. **Clone the repository:**
-   \`\`\`bash
+   ```bash
    git clone https://github.com/yourusername/queue-management-system.git
    cd queue-management-system
-   \`\`\`
+   ```
 
 2. **Backend Setup:**
-   \`\`\`bash
+   ```bash
    cd server
    npm install
-   \`\`\`
+   ```
 
 3. **Frontend Setup:**
-   \`\`\`bash
+   ```bash
    cd client
    npm install
-   \`\`\`
+   ```
 
 4. **Database Setup:**
    - Create a MySQL database and import the schema from `server/db/schema.sql`.
@@ -84,34 +84,34 @@ This project is a real-time queue management system designed for a medical cente
 
 1. **Environment Variables:**
    Create a `.env` file in the `server` directory with the following content:
-   \`\`\`env
+   ```env
    DB_HOST=your_mysql_host
    DB_USER=your_mysql_user
    DB_PASSWORD=your_mysql_password
    DB_NAME=your_database_name
-   \`\`\`
+   ```
 
 ### Client
 
 1. **Environment Variables:**
    Create a `.env` file in the `client` directory with the following content:
-   \`\`\`env
+   ```env
    REACT_APP_SOCKET_SERVER_URL=http://localhost:3001
-   \`\`\`
+   ```
 
 ## Running the Application
 
 1. **Start the Backend Server:**
-   \`\`\`bash
+   ```bash
    cd server
    npm start
-   \`\`\`
+   ```
 
 2. **Start the Frontend Client:**
-   \`\`\`bash
+   ```bash
    cd client
    npm start
-   \`\`\`
+   ```
 
 3. Open your browser and navigate to `http://localhost:3000` to access the client.
 
