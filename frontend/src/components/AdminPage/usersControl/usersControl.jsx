@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { getUsers, createUser } from '../../../clientServices/UserService';
+import { getUsers, createUser, getUserByEmailAddress } from '../../../clientServices/UserService';
 import { getRoles } from '../../../clientServices/RoleService';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -33,18 +33,91 @@ function MyVerticallyCenteredModal(props) {
         fetchRoles();
     }, []);
 
-    const checkRole = async () => {
-        if (newUser.RoleID === 0) {
-            alert("Choose role");
+    const validateUserName = () => {
+        // Check if username is empty
+        if (!newUser.Name) {
+            return false;
         }
+
+        // Check if username contains allowed characters
+        const regex = /^[a-zA-Z0-9-_]{3,30}$/;
+        if (!regex.test(newUser.Name)) {
+            return false;
+        }
+
+        return true;
+    };
+
+    const validatePhoneNumber = () => {
+        // Check if phone number is empty
+        if (!newUser.Phone) {
+            return false;
+        }
+
+        const regex = /^\d{10}$/;
+        if (!regex.test(newUser.Phone)) {
+            return false;
+        }
+
+        return true;
+    };
+
+    const validatePassword = () => {
+        // Check if password is empty
+        if (!newUser.Password) {
+            return false;
+        }
+
+        const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*]{6,}$/;
+        if (!regex.test(newUser.Password)) {
+            return false;
+        }
+
+        return true;
+    };
+
+    const validateEmail = () => {
+        // Check if email is empty
+        if (!newUser.Email) {
+            return false;
+        }
+
+        const regex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+        if (!regex.test(newUser.Email)) {
+            return false;
+        }
+
+        return true;
+    };
+
+    const validateRole = () => {
+        if (newUser.RoleID === 0) {
+            return false;
+        }
+        return true;
+    }
+
+    const validateInputs = () => {
+        return validateUserName() && 
+            validateRole() && 
+            validatePassword() && 
+            validateEmail() && 
+            validatePhoneNumber();
     }
 
     const handleCreateUser = async () => {
         try {
-            var ans = await createUser(newUser);
-            if (ans.data === 'Email already Exist') {
-                alert('Email already Exist');
+            var result = await validateInputs();
+            if (!result) {
+                alert("Invalid input");
+                return;
             }
+            var user = await getUserByEmailAddress(newUser.Email);
+            if(user.data) {
+                alert('Email already Exist');
+                return;
+            }
+            await createUser(newUser);
             props.onHide();
             props.refreshUsers();
         } catch (error) {
@@ -72,12 +145,6 @@ function MyVerticallyCenteredModal(props) {
                         value={newUser.Name}
                         onChange={(e) => setNewUser({ ...newUser, Name: e.target.value })}
                     />
-                    {/* <input
-                        type="number"
-                        placeholder="Role ID"
-                        value={newUser.RoleID}
-                        onChange={(e) => setNewUser({ ...newUser, RoleID: e.target.value })}
-                    /> */}
                     {roles ? (
                         <select
                             value={newUser.RoleID}

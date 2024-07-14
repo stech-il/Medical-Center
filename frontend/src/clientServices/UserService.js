@@ -8,7 +8,12 @@ export const getUsers = async () => {
 };
 
 export const getUserById = async (id) => {
-  const response = await axios.get(`${API_URL}/${id}`);
+  const response = await axios.get(`${API_URL}/id/${id}`);
+  return response.data;
+};
+
+export const getUserByEmailAddress = async (emailAddress) => {
+  const response = await axios.get(`${API_URL}/email/${emailAddress}`);
   return response.data;
 };
 

@@ -1,20 +1,18 @@
 const UsersService = require('../services/UsersService');
 
-const express = require('express');
-
 exports.findUserById = async (req, res) => {
     try {
         const user = await UsersService.findUserById(req.params.id);
-        if (user) {
+        // if (user) {
             return res.json({
                 data: user,
                 message: 'Success.'
             });
-        } else {
-            return res.status(404).json({
-                message: 'User not found.'
-            });
-        }
+        // } else {
+        //     return res.status(404).json({
+        //         message: 'User not found.'
+        //     });
+        // }
     } catch (error) {
         return res.status(500).json({
             message: 'Internal Server Error',
@@ -25,7 +23,7 @@ exports.findUserById = async (req, res) => {
 
 exports.findUserByEmailAddress = async (req, res) => {
     try {
-        const user = await UsersService.findUserByEmailAddress(req.params.Email);
+        const user = await UsersService.findUserByEmailAddress(req.params.emailAddress);
         if (user) {
             return res.json({
                 data: user,
@@ -33,6 +31,7 @@ exports.findUserByEmailAddress = async (req, res) => {
             });
         } else {
             return res.status(404).json({
+                data: null,
                 message: 'User not found.'
             });
         }
@@ -62,21 +61,15 @@ exports.findAllUsers = async (req, res) => {
 exports.createUser = async (req, res) => {
     try {
         const user = await UsersService.createUser(req.body);
-
-        if (res == false) {
-            return 'Email Exist';
-        }
-        else {
-            if (user) {
-                return res.json({
-                    data: user,
-                    message: 'User created successfully.'
-                });
-            } else {
-                return res.status(404).json({
-                    message: 'Failed.'
-                });
-            }
+        if (user) {
+            return res.json({
+                data: user,
+                message: 'User created successfully.'
+            });
+        } else {
+            return res.status(404).json({
+                message: 'Failed.'
+            });
         }
     } catch (error) {
         return res.status(500).json({
@@ -92,9 +85,6 @@ exports.userLogin = async (req, res) => {
         const password = req.body.Password;
         const loggedIn = await UsersService.userLogin(email, password);
         if (loggedIn) {
-            req.session.userEmail = email;
-            req.session.userPassword = password;
-            console.log("req.session.userEmail", req.session.userEmail);
             return res.json({
                 message: 'Login successful'
             });
