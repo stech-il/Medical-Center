@@ -48,7 +48,6 @@ exports.updateQueue = (queueData) => {
     console.log(queueData);
     return QueueModel.update(queueData, {
         where: { ID: queueData.ID }
-
     });
 }
 
@@ -155,8 +154,6 @@ exports.moveBetweenRooms = async (patientId, newRoomId, place) => {
             PriorityNumber: priority
         };
         const appointmentUpdated = await this.updateQueue(data);
-
-
         return appointmentUpdated;
     } catch (error) {
         throw new Error(error.message);

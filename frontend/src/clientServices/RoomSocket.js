@@ -20,6 +20,7 @@ const useRoomSocket = (roomId,currentPatient,setCurrentPatient,nextPatient,setNe
         });
 
         socketRef.current.on("message", (message) => {
+            alert(message);
             console.log(message);
         });
 
@@ -42,7 +43,30 @@ const useRoomSocket = (roomId,currentPatient,setCurrentPatient,nextPatient,setNe
         }
     };
 
-    return { currentPatient, nextPatient, moveRoom };
+    const emergencyAlertToDoctor=(patientId,roomId)=>{
+        try{
+            if(patientId==null||roomId==null)
+                alert("not valid");
+            else{
+                console.log("emergencyAlertToRoom",roomId,"for patient ",patientId );
+                socketRef.current.emit("EmergencyAlertToRoom",roomId,patientId);
+            }
+        }
+        catch(error){
+            console.log(error);
+        }
+    }
+
+    const endOfTreatment=(patientId)=>{
+        try{
+
+        }
+        catch(error){
+            console.log(error);
+        }
+    }
+
+    return {emergencyAlertToDoctor,endOfTreatment, currentPatient, nextPatient, moveRoom };
 };
 
 export default useRoomSocket;

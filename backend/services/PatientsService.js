@@ -1,6 +1,6 @@
 const PatientModel = require('../models/PatientModel');
 const QueueService=require('./QueueService'); 
-const RoomService=require('./RoomSrevice')
+const RoomService=require('./RoomService')
 const QueueModel = require('../models/QueueModel');
 const RoomModel = require('../models/RoomModel');
 const HmoModel = require('../models/HMOModel');
@@ -43,6 +43,42 @@ exports.getAllPatientsWithQueueDetails = async () => {
         }
 
         return patients;
+    } catch (error) {
+        console.error('Error fetching patients with queue details:', error.message);
+        console.error('Detailed error:', error); // Log the complete error object
+        throw new Error(error.message || 'Unknown error occurred.');
+    }
+};
+
+exports.getPatientWithQueueDetailsByID = async (id) => {
+    try {
+        const patients = await PatientModel.findAll({
+            where: {
+                Status: true,
+                ID:id
+            },
+            include: [
+                {
+                    model: HmoModel,
+                    attributes: ['Name']
+                },
+                {
+                    model: QueueModel,
+                    attributes: ['PriorityNumber', 'RoomId'],
+                    include: [
+                        {
+                            model: RoomModel,
+                            attributes: ['Name']
+                        }
+                    ]
+                }
+            ],
+        });
+
+        if (!patients || patients.length === 0) {
+            throw new Error('Patient not found.');
+        }
+        return patients[0];
     } catch (error) {
         console.error('Error fetching patients with queue details:', error.message);
         console.error('Detailed error:', error); // Log the complete error object

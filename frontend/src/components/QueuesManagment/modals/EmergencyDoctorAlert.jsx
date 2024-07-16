@@ -33,7 +33,7 @@ export default function BasicModal({ open, handleClose, handleConfirm, patientNa
           component="h2"
           sx={{ fontFamily: 'Segoe UI, sans-serif', fontWeight: 'bold' }}
         >
-          התרעת חירום לרופא
+          התראת חירום לרופא
         </Typography>
         <Typography
           id="modal-modal-description"

@@ -3,6 +3,7 @@ const RoomsModel = require('../models/RoomModel');
 exports.findRoomById = (id) => {
     return RoomsModel.findByPk(id);
 }
+
 exports.findRoomByName = async (name) => {
     try {
         const room = await RoomsModel.findOne({
@@ -18,8 +19,6 @@ exports.findRoomByName = async (name) => {
         throw error;
     }
 };
-
-
 
 exports.findAllRooms = () => {
     return RoomsModel.findAll();
