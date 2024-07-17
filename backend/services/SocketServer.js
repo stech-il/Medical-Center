@@ -17,6 +17,8 @@ const getKeyByValue = (map, value) => {
     return null; // Return null if the value is not found or the Map is empty
 };
 
+
+
 const createSocketServer = (app) => {
     const server = http.createServer(app);
     const io = new Server(server, {
@@ -97,8 +99,37 @@ const createSocketServer = (app) => {
                     console.error('Stack Trace:', error.stack);
                     throw new Error(error.message);
                 }
-            })
+            });
 
+            socket.on("deletePatient",async (patientId)=>{
+                try{
+                    console.log(patientId);
+                    //delete patient may affect on: in the db to change the status, reception, monitor, the room he is in.
+                    const appointment=await queueService.findQueueByPatient(patientId);
+                    console.log("appointment ",appointment);                    
+                    const room= appointment.dataValues.RoomId;
+                    console.log("room ",room);
+                    await queueService.deleteQueue(appointment.ID);
+                    await PatientsService.deletePatient(patientId);
+                    //reception
+                    io.to(getKeyByValue(clientRooms, "reception")).emit("queueUpdate", {ID:patientId});
+                    //monitor
+                    const updatedQueue = await queueService.getQueueListByRoom(room);
+                    io.to(getKeyByValue(clientRooms, "monitor")).emit("queueUpdate", room, updatedQueue);
+                    //room
+                    //update the room - the next and the next-next clients  
+                    currentClient = await queueService.getFirstInQueueByRoom(room);
+                    nextClient = await queueService.getSecondInQueueByRoom(room);
+                    io.to(getKeyByValue(clientRooms, room)).emit("updateCurrentPatient", currentClient ? currentClient.patient : null);
+                    io.to(getKeyByValue(clientRooms, room)).emit("updateNextPatient", nextClient ? nextClient.patient : null);
+
+                }
+                catch(error){
+                    console.log(error.message);
+                    console.error('Stack Trace:', error.stack);
+                    throw new Error(error.message);
+                }
+            });
 
             socket.on("disconnect", () => {
                 clientRooms.delete(socket.id);

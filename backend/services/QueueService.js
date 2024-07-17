@@ -25,10 +25,11 @@ exports.getQueueListByRoom = async (roomId) => {
     }
 }
 
-exports.findQueueByPatient = (patientId) => {
-    return QueueModel.findAll({
+exports.findQueueByPatient =async (patientId) => {
+
+    return (await QueueModel.findAll({
         where: { PatientId: patientId }
-    });
+    }))[0];
 }
 
 exports.findQueueById = (id) => {
