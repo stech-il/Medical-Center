@@ -37,6 +37,7 @@ const createSocketServer = (app) => {
             const roomId = socket.handshake.query.clientId; // Access the roomId query parameter
             clientRooms.set(socket.id, roomId);
             console.log("A new user has connected", socket.id, "room number", roomId);
+
             if (!["monitor", "reception"].includes(roomId)) {
                 let currentClient = await queueService.getFirstInQueueByRoom(roomId);
                 let nextClient = await queueService.getSecondInQueueByRoom(roomId);
@@ -44,11 +45,13 @@ const createSocketServer = (app) => {
                 socket.emit("updateCurrentPatient", currentClient ? currentClient.patient : null);
                 socket.emit("updateNextPatient", nextClient ? nextClient.patient : null);
             }
+
             //listening to calls from a client
             socket.on("moveClientToAnotherRoom", async (currentPatient, newRoomId, place) => {
                 try {
                     //source room
-                    const room = clientRooms.get(socket.id) != "reception" ? clientRooms.get(socket.id) : queueService.findQueueByPatient(currentPatient).roomId;
+                    console.log(await queueService.findQueueByPatient(currentPatient));
+                    const room = clientRooms.get(socket.id) != "reception" ? clientRooms.get(socket.id) :(await queueService.findQueueByPatient(currentPatient)).dataValues.RoomId;
                     //update in the db
                     await queueService.moveBetweenRooms(currentPatient, newRoomId, place);
                     //return approval to the caller
@@ -65,8 +68,8 @@ const createSocketServer = (app) => {
                     const updatedPatient = await PatientsService.getPatientWithQueueDetailsByID(currentPatient);
                     io.to(getKeyByValue(clientRooms, "reception")).emit("queueUpdate", updatedPatient);
                     //update the room - the next and the next-next clients  
-                    currentClient = await queueService.getFirstInQueueByRoom(room);
-                    nextClient = await queueService.getSecondInQueueByRoom(room);
+                    currentClient = await queueService.getFirstInQueueByRoom(newRoomId);
+                    nextClient = await queueService.getSecondInQueueByRoom(newRoomId);
                     io.to(getKeyByValue(clientRooms, room)).emit("updateCurrentPatient", currentClient ? currentClient.patient : null);
                     io.to(getKeyByValue(clientRooms, room)).emit("updateNextPatient", nextClient ? nextClient.patient : null);
                 } catch (error) {

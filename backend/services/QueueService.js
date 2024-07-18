@@ -132,6 +132,7 @@ exports.createAppointment = async (patientId, roomId) => {
 
 exports.moveBetweenRooms = async (patientId, newRoomId, place) => {
     try {        
+        console.log("patient id",patientId,"new roomid",newRoomId);
         let priority;
         if (place === true) {
             const lastInQueue = await this.getLastInQueueByRoom(newRoomId);
@@ -145,8 +146,8 @@ exports.moveBetweenRooms = async (patientId, newRoomId, place) => {
         if (!queue || queue.length === 0) {
             throw new Error('Queue not found for patient');
         }
-        
-        const queueId = queue[0].ID;
+        console.log(queue);
+        const queueId = queue.ID;
 
         const data = {
             ID: queueId,

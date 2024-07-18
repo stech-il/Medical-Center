@@ -25,7 +25,7 @@ const QueueManagmentPage = () => {
 
     const [patients, setPatients] = useState([]);
 
-    const { moveRoom,emergencyAlertToDoctor } = useReceptionSocket(setSelectedPatient,patients,setPatients);
+    const { moveRoom,emergencyAlertToDoctor,endOfTreatment } = useReceptionSocket(setSelectedPatient,patients,setPatients);
 
     const handleSelectPatient = (patient) => {
         setSelectedPatient(patient);
@@ -97,7 +97,7 @@ const QueueManagmentPage = () => {
 
     const handleConfirmDeleteModal = async () => {
         try {
-            await deletePatient(selectedPatient.ID);
+            await endOfTreatment(selectedPatient.ID);
             alert('הטיפול הסתיים בהצלחה');
             setSelectedPatient(null);
             handleCloseDeleteModal();

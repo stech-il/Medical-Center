@@ -50,8 +50,8 @@ export default function PatientsTable({patients,setPatients, onSelectPatient }) 
     const filteredPatients = patients.filter((patient) => {
         const fullName = `${patient.FirstName} ${patient.LastName}`.toLowerCase();
         const uniqueNumber = (patient.UniqueNumber || '').toLowerCase();
-        const roomName = patient.queues.length > 0 ? (patient.queues[0].room.Name || '').toLowerCase() : '';
-        const priorityNumber = patient.queues.length > 0 ? (patient.queues[0].PriorityNumber || '').toString().toLowerCase() : '';
+        const roomName = patient.queues ? (patient.queues[0].room.Name || '').toLowerCase() : '';
+        const priorityNumber = patient.queues ? (patient.queues[0].PriorityNumber || '').toString().toLowerCase() : '';
         // const hmoId = (patient.HMOid || '').toLowerCase();
 
         return (

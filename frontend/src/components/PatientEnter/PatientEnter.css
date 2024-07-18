@@ -176,6 +176,11 @@
 
 }
 
+.clinic.selected {
+    background-color: #352ce1 ;
+    color: white;
+}
+
 
 /* Number note style ------------------------------------ */
 .numberNote {
