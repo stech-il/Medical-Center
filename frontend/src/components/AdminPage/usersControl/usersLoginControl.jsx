@@ -39,10 +39,9 @@ function MyVerticallyCenteredModal(props) {
         return password;
     }
 
-    var generatedPassword;
-
+    
     const handleForgotPassword = async (e) => {
-
+        
         if (!user.Email) {
             alert("Email address required");
         }
@@ -53,6 +52,8 @@ function MyVerticallyCenteredModal(props) {
             }
             else {
                 e.preventDefault();
+                
+                var generatedPassword;
 
                 sessionStorage.setItem('email', user.Email);
                 generatedPassword = generateRandomPassword();
@@ -70,7 +71,6 @@ function MyVerticallyCenteredModal(props) {
                         console.log('SUCCESS!', response.status, response.text);
                         props.onHide();
                         navigate('/checkPassword', { state: generatedPassword });
-                        // confirmPassword();
                     })
                     .catch((error) => {
                         console.error('FAILED...', error);
