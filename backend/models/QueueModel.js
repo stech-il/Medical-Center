@@ -23,13 +23,12 @@ const QueueModel = db.define("queues", {
         references: {
             model: RoomModel,
             key: 'ID'
-        }
+        },
     },
-    PriorityNumber: {
-
+    PariortyNumber: {
         type: DataTypes.INTEGER,
         allowNull: false,
-    }},{
+}}, {
     tableName: 'Queues',
     timestamps: false
 });

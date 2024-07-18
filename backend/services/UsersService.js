@@ -15,7 +15,7 @@ exports.createUser = async (userData) => {
         const user = await this.findUserByEmailAddress(userData.Email);
 
         if(user) {
-            return 'Email already Exist';
+            return null;
         }
 
         const salt = await bcrypt.genSalt(10);
@@ -38,7 +38,7 @@ exports.createUser = async (userData) => {
     }
 }
 
-exports.findUserByEmailAddress = (emailAddress) => {
+exports.findUserByEmailAddress = async (emailAddress) => {
     return UsersModel.findOne({
         where: {
             Email: emailAddress
@@ -49,11 +49,11 @@ exports.findUserByEmailAddress = (emailAddress) => {
 exports.userLogin = async (emailAddress, password) => {
     try {
         const user = await this.findUserByEmailAddress(emailAddress);
-        if (!user) {
-            return false; // User not found
+        if (user) {
+            const passwordMatch = await bcrypt.compare(password, user.Password);
+            return passwordMatch;
         }
-        const passwordMatch = await bcrypt.compare(password, user.Password);
-        return passwordMatch;
+        return false; // User not found
     } catch (error) {
         throw error;
     }
