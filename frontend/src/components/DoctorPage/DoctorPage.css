@@ -113,3 +113,29 @@ button{
     outline: none;
 }
 
+
+.anotherButtons {
+    border-radius: 10px;
+    width: 320px;
+    height: 60px;
+    margin: 10px;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    font-weight: 600;
+    font-size: 11pt;
+    flex-direction: column;
+    justify-content: center;  
+    cursor: pointer;  
+}
+
+.emergencyAlert{
+    background-color: rgb(250, 67, 67);
+}
+.EndOfTreatment{
+    border: red solid 1px;
+    background-color: white;
+    color: red;
+}
+

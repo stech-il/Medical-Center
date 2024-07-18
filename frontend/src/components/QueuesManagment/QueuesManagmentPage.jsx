@@ -10,11 +10,11 @@ import PatientsTable from './PatientsTable';
 import RoomsTable from './RoomsTable';
 import Sidebar from '../sidebar/sidebar';
 import SelectRoom from './SelectRoom';
-import { moveBetweenRooms } from '../../clientServices/QueueService';
 import { deletePatient } from '../../clientServices/PatientsService';
 import DeletePatientModal from './modals/DeletePatient';
 import EmergencyDoctorAlertModal from './modals/EmergencyDoctorAlert';
 import AddPatientModal from './modals/AddNewPatient'; // Import the new modal
+import useReceptionSocket from '../../clientServices/ReceptionSocket';
 
 const QueueManagmentPage = () => {
     const [selectedPatient, setSelectedPatient] = useState(null);
@@ -23,6 +23,10 @@ const QueueManagmentPage = () => {
     const [isEmergencyModalOpen, setIsEmergencyModalOpen] = useState(false); // State to manage the emergency modal
     const [isAddPatientModalOpen, setIsAddPatientModalOpen] = useState(false);
 
+    const [patients, setPatients] = useState([]);
+
+    const { moveRoom,emergencyAlertToDoctor,endOfTreatment } = useReceptionSocket(setSelectedPatient,patients,setPatients);
+
     const handleSelectPatient = (patient) => {
         setSelectedPatient(patient);
     };
@@ -30,7 +34,7 @@ const QueueManagmentPage = () => {
     const handleMoveToEndOfQueue = async () => {
         if (selectedPatient && selectedRoom) {
             try {
-                await moveBetweenRooms(selectedPatient.ID, selectedRoom.ID, true);
+                await moveRoom(selectedRoom.ID,selectedPatient.ID, true);
                 alert('המטופל הועבר לסוף התור בהצלחה');
             } catch (error) {
                 console.error('Error moving patient to end of queue:', error);
@@ -49,7 +53,7 @@ const QueueManagmentPage = () => {
     const handleMoveToFrontOfQueue = async () => {
         if (selectedPatient && selectedRoom) {
             try {
-                await moveBetweenRooms(selectedPatient.ID, selectedRoom.ID, false);
+                await moveRoom( selectedRoom.ID, selectedPatient.ID,false);
                 alert('המטופל הועבר לתחילת התור בהצלחה');
                 setSelectedPatient(null);
                 setSelectedRoom(null);
@@ -93,7 +97,7 @@ const QueueManagmentPage = () => {
 
     const handleConfirmDeleteModal = async () => {
         try {
-            await deletePatient(selectedPatient.ID);
+            await endOfTreatment(selectedPatient.ID);
             alert('הטיפול הסתיים בהצלחה');
             setSelectedPatient(null);
             handleCloseDeleteModal();
@@ -104,6 +108,7 @@ const QueueManagmentPage = () => {
     };
 
     const handleConfirmEmergencyModal = () => {
+        emergencyAlertToDoctor(selectedPatient.UniqueNumber,selectedRoom.Name);
         alert('קריאת חירום נשלחה לרופא');
         handleCloseEmergencyModal();
     };
@@ -177,7 +182,7 @@ const QueueManagmentPage = () => {
                             </div>
                         </div>
                         <div className='tableAndOperationCont'>
-                            <PatientsTable onSelectPatient={handleSelectPatient} />
+                            <PatientsTable patients={patients} setPatients={setPatients} onSelectPatient={handleSelectPatient} />
                             <div className='operationCont'>
                                 <div className='actionOfPatientContainer'>
                                     <div className='listOfRoomsContainer'>
@@ -205,7 +210,7 @@ const QueueManagmentPage = () => {
                                         הוספת מטופל חדש
                                     </button>
                                     <button className='moreOperation' onClick={handleOpenEmergencyModal}>
-                                        התרעת חירום לרופא
+                                        התראת חירום לרופא
                                     </button>
                                 </div>
                             </div>

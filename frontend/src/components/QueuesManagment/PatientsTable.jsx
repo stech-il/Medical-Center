@@ -11,8 +11,7 @@ import TableSortLabel from '@mui/material/TableSortLabel';
 import TextField from '@mui/material/TextField';
 import { getAllPatientsWithQueueDetails } from '../../clientServices/PatientsService';
 
-export default function PatientsTable({ onSelectPatient }) {
-    const [patients, setPatients] = useState([]);
+export default function PatientsTable({patients,setPatients, onSelectPatient }) {
     const [selectedPatientId, setSelectedPatientId] = useState(null);
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('FirstName');
@@ -32,6 +31,7 @@ export default function PatientsTable({ onSelectPatient }) {
         fetchPatients();
     }, []);
 
+
     const handleRowClick = (patient) => {
         setSelectedPatientId(patient.ID);
         onSelectPatient(patient);
@@ -50,8 +50,8 @@ export default function PatientsTable({ onSelectPatient }) {
     const filteredPatients = patients.filter((patient) => {
         const fullName = `${patient.FirstName} ${patient.LastName}`.toLowerCase();
         const uniqueNumber = (patient.UniqueNumber || '').toLowerCase();
-        const roomName = patient.queues.length > 0 ? (patient.queues[0].room.Name || '').toLowerCase() : '';
-        const priorityNumber = patient.queues.length > 0 ? (patient.queues[0].PriorityNumber || '').toString().toLowerCase() : '';
+        const roomName = patient.queues ? (patient.queues[0].room.Name || '').toLowerCase() : '';
+        const priorityNumber = patient.queues ? (patient.queues[0].PriorityNumber || '').toString().toLowerCase() : '';
         // const hmoId = (patient.HMOid || '').toLowerCase();
 
         return (

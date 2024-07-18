@@ -134,7 +134,7 @@ const PatientEnter = () => {
                                     {['מכבי', 'מאוחדת', 'כללית', 'לאומית', 'אחר'].map((clinic) => (
                                         <button
                                             key={clinic}
-                                            className='clinic'
+                                            className={`clinic ${patientClinic === clinic ? 'selected' : ''}`}
                                             onClick={() => handleClinicSelection(clinic)}
                                         >
                                             {clinic}

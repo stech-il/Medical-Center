@@ -1,42 +1,41 @@
 import { useState, useEffect, useRef } from 'react';
 import socketIO from 'socket.io-client';
 
-const useRoomSocket = (roomId, currentPatient, setCurrentPatient, nextPatient, setNextPatient) => {
+const useReceptionSocket = (setSelectedPatient, patients, setPatients) => {
     const socketRef = useRef(null);
 
     useEffect(() => {
         socketRef.current = socketIO("http://localhost:8000", {
-            query: { clientId: roomId }
+            query: { clientId: "reception" }
         });
 
-        socketRef.current.on("updateCurrentPatient", (newPatient) => {
-            setCurrentPatient(newPatient);
-            console.log("current patient", newPatient);
-        });
-
-        socketRef.current.on("updateNextPatient", (newPatient) => {
-            setNextPatient(newPatient);
-            console.log("next patient", newPatient);
+        socketRef.current.on("queueUpdate", (updatedAppointment) => {
+            console.log("queue update", updatedAppointment);
+            setPatients(patients =>
+                patients
+                    .map(patient => patient.ID === updatedAppointment.ID ? updatedAppointment : patient)
+                    .filter(patient => patient.LastName!=undefined)
+            );
+            if (updatedAppointment.LastName)
+                setSelectedPatient(updatedAppointment);
         });
 
         socketRef.current.on("message", (message) => {
-            alert(message);
             console.log(message);
         });
 
         return () => {
             socketRef.current.disconnect();
         };
-    }, [roomId]);
+    }, [patients]);
 
-    const moveRoom = (roomId) => {
+    const moveRoom = (roomId, patientId, place) => {
         try {
-            if (currentPatient == null)
-                console.log("not valid");
+            if (patientId == null)
+                alert("not valid");
             else {
-                console.log("move client ", currentPatient.ID, " to room ", roomId);
-                const place = true;
-                socketRef.current.emit("moveClientToAnotherRoom", currentPatient.ID, roomId, place);
+                console.log("move client ", patientId, " to room ", roomId);
+                socketRef.current.emit("moveClientToAnotherRoom", patientId, roomId, place);
             }
         } catch (error) {
             console.log(error);
@@ -72,7 +71,7 @@ const useRoomSocket = (roomId, currentPatient, setCurrentPatient, nextPatient, s
         }
     }
 
-    return { emergencyAlertToDoctor, endOfTreatment, currentPatient, nextPatient, moveRoom };
+    return { moveRoom, emergencyAlertToDoctor, endOfTreatment };
 };
 
-export default useRoomSocket;
+export default useReceptionSocket;

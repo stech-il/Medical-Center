@@ -25,10 +25,11 @@ exports.getQueueListByRoom = async (roomId) => {
     }
 }
 
-exports.findQueueByPatient = (patientId) => {
-    return QueueModel.findAll({
+exports.findQueueByPatient =async (patientId) => {
+
+    return (await QueueModel.findAll({
         where: { PatientId: patientId }
-    });
+    }))[0];
 }
 
 exports.findQueueById = (id) => {
@@ -48,7 +49,6 @@ exports.updateQueue = (queueData) => {
     console.log(queueData);
     return QueueModel.update(queueData, {
         where: { ID: queueData.ID }
-
     });
 }
 
@@ -132,6 +132,7 @@ exports.createAppointment = async (patientId, roomId) => {
 
 exports.moveBetweenRooms = async (patientId, newRoomId, place) => {
     try {        
+        console.log("patient id",patientId,"new roomid",newRoomId);
         let priority;
         if (place === true) {
             const lastInQueue = await this.getLastInQueueByRoom(newRoomId);
@@ -145,8 +146,8 @@ exports.moveBetweenRooms = async (patientId, newRoomId, place) => {
         if (!queue || queue.length === 0) {
             throw new Error('Queue not found for patient');
         }
-        
-        const queueId = queue[0].ID;
+        console.log(queue);
+        const queueId = queue.ID;
 
         const data = {
             ID: queueId,
@@ -155,8 +156,6 @@ exports.moveBetweenRooms = async (patientId, newRoomId, place) => {
             PriorityNumber: priority
         };
         const appointmentUpdated = await this.updateQueue(data);
-
-
         return appointmentUpdated;
     } catch (error) {
         throw new Error(error.message);
