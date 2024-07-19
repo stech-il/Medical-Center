@@ -18,7 +18,8 @@ const MonitorPage = () => {
             try {
                 const response = await getAllRooms();
                 console.log(response.data);
-                setRooms(response.data);
+                const activeRooms = response.data.filter(room => room.Status === true);
+                setRooms(activeRooms);
             } catch (error) {
                 console.error('Error fetching rooms:', error);
             }

@@ -1,11 +1,14 @@
-// AddPatientModal.js
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
-import {createPatient} from '../../../clientServices/PatientsService'
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import { getAllHMOs } from '../../../clientServices/HmosService';
+import { getAllRooms } from '../../../clientServices/RoomService';
+import { addManualPatient } from '../../../clientServices/PatientsService'; // Import your patient service function
 
 const style = {
   position: 'absolute',
@@ -17,16 +20,68 @@ const style = {
   border: 'none',
   boxShadow: 24,
   p: 4,
-  textAlign: 'center',
+  textAlign: 'center'
 };
 
-export default function AddPatientModal({ open, handleClose, handleAddPatient }) {
-  const [patientName, setPatientName] = React.useState('');
-  const [patientHMO, setPatientHMO] = React.useState('');
+const AddPatientModal = ({ open, handleClose }) => {
+  const [patientFirstName, setPatientFirstName] = useState('');
+  const [patientLastName, setPatientLastName] = useState('');
+  const [patientTz, setPatientTz] = useState('');
+  const [patientHMO, setPatientHMO] = useState('');
+  const [selectedRoom, setSelectedRoom] = useState('');
+  const [hmos, setHmos] = useState([]);
+  const [rooms, setRooms] = useState([]);
 
-  const handleSubmit = () => {
-    handleAddPatient({ name: patientName, hmo: patientHMO });
-    handleClose();
+  useEffect(() => {
+    const fetchHMOs = async () => {
+      try {
+        const response = await getAllHMOs();
+        setHmos(response.data);
+      } catch (error) {
+        console.error('Error fetching HMOs:', error);
+      }
+    };
+
+    const fetchRooms = async () => {
+      try {
+        const response = await getAllRooms();
+        setRooms(response.data);
+      } catch (error) {
+        console.error('Error fetching Rooms:', error);
+      }
+    };
+
+    fetchHMOs();
+    fetchRooms();
+  }, []);
+
+  const handleSubmit = async () => {
+    try {
+      // Validate required fields
+      if (!patientFirstName || !patientLastName || !patientTz || !patientHMO || !selectedRoom) {
+        alert('נא למלא את כל השדות הנדרשים');
+        return;
+      }
+
+      // Construct patient object
+      const patientData = {
+        "firstName":patientFirstName,
+        "lastName":patientLastName,
+        "HMOid":patientHMO,
+        "phone":"0",
+        "Tz":patientTz,
+        "roomId":selectedRoom
+    }
+
+      // Call service function to add patient
+      await addManualPatient(patientData);
+
+      alert('המטופל נוסף בהצלחה');
+      handleClose();
+    } catch (error) {
+      console.error('Error adding patient:', error);
+      alert('אופס, שגיאה בהוספת המטופל');
+    }
   };
 
   return (
@@ -47,18 +102,60 @@ export default function AddPatientModal({ open, handleClose, handleAddPatient })
         </Typography>
         <Box sx={{ mt: 2 }}>
           <TextField
-            label="שם מטופל"
-            value={patientName}
-            onChange={(e) => setPatientName(e.target.value)}
+            label="שם פרטי"
+            value={patientFirstName}
+            onChange={(e) => setPatientFirstName(e.target.value)}
             fullWidth
             sx={{ mb: 2 }}
           />
           <TextField
+            label="שם משפחה"
+            value={patientLastName}
+            onChange={(e) => setPatientLastName(e.target.value)}
+            fullWidth
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            label="מספר תעודת זהות"
+            value={patientTz}
+            onChange={(e) => setPatientTz(e.target.value)}
+            fullWidth
+            sx={{ mb: 2 }}
+          />
+          <Select
             label="קופת חולים"
             value={patientHMO}
             onChange={(e) => setPatientHMO(e.target.value)}
             fullWidth
-          />
+            displayEmpty
+            sx={{ mb: 2 }}
+          >
+            <MenuItem value="">
+              <em>בחר קופת חולים</em>
+            </MenuItem>
+            {hmos.map(hmo => (
+              <MenuItem key={hmo.ID} value={hmo.ID}>
+                {hmo.Name}
+              </MenuItem>
+            ))}
+          </Select>
+          <Select
+            label="חדר"
+            value={selectedRoom}
+            onChange={(e) => setSelectedRoom(e.target.value)}
+            fullWidth
+            displayEmpty
+            sx={{ mb: 2 }}
+          >
+            <MenuItem value="">
+              <em>בחר חדר</em>
+            </MenuItem>
+            {rooms.map(room => (
+              <MenuItem key={room.ID} value={room.ID}>
+                {room.Name}
+              </MenuItem>
+            ))}
+          </Select>
         </Box>
         <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
           <Button variant="contained" color="primary" onClick={handleSubmit} sx={{ marginRight: 3 }}>
@@ -71,4 +168,6 @@ export default function AddPatientModal({ open, handleClose, handleAddPatient })
       </Box>
     </Modal>
   );
-}
+};
+
+export default AddPatientModal;

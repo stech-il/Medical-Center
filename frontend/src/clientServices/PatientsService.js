@@ -7,17 +7,22 @@ export const getAllPatientsWithQueueDetails = async () => {
 };
 
 export const getPatientById = async (id) => {
-    return axios.get(`${API_URL}/patients/${id}`);
+    return axios.get(`${API_URL}/${id}`);
 };
 
 export const createPatient = async (data) => {
-    return axios.post(`${API_URL}/patients`, data);
+    return axios.post(`${API_URL}/`, data);
 };
 
 export const updatePatient = async (id, data) => {
-    return axios.put(`${API_URL}/patients/${id}`, data);
+    return axios.put(`${API_URL}/${id}`, data);
 };
 
 export const deletePatient = async (id) => {
     return axios.delete(`${API_URL}/${id}`);
+};
+
+
+export const addManualPatient = async (data) => {
+    return axios.post(`${API_URL}/addManualPatient`, data);
 };

@@ -20,6 +20,8 @@ exports.findRoomByName = async (name) => {
     }
 };
 
+
+
 exports.findAllRooms = () => {
     return RoomsModel.findAll();
 }
