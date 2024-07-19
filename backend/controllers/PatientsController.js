@@ -49,12 +49,34 @@ exports.getAllPatientsWithQueueDetails = async (req, res) => {
 exports.createPatient = async (req, res) => {
     try {
         const { firstName, lastName, HMOid, phone } = req.body;
+        console.log( firstName, lastName, HMOid, phone)
         if (!firstName || !lastName || !HMOid || !phone) {
             return res.status(400).json({
                 message: 'Missing required fields'
             });
         }
         const newPatient = await PatientsService.createPatient(firstName, lastName, HMOid, phone);
+        return res.status(201).json({
+            data: newPatient,
+            message: 'Patient created successfully.'
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: 'Internal Server Error',
+            error: error.message
+        });
+    }
+};
+
+exports.addManualPatient = async (req, res) => {
+    try {
+        const { firstName, lastName, HMOid, phone , Tz , roomId } = req.body;
+        if (!firstName || !lastName || !HMOid || !phone ||!Tz ||!roomId) {
+            return res.status(400).json({
+                message: 'Missing required fields'
+            });
+        }
+        const newPatient = await PatientsService.addManualPatient(firstName, lastName, HMOid, phone , Tz , roomId);
         return res.status(201).json({
             data: newPatient,
             message: 'Patient created successfully.'

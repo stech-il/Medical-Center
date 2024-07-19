@@ -5,19 +5,18 @@ exports.findHMOById = (id) => {
 }
 
 exports.findAllHMOs = () => {
-    return PatientModel.findAll();
+    return HMOModel.findAll();
 }
-
 
 exports.updateHMO = (id, HMOData) => {
     return HMOModel.update(HMOData, {
-        where: { id: id }
+        where: { ID: id }
     });
 }
 
 exports.deleteHMO = (id) => {
     return HMOModel.destroy({
-        where: { id: id }
+        where: { ID: id }
     });
 }
 

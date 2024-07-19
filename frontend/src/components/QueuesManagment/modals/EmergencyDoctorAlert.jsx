@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import './modal.css';
@@ -33,7 +32,7 @@ export default function BasicModal({ open, handleClose, handleConfirm, patientNa
           component="h2"
           sx={{ fontFamily: 'Segoe UI, sans-serif', fontWeight: 'bold' }}
         >
-          התראת חירום לרופא
+          התרעת חירום לרופא
         </Typography>
         <Typography
           id="modal-modal-description"

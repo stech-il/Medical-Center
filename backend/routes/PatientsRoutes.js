@@ -18,5 +18,7 @@ router.put('/:id', PatientsController.updatePatient);
 // Delete a patient by ID
 router.delete('/:id', PatientsController.deletePatient);
 router.get('/patientQueueDetails/', PatientsController.getAllPatientsWithQueueDetails);
+router.post('/addManualPatient', PatientsController.addManualPatient);
+
 
 module.exports = router;
