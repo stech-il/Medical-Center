@@ -25,11 +25,10 @@ exports.getQueueListByRoom = async (roomId) => {
     }
 }
 
-exports.findQueueByPatient =async (patientId) => {
-
-    return (await QueueModel.findAll({
+exports.findQueueByPatient = (patientId) => {
+    return QueueModel.findAll({
         where: { PatientId: patientId }
-    }))[0];
+    });
 }
 
 exports.findQueueById = (id) => {
@@ -49,6 +48,7 @@ exports.updateQueue = (queueData) => {
     console.log(queueData);
     return QueueModel.update(queueData, {
         where: { ID: queueData.ID }
+
     });
 }
 
@@ -129,7 +129,6 @@ exports.createAppointment = async (patientId, roomId) => {
         throw new Error(error.message);
     }
 }
-
 exports.moveBetweenRooms = async (patientId, newRoomId, place) => {
     try {        
         console.log("patient id",patientId,"new roomid",newRoomId);

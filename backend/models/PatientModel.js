@@ -47,6 +47,11 @@ const PatientModel = db.define("patients", {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: true
+    },
+    Tz: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: true
     }
 }, {
     tableName: 'Patients',

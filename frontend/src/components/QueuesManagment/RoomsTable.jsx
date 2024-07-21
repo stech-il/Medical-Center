@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -9,12 +9,14 @@ import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import TextField from '@mui/material/TextField';
-import { getAllRooms } from '../../clientServices/RoomService';
+import { getAllRooms, updateRoom } from '../../clientServices/RoomService';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
 
-export default function RoomsTable() {
+const RoomsTable = forwardRef((props, ref) => {
+    const { onSelectRoomInTable } = props;
     const [rooms, setRooms] = useState([]);
     const [selectedRoomId, setSelectedRoomId] = useState(null);
-
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('Name');
     const [searchQuery, setSearchQuery] = useState('');
@@ -23,7 +25,7 @@ export default function RoomsTable() {
         const fetchRooms = async () => {
             try {
                 const response = await getAllRooms();
-                setRooms(response.data); // Assuming response.data is an array of room objects
+                setRooms(response.data); 
             } catch (error) {
                 console.error('Error fetching rooms:', error);
             }
@@ -33,9 +35,8 @@ export default function RoomsTable() {
     }, []);
 
     const handleRowClick = (room) => {
-        // No patient selection logic here as it's a room table, adjust as needed
         setSelectedRoomId(room.ID);
-        // onSelectPatient(patient);
+        onSelectRoomInTable(room); // Call the prop function with the selected room
     };
 
     const handleRequestSort = (property) => {
@@ -47,6 +48,23 @@ export default function RoomsTable() {
     const handleSearchChange = (event) => {
         setSearchQuery(event.target.value);
     };
+
+    const handleToggleStatus = async () => {
+        const roomToToggle = rooms.find(room => room.ID === selectedRoomId);
+        if (roomToToggle) {
+            const updatedRoom = { ...roomToToggle, Status: !roomToToggle.Status };
+            try {
+                await updateRoom(updatedRoom.ID, updatedRoom);
+                setRooms(rooms.map(room => room.ID === updatedRoom.ID ? updatedRoom : room));
+            } catch (error) {
+                console.error('Error updating room status:', error);
+            }
+        }
+    };
+
+    useImperativeHandle(ref, () => ({
+        handleToggleStatus,
+    }));
 
     const filteredRooms = rooms.filter((room) => {
         const name = (room.Name || '').toLowerCase();
@@ -92,24 +110,16 @@ export default function RoomsTable() {
                                     שם חדר
                                 </TableSortLabel>
                             </TableCell>
+                            
                             <TableCell align="center">
-                                <TableSortLabel
-                                    active={orderBy === 'CurrentQueueNumber'}
-                                    direction={orderBy === 'CurrentQueueNumber' ? order : 'asc'}
-                                    onClick={() => handleRequestSort('CurrentQueueNumber')}
-                                >
-                                    מספר תור נוכחי
-                                </TableSortLabel>
-                            </TableCell>
-                            {/* <TableCell align="center">
                                 <TableSortLabel
                                     active={orderBy === 'Status'}
                                     direction={orderBy === 'Status' ? order : 'asc'}
                                     onClick={() => handleRequestSort('Status')}
                                 >
-                                    סטטוס
+                                    סטטוס פעילות
                                 </TableSortLabel>
-                            </TableCell> */}
+                            </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -131,12 +141,10 @@ export default function RoomsTable() {
                                 <TableCell align="center">
                                     {room.Name}
                                 </TableCell>
+                             
                                 <TableCell align="center">
-                                    {room.CurrentQueueNumber}
+                                    {room.Status ? <CheckCircleIcon color="success" /> : <CancelIcon color="error" />}
                                 </TableCell>
-                                {/* <TableCell align="center">
-                                    {room.Status}
-                                </TableCell> */}
                             </TableRow>
                         ))}
                     </TableBody>
@@ -144,4 +152,6 @@ export default function RoomsTable() {
             </TableContainer>
         </div>
     );
-}
+});
+
+export default RoomsTable;

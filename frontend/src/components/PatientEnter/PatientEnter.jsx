@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './PatientEnter.css';
+import doctorImg from '../../doctor.png'
 
 const PatientEnter = () => {
     const [firstName, setFirstName] = useState('');
@@ -64,7 +65,8 @@ const PatientEnter = () => {
             lastName,
             identityNumber,
             HMOid: 1, // Replace with actual HMO id
-            phone: '1234567890' // Replace with actual phone number
+            phone: '1234567890', // Replace with actual phone number
+            Tz:123456789
         };
 
         axios.post(apiUrl, requestData)
@@ -100,7 +102,9 @@ const PatientEnter = () => {
 
     return (
         <>
-            <div className='patientEnterCont'>
+            <div className='patientEnterCont' >
+            <img src={doctorImg} alt='doctor' className='doctorImg'></img>
+
                 <div className='enterBoardCont'>
                     <div className='enterBoard'>
                         {currentStep === 1 && (
@@ -223,7 +227,7 @@ const PatientEnter = () => {
                                     {['מכבי', 'מאוחדת', 'כללית', 'לאומית', 'אחר'].map((clinic) => (
                                         <button
                                             key={clinic}
-                                            className={`clinic ${patientClinic === clinic ? 'selected' : ''}`}
+                                            className='clinic'
                                             onClick={() => handleClinicSelection(clinic)}
                                         >
                                             {clinic}
