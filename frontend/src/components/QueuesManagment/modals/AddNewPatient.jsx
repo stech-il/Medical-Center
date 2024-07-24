@@ -23,7 +23,7 @@ const style = {
   textAlign: 'center'
 };
 
-const AddPatientModal = ({ open, handleClose }) => {
+const AddPatientModal = ( {open, handleClose,insert }) => {
   const [patientFirstName, setPatientFirstName] = useState('');
   const [patientLastName, setPatientLastName] = useState('');
   const [patientTz, setPatientTz] = useState('');
@@ -73,8 +73,9 @@ const AddPatientModal = ({ open, handleClose }) => {
         "roomId":selectedRoom
     }
 
+      console.log(selectedRoom);
       // Call service function to add patient
-      await addManualPatient(patientData);
+      await insert(patientFirstName,patientLastName,patientHMO,"4849512",patientTz,selectedRoom);
 
       alert('המטופל נוסף בהצלחה');
       handleClose();

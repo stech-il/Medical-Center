@@ -20,6 +20,11 @@ const useReceptionSocket = (setSelectedPatient, patients, setPatients) => {
                 setSelectedPatient(updatedAppointment);
         });
 
+        socketRef.current.on("insertPatient",(newPatient)=>{
+            setPatients(prevPatients => [...prevPatients, newPatient]);
+            console.log(patients);
+        });
+
         socketRef.current.on("message", (message) => {
             console.log(message);
         });
@@ -27,7 +32,7 @@ const useReceptionSocket = (setSelectedPatient, patients, setPatients) => {
         return () => {
             socketRef.current.disconnect();
         };
-    }, [patients]);
+    }, []);
 
     const moveRoom = (roomId, patientId, place) => {
         try {
@@ -71,7 +76,17 @@ const useReceptionSocket = (setSelectedPatient, patients, setPatients) => {
         }
     }
 
-    return { moveRoom, emergencyAlertToDoctor, endOfTreatment };
+    const insertPatient=(firstName, LastName,HMO, tz,phone,room)=>{
+        try{
+            console.log("room ",room);
+             socketRef.current.emit("insertPatient",firstName,LastName,HMO,tz,phone,room);
+             console.log("insert patient through socket");
+        }catch(error){
+
+        }
+    }
+
+    return { moveRoom, emergencyAlertToDoctor, endOfTreatment ,insertPatient};
 };
 
 export default useReceptionSocket;

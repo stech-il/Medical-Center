@@ -11,8 +11,7 @@ import TableSortLabel from '@mui/material/TableSortLabel';
 import TextField from '@mui/material/TextField';
 import { getAllPatientsWithQueueDetails } from '../../clientServices/PatientsService';
 
-export default function PatientsTable({ onSelectPatient }) {
-    const [patients, setPatients] = useState([]);
+export default function PatientsTable({patients,setPatients, onSelectPatient }) {
     const [selectedPatientId, setSelectedPatientId] = useState(null);
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('FirstName');
@@ -22,11 +21,11 @@ export default function PatientsTable({ onSelectPatient }) {
         const fetchPatients = async () => {
             try {
                 const response = await getAllPatientsWithQueueDetails();
-                let patientsData = response.data.data;
+                let p=response.data.data;
 
                 // Group patients by queue
                 let queues = {};
-                patientsData.forEach(patient => {
+                p.forEach(patient => {
                     patient.queues.forEach(queue => {
                         const queueId = queue.RoomId;
                         if (!queues[queueId]) {

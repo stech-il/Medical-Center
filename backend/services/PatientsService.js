@@ -106,7 +106,7 @@ exports.deletePatient = (id) => {
         where: { id: id }
     });
 }
-exports.createPatient = async (firstName, lastName, HMOid, phone) => {
+exports.createPatient = async (firstName, lastName, HMOid, phone,tz) => {
     try {
         const uniqueNumber = await generateNumber();
         const data = {
@@ -115,6 +115,7 @@ exports.createPatient = async (firstName, lastName, HMOid, phone) => {
             LastName: lastName,
             Phone: phone,
             HMOid: HMOid,
+            tz:tz,
             CheckIn: new Date(),
             CheckOut: new Date(),
             Status: true

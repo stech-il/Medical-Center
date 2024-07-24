@@ -50,7 +50,7 @@ const createSocketServer = (app) => {
             socket.on("moveClientToAnotherRoom", async (currentPatient, newRoomId, place) => {
                 try {
                     //source room
-                    console.log(await queueService.findQueueByPatient(currentPatient));
+                    //console.log(await queueService.findQueueByPatient(currentPatient));
                     const room = clientRooms.get(socket.id) != "reception" ? clientRooms.get(socket.id) :(await queueService.findQueueByPatient(currentPatient)).dataValues.RoomId;
                     //update in the db
                     await queueService.moveBetweenRooms(currentPatient, newRoomId, place);
@@ -96,7 +96,7 @@ const createSocketServer = (app) => {
                 try {
                     const doctorRoom = await RoomService.findRoomByName("רופא");
                     console.log(doctorRoom, " key ", getKeyByValue(clientRooms, doctorRoom));
-                    io.to(getKeyByValue(clientRooms, doctorRoom)).emit( "message", `קריאת חירום לרופא לחדר ${room} עבור מטופל מספר ${patient}`);
+                    io.to(getKeyByValue(clientRooms, doctorRoom)).emit("message", `קריאת חירום לרופא לחדר ${room} עבור מטופל מספר ${patient}`);
                 } catch (error) {
                     console.log(error.message);
                     console.error('Stack Trace:', error.stack);
@@ -104,18 +104,18 @@ const createSocketServer = (app) => {
                 }
             });
 
-            socket.on("deletePatient",async (patientId)=>{
-                try{
+            socket.on("deletePatient", async (patientId) => {
+                try {
                     console.log(patientId);
                     //delete patient may affect on: in the db to change the status, reception, monitor, the room he is in.
-                    const appointment=await queueService.findQueueByPatient(patientId);
-                    console.log("appointment ",appointment);                    
-                    const room= appointment.dataValues.RoomId;
-                    console.log("room ",room);
+                    const appointment = await queueService.findQueueByPatient(patientId);
+                    console.log("appointment ", appointment);
+                    const room = appointment.dataValues.RoomId;
+                    console.log("room ", room);
                     await queueService.deleteQueue(appointment.ID);
                     await PatientsService.deletePatient(patientId);
                     //reception
-                    io.to(getKeyByValue(clientRooms, "reception")).emit("queueUpdate", {ID:patientId});
+                    io.to(getKeyByValue(clientRooms, "reception")).emit("queueUpdate", { ID: patientId });
                     //monitor
                     const updatedQueue = await queueService.getQueueListByRoom(room);
                     io.to(getKeyByValue(clientRooms, "monitor")).emit("queueUpdate", room, updatedQueue);
@@ -127,7 +127,41 @@ const createSocketServer = (app) => {
                     io.to(getKeyByValue(clientRooms, room)).emit("updateNextPatient", nextClient ? nextClient.patient : null);
 
                 }
-                catch(error){
+                catch (error) {
+                    console.log(error.message);
+                    console.error('Stack Trace:', error.stack);
+                    throw new Error(error.message);
+                }
+            });
+
+            socket.on("insertPatient", async (firstName, lastName, HMOid, phone, tz, room) => {
+                try {
+                    //update reception table, monitor, reception room
+                    let patient;
+                    if (!room){
+                        console.log("enter patient",room);
+                        patient = await PatientsService.createPatient(firstName, lastName, HMOid, phone, tz);}
+                    else{
+                        console.log("reception manual patient",room);
+                        patient = await PatientsService.addManualPatient(firstName, lastName, HMOid, phone, tz, room);
+                    }
+                    //reception table
+                    const fullDataPatient = await PatientsService.getPatientWithQueueDetailsByID(patient.ID);
+                    const roomId = await RoomService.findRoomByName("קבלה");
+                    io.to(getKeyByValue(clientRooms, "reception")).emit("insertPatient", fullDataPatient);
+                    //monitor
+                    const receptionQueue = queueService.getQueueListByRoom(roomId);
+                    io.to(getKeyByValue(clientRooms, "monitor")).emit("queueUpdate", roomId, receptionQueue);
+                    //reception room
+                    currentClient = await queueService.getFirstInQueueByRoom(roomId);
+                    nextClient = await queueService.getSecondInQueueByRoom(roomId);
+                    io.to(getKeyByValue(clientRooms, roomId)).emit("updateCurrentPatient", currentClient ? currentClient.patient : null);
+                    io.to(getKeyByValue(clientRooms, roomId)).emit("updateNextPatient", nextClient ? nextClient.patient : null);
+                    console.log(fullDataPatient.dataValues);
+                    console.log(socket.id);
+                    io.to(socket.id).emit(`patientInserted`, fullDataPatient.dataValues);
+
+                } catch (error) {
                     console.log(error.message);
                     console.error('Stack Trace:', error.stack);
                     throw new Error(error.message);
