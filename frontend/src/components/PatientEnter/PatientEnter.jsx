@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState ,useEffect} from 'react';
 import './PatientEnter.css';
-import doctorImg from '../../doctor.png'
+import useSocket from "../../clientServices/PatientSocket.js";
+import {getAllHMOs} from "../../clientServices/HmosService.js";
+
+//import doctorImg from '../../doctor.png'
 
 const PatientEnter = () => {
+    
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [identityNumber, setIdentityNumber] = useState('');
@@ -11,6 +14,9 @@ const PatientEnter = () => {
     const [newPatient, setNewPatient] = useState({});
     const [currentStep, setCurrentStep] = useState(1);
     const [currentTime, setCurrentTime] = useState('');
+    const [clinicsList,setClinicsList]=useState([]);
+    const [patientDetails,setPatientDetails]=useState({});
+    const {insertPatient}=useSocket(setPatientDetails);
 
     const hebrewCharacters = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ך', 'ל', 'מ', 'ם', 'נ', 'ן', 'ס', 'ע', 'פ', 'ף', 'צ', 'ץ', 'ק', 'ר', 'ש', 'ת'];
     const numberCharacters = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
@@ -24,6 +30,20 @@ const PatientEnter = () => {
             setState((prev) => prev + key);
         }
     };
+
+    useEffect(() => {
+        const fetchClinics = async () => {
+            try {
+                const response = await getAllHMOs();
+                setClinicsList( response.data);
+                console.log(response.data);
+            }catch(error){
+                console.log(error);
+            }
+        }
+        fetchClinics();
+    },[]
+    );
 
     const handleSubmitStep1 = () => {
         if (firstName.trim() === '') {
@@ -59,24 +79,7 @@ const PatientEnter = () => {
             return;
         }
 
-        const apiUrl = 'http://localhost:8000/patients'; // Update the API URL
-        const requestData = {
-            firstName,
-            lastName,
-            identityNumber,
-            HMOid: 1, // Replace with actual HMO id
-            phone: '1234567890', // Replace with actual phone number
-            Tz:123456789
-        };
-
-        axios.post(apiUrl, requestData)
-            .then(response => {
-                setNewPatient(response.data.data);
-                console.log(response.data.data);
-            })
-            .catch(error => {
-                console.error('Error submitting data:', error);
-            });
+        insertPatient(firstName,lastName,patientClinic,"0236232732",identityNumber);
 
         setCurrentStep(5);
 
@@ -97,13 +100,13 @@ const PatientEnter = () => {
             setPatientClinic('');
             setNewPatient({});
             setCurrentStep(1);
-        }, 11000);
+        }, 40000);
     };
 
     return (
         <>
             <div className='patientEnterCont' >
-            <img src={doctorImg} alt='doctor' className='doctorImg'></img>
+            {/* <img src={doctorImg} alt='doctor' className='doctorImg'></img> */}
 
                 <div className='enterBoardCont'>
                     <div className='enterBoard'>
@@ -224,13 +227,13 @@ const PatientEnter = () => {
                             <div className='insertClinic'>
                                 <div className='inputClinicBtn'>בחר קופת חולים</div>
                                 <div className='allClinic'>
-                                    {['מכבי', 'מאוחדת', 'כללית', 'לאומית', 'אחר'].map((clinic) => (
+                                    {clinicsList.map((clinic) => (
                                         <button
-                                            key={clinic}
+                                            key={clinic.ID}
                                             className='clinic'
-                                            onClick={() => handleClinicSelection(clinic)}
+                                            onClick={() => handleClinicSelection(clinic.ID)}
                                         >
-                                            {clinic}
+                                            {clinic.Name}
                                         </button>
                                     ))}
                                     <button className='continueBtn' onClick={handleClinicSubmit}>
@@ -240,17 +243,17 @@ const PatientEnter = () => {
                             </div>
                         )}
 
-                        {currentStep === 5 && (
+                        {currentStep === 5 &&  (
                             <div className='numberNote'>
                                 <div className='patientInfo'>
                                     <div className='numberCont'>
                                         <div>מספרך בתור:</div>
                                         <div className='uniqueNumber'>
-                                            {newPatient.UniqeNumber}
+                                            {patientDetails.UniqueNumber}
                                         </div>
                                     </div>
-                                    <div className='moreDetails'>שם: {`${newPatient.FirstName} ${newPatient.LastName}`}</div>
-                                    <div className='moreDetails'>קופת חולים: {patientClinic}</div>
+                                    <div className='moreDetails'>שם: {`${patientDetails.FirstName} ${patientDetails.LastName}`}</div>
+                                    <div className='moreDetails'>קופת חולים: {patientDetails?.HMO?.Name || ''}</div>
                                     <div className='moreDetails'>שעה: {currentTime}</div>
                                 </div>
                                 <div className='saveNumber'>

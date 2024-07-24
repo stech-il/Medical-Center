@@ -10,7 +10,6 @@ import PatientsTable from './PatientsTable';
 import RoomsTable from './RoomsTable';
 import Sidebar from '../sidebar/sidebar';
 import SelectRoom from './SelectRoom';
-import { moveBetweenRooms } from '../../clientServices/QueueService';
 import { deletePatient  } from '../../clientServices/PatientsService';
 import DeletePatientModal from './modals/DeletePatient';
 import EmergencyDoctorAlertModal from './modals/EmergencyDoctorAlert';
@@ -18,18 +17,21 @@ import AddPatientModal from './modals/AddNewPatient';
 import AddRoomModal from './modals/AddNewRoom';
 import DeleteRoomModal from './modals/DeleteRoom';
 import { deleteRoom } from '../../clientServices/RoomService';
-
+import useReceptionSocket from '../../clientServices/ReceptionSocket';
 
 const QueueManagmentPage = () => {
     const [selectedPatient, setSelectedPatient] = useState(null);
     const [selectedRoom, setSelectedRoom] = useState(null);
     const [selectedRoomInTable, setSelectedRoomInTable] = useState(null);
-
+    const [patients, setPatients] = useState([]);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [isEmergencyModalOpen, setIsEmergencyModalOpen] = useState(false);
     const [isAddPatientModalOpen, setIsAddPatientModalOpen] = useState(false);
     const [isAddRoomModalOpen, setIsAddRoomModalOpen] = useState(false);
     const [isRoomDeleteModalOpen, setIsRoomDeleteModalOpen] = useState(false);
+
+    const { moveRoom,emergencyAlertToDoctor,endOfTreatment ,insertPatient} = useReceptionSocket(setSelectedPatient,patients,setPatients);
+
 
     const handleSelectPatient = (patient) => {
         setSelectedPatient(patient);
@@ -43,7 +45,8 @@ const QueueManagmentPage = () => {
     const handleMoveToEndOfQueue = async () => {
         if (selectedPatient && selectedRoom) {
             try {
-                await moveBetweenRooms(selectedPatient.ID, selectedRoom.ID, true);
+                console.log(selectedPatient.ID);
+                await moveRoom(selectedRoom.ID, selectedPatient.ID, true);
                 alert('המטופל הועבר לסוף התור בהצלחה');
             } catch (error) {
                 console.error('Error moving patient to end of queue:', error);
@@ -62,7 +65,7 @@ const QueueManagmentPage = () => {
     const handleMoveToFrontOfQueue = async () => {
         if (selectedPatient && selectedRoom) {
             try {
-                await moveBetweenRooms(selectedPatient.ID, selectedRoom.ID, false);
+                await moveRoom(selectedRoom.ID, selectedPatient.ID, false);
                 alert('המטופל הועבר לתחילת התור בהצלחה');
                 setSelectedPatient(null);
                 setSelectedRoom(null);
@@ -110,7 +113,7 @@ const QueueManagmentPage = () => {
 
     const handleConfirmDeleteModal = async () => {
         try {
-            await deletePatient(selectedPatient.ID);
+            await endOfTreatment(selectedPatient.ID);
             alert('הטיפול הסתיים בהצלחה');
             setSelectedPatient(null);
             handleCloseDeleteModal();
@@ -135,6 +138,7 @@ const QueueManagmentPage = () => {
     };
 
     const handleConfirmEmergencyModal = () => {
+        emergencyAlertToDoctor(selectedPatient.UniqueNumber,selectedRoom.Name);
         alert('קריאת חירום נשלחה לרופא');
         handleCloseEmergencyModal();
     };
@@ -226,7 +230,7 @@ const QueueManagmentPage = () => {
                             </div>
                         </div>
                         <div className='tableAndOperationCont'>
-                            <PatientsTable onSelectPatient={handleSelectPatient} />
+                            <PatientsTable patients={patients} setPatients={setPatients} onSelectPatient={handleSelectPatient} />
                             <div className='operationCont'>
                                 <div className='actionOfPatientContainer'>
                                     <div className='listOfRoomsContainer'>
@@ -296,6 +300,7 @@ const QueueManagmentPage = () => {
             <AddPatientModal
                 open={isAddPatientModalOpen}
                 handleClose={handleCloseAddPatientModal}
+                insert={insertPatient}
             />
 
             <AddRoomModal
