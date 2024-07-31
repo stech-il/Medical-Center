@@ -9,7 +9,7 @@ import emailjs from 'emailjs-com';
 function MyVerticallyCenteredModal(props) {
     const navigate = useNavigate();
 
-    emailjs.init('MWdKGN28PpafQHXOI');
+    emailjs.init('OGeC5v16OEXHrsSlr');
 
     const [user, setUser] = useState({
         Password: '',
@@ -63,8 +63,8 @@ function MyVerticallyCenteredModal(props) {
                 };
 
                 emailjs.send(
-                    'service_537hb2a', // service ID
-                    'template_87mgofj', // template ID
+                    'service_b5emsma', // service ID
+                    'template_5f0jjve', // template ID
                     templateParams
                 )
                     .then((response) => {
