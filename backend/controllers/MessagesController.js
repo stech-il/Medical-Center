@@ -38,13 +38,14 @@ exports.findAllMessages = async (req, res) => {
 
 exports.createMessage = async (req, res) => {
     try {
-        const { message, status } = req.body; // Expecting content and status fields
-        if (!message || !status) {
+        const { Message, Status } = req.body; // Expecting content and status fields
+        if (!Message || Status === undefined) {
             return res.status(400).json({
                 message: 'Missing required fields: content and status are required.'
             });
         }
-        const newMessage = await MessagesService.createMessage(message, status);
+        console.log(req.body)
+        const newMessage = await MessagesService.createMessage(Message, Status);
         return res.status(201).json({
             data: newMessage,
             message: 'Message created successfully.'
@@ -58,12 +59,37 @@ exports.createMessage = async (req, res) => {
 };
 
 
+
 exports.updateMessage = async (req, res) => {
     try {
-        const updatedMessage = await MessagesService.updateMessage(req.params.id, req.body);
+        const ID = req.params.id;
+        const {Message} = req.body;
+        console.log('עדכון הודעה ', ID, Message)
+        const updatedMessage = await MessagesService.updateMessage(ID, Message);
         if (updatedMessage[0] === 1) { // Sequelize returns an array with the number of affected rows
             return res.json({
                 message: 'Message updated successfully.'
+            });
+        } else {
+            return res.status(404).json({
+                message: 'Message not found.'
+            });
+        }
+    } catch (error) {
+        return res.status(500).json({
+            message: 'Internal Server Error',
+            error: error.message
+        });
+    }
+}
+
+exports.updateMessageStatus = async (req, res) => {
+    try {
+        const { ID, Status } = req.body;
+        const updatedMessage = await MessagesService.updateMessageStatus(ID, Status);
+        if (updatedMessage[0] === 1) { // Sequelize returns an array with the number of affected rows
+            return res.json({
+                message: 'Message status updated successfully.'
             });
         } else {
             return res.status(404).json({

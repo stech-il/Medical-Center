@@ -1,7 +1,7 @@
 .MessageItemContainer {
     display: flex;
     width: 25%;
-    height: 90%;
+    height: 280px;
     margin: 20px;
     justify-content: center;
     align-items: center;
@@ -111,7 +111,8 @@
     padding: 11px;
     font-weight: 500;
     font-size: 10pt;
-
+    display: flex;
+    align-items: center;
 }
 
 .messageActivity-btn:hover {
@@ -152,6 +153,7 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
+    height: 80%;
 }
 
 .chooseActivity {
@@ -197,4 +199,10 @@
     border-radius: 20px;
     display: flex;
     border: none;
+}
+
+.titleAndNewMessage{
+    margin-top: 7%;
+    width: 100%;
+
 }

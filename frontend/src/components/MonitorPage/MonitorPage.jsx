@@ -32,9 +32,10 @@ const MonitorPage = () => {
             const now = new Date();
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             const formattedDate = now.toLocaleDateString('he-IL', options);
-            setCurrentDate(formattedDate);
+            const formattedTime = now.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
+            setCurrentDate(`${formattedDate} ${formattedTime}`);
         };
-
+        
         updateDate();
         const intervalId = setInterval(updateDate, 60000); // Update every minute
 

@@ -25,7 +25,7 @@ export default function AddRoomModal({ open, handleClose }) {
 
   const handleSubmit = async () => {
     try {
-        await createRoom({ Name: roomName,Status:false });
+        await createRoom(roomName ,false);
         alert(`חדר חדש נוסף: ${roomName}`);
         handleClose();
       } catch (error) {

@@ -1,0 +1,19 @@
+
+.ReportsPageContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+}
+
+.chartCont{
+    margin: 20px;
+}
+
+.report-btn{
+    padding: 5px;
+    border-radius: 5px;
+    width:150px;
+    margin: 10px;
+}

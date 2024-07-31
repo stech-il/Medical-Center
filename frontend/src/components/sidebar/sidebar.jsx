@@ -12,6 +12,8 @@ import './sidebar.css'
 function SidebarMenu() {
   const [collapsed, setCollapsed] = useState(true);
 
+  const navigate = useNavigate();
+
   const handleToggleSidebar = () => {
     setCollapsed(!collapsed);
   };
@@ -20,7 +22,6 @@ function SidebarMenu() {
     navigate('/');
   };
 
-  const navigate = useNavigate();
 
   const goToUsersPage = () => {
     navigate('/users');
@@ -38,6 +39,10 @@ function SidebarMenu() {
   const goToQueueManagmentPage = () => {
     navigate('/QueueManagment');
   };
+
+  const goToReportsPage = () => {
+    navigate('/reports');
+  };
   return (
     <div className='sidebarContainer'>
       <Sidebar className='sidebar' rtl={true} collapsed={collapsed} style={{ height: "100vh" }}>
@@ -46,7 +51,7 @@ function SidebarMenu() {
           <MenuItem icon={<PeopleAltIcon className='icon' />} onClick={goToUsersPage}>משתמשים</MenuItem>
           <MenuItem icon={<MeetingRoomIcon className='icon' />} onClick={goToQueueManagmentPage}>ניהול תורים</MenuItem>
           <MenuItem icon={<MessageIcon className='icon' />} onClick={goToMessagesPage}>הודעות</MenuItem>
-          <MenuItem icon={<AssessmentIcon className='icon' />}>ניתוח נתונים</MenuItem>
+          <MenuItem icon={<AssessmentIcon className='icon' />} onClick={goToReportsPage}>ניתוח נתונים</MenuItem>
           <MenuItem icon={<MonitorIcon className='icon' />} onClick={goToMonitorPage}>מוניטור</MenuItem>
         </Menu>
         <button className='menu-btn' onClick={handleToggleSidebar}>תפריט</button>
