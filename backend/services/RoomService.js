@@ -27,10 +27,12 @@ exports.findAllRooms = () => {
 }
 
 exports.createRoom = async (roomData) => {
-    try {
+    try {        
         const newRoom = await RoomsModel.create(roomData);
+        console.log(newRoom);
         return newRoom;
     } catch (error) {
+        console.log(error.message);
         throw new Error(error.message);
     }
 }

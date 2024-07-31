@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-
+import { getAllRooms } from '../../../clientServices/RoomService';
 import { useNavigate } from 'react-router-dom';
 
 import './pagesNavigate.css'
