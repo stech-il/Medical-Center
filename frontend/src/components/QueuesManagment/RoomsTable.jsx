@@ -53,8 +53,9 @@ const RoomsTable = forwardRef((props, ref) => {
         const roomToToggle = rooms.find(room => room.ID === selectedRoomId);
         if (roomToToggle) {
             const updatedRoom = { ...roomToToggle, Status: !roomToToggle.Status };
+            console.log(updatedRoom)
             try {
-                await updateRoom(updatedRoom.ID, updatedRoom);
+                await updateRoom(updatedRoom.ID,updatedRoom.Name,updatedRoom.Status);
                 setRooms(rooms.map(room => room.ID === updatedRoom.ID ? updatedRoom : room));
             } catch (error) {
                 console.error('Error updating room status:', error);

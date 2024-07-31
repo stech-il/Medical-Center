@@ -18,7 +18,6 @@ const style = {
 };
 
 export default function DeleteRoomModal({ open, handleClose, handleConfirm, roomName }) {
-    console.log(roomName)
     return (
         <Modal
             open={open}

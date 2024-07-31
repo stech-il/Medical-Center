@@ -55,6 +55,18 @@ const AddPatientModal = ( {open, handleClose,insert }) => {
     fetchRooms();
   }, []);
 
+  function IDValidator(id)
+  {
+      if (id.length !== 9 || isNaN(id)) {  // Make sure ID is formatted properly
+          return false;
+      }
+      let sum = 0, incNum;
+      for (let i = 0; i < id.length; i++) {
+          incNum = Number(id[i]) * ((i % 2) + 1);  // Multiply number by 1 or 2
+          sum += (incNum > 9) ? incNum - 9 : incNum;  // Sum the digits up and add to total
+      }
+      return (sum % 10 === 0);
+  }
   const handleSubmit = async () => {
     try {
       // Validate required fields
@@ -75,10 +87,17 @@ const AddPatientModal = ( {open, handleClose,insert }) => {
 
       console.log(selectedRoom);
       // Call service function to add patient
-      await insert(patientFirstName,patientLastName,patientHMO,"4849512",patientTz,selectedRoom);
+      if(IDValidator(patientTz))
+      {
+        await insert(patientFirstName,patientLastName,patientHMO,"4849512",patientTz,selectedRoom);
 
-      alert('המטופל נוסף בהצלחה');
-      handleClose();
+        alert('המטופל נוסף בהצלחה');
+        handleClose();
+      }
+      else{
+        alert('תעודת זהות לא תקינה')
+      }
+  
     } catch (error) {
       console.error('Error adding patient:', error);
       alert('אופס, שגיאה בהוספת המטופל');

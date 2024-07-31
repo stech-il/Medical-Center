@@ -9,7 +9,8 @@ const MonitorMessages = () => {
         const fetchMessages = async () => {
             try {
                 const response = await getAllMessages();
-                setMessages(response.data.data);
+                const activeMessages = response.data.data.filter(message => message.Status === true);
+                setMessages(activeMessages);
                 console.log(response.data)
             } catch (error) {
                 console.error('Error fetching messages:', error);

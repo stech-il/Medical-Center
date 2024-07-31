@@ -2,6 +2,8 @@ import React, { useState ,useEffect} from 'react';
 import './PatientEnter.css';
 import useSocket from "../../clientServices/PatientSocket.js";
 import {getAllHMOs} from "../../clientServices/HmosService.js";
+import doctorImg from '../../doctor.png'
+
 
 //import doctorImg from '../../doctor.png'
 
@@ -100,13 +102,13 @@ const PatientEnter = () => {
             setPatientClinic('');
             setNewPatient({});
             setCurrentStep(1);
-        }, 40000);
+        }, 15000);
     };
 
     return (
         <>
             <div className='patientEnterCont' >
-            {/* <img src={doctorImg} alt='doctor' className='doctorImg'></img> */}
+            <img src={doctorImg} alt='doctor' className='doctorImg'></img>
 
                 <div className='enterBoardCont'>
                     <div className='enterBoard'>
