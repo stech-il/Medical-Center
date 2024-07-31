@@ -134,7 +134,7 @@ const QueueManagmentPage = () => {
         } catch (error) {
             console.error('Error deleting room:', error);
             alert('כרגע החדר בשימוש, אין אפשרות למחוק אותו');
-        }
+        } 
     };
 
     const handleConfirmEmergencyModal = () => {

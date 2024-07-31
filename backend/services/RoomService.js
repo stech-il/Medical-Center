@@ -42,6 +42,7 @@ exports.updateRoom = (id, roomData) => {
 }
 
 exports.deleteRoom = (id) => {
+    
     return RoomsModel.destroy({
         where: { ID: id }
     });

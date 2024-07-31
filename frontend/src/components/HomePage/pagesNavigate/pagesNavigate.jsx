@@ -1,10 +1,26 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+
+
 import { useNavigate } from 'react-router-dom';
 
 import './pagesNavigate.css'
 const PagesNavigation = () => {
+  const [rooms, setRooms] = useState([]);
 
-  
+  useEffect(() => {
+    const fetchRooms = async () => {
+        try {
+            const response = await getAllRooms();
+            setRooms(response.data); 
+        } catch (error) {
+            console.error('Error fetching rooms:', error);
+        }
+    };
+
+    fetchRooms();
+}, []);
+
+
   const navigate = useNavigate();
 
   const goToAdminPage = () => {
