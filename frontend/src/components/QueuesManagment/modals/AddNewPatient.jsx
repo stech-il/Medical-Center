@@ -75,7 +75,7 @@ const AddPatientModal = ( {open, handleClose,insert }) => {
 
       console.log(selectedRoom);
       // Call service function to add patient
-      await insert(patientFirstName,patientLastName,patientHMO,"4849512",patientTz,selectedRoom);
+      await insert(patientFirstName,patientLastName,patientHMO,"0548585858",patientTz,selectedRoom);
 
       alert('המטופל נוסף בהצלחה');
       handleClose();
