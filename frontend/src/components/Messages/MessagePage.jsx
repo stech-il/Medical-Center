@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import './MessagePage.css';
 import MessageItem from './MessageItem';
-import { getAllMessages, createMessage } from '../../clientServices/MessagesService';
+import { getAllMessages } from '../../clientServices/MessagesService';
 import NewMessageModal from './NewMessageModal';
-import Sidebar from '../sidebar/sidebar'
+import Sidebar from '../sidebar/sidebar';
+
 
 const MessagePage = () => {
     const [allMessages, setAllMessages] = useState([]);
-    const [showModal, setShowModal] = useState(false);
+    const [isAddMessageModalOpen, setIsAddMessageModalOpen] = useState(false);
+
 
     const fetchAllMessages = async () => {
         try {
@@ -22,28 +24,27 @@ const MessagePage = () => {
         fetchAllMessages();
     }, []);
 
-    const handleNewMessage = async (content, status) => {
-        try {
-            await createMessage(content, status);
-            await fetchAllMessages(); // Refresh the list of messages
-        } catch (error) {
-            console.error('Error creating message:', error);
-        }
+    const handleOpenAddMessagModal = () => {
+        setIsAddMessageModalOpen(true);
     };
 
-    const handleMessageUpdated = () => {
-        fetchAllMessages(); // Refresh the list of messages after an update or delete
+    const handleCloseAddMessageModal = () => {
+        fetchAllMessages();
+        setIsAddMessageModalOpen(false);
     };
 
     return (
-        <div className='MessagePageContainer'>
-            <Sidebar />
+        <>
+            <div className='MessagePageContainer'>
+                <Sidebar />
 
-            {!showModal && (
                 <>
-                    <h2>הודעות מערכת</h2>
+                    <div className='titleAndNewMessage'>
+                        <h2>הודעות מערכת</h2>
 
-                    <button className='newMsg-Btn' onClick={() => setShowModal(true)}>הודעה חדשה</button>
+                        <button className='newMsg-Btn' onClick={handleOpenAddMessagModal}>הודעה חדשה</button>
+                    </div>
+
 
                     <div className='allMessagesContainer'>
                         {Array.isArray(allMessages) && allMessages.length > 0 ? (
@@ -53,7 +54,7 @@ const MessagePage = () => {
                                     id={message.ID}
                                     content={message.Message}
                                     status={message.Status}
-                                    onMessageUpdated={handleMessageUpdated}
+                                    fetchAllMessages={fetchAllMessages}
                                 />
                             ))
                         ) : (
@@ -61,9 +62,13 @@ const MessagePage = () => {
                         )}
                     </div>
                 </>
-            )}
-            {showModal && <NewMessageModal onClose={() => setShowModal(false)} onSave={handleNewMessage} />}
-        </div>
+
+            </div>
+            <NewMessageModal
+                open={isAddMessageModalOpen}
+                handleClose={handleCloseAddMessageModal}
+            />
+        </>
     );
 };
 

@@ -9,10 +9,19 @@ exports.findAllMessages = () => {
 }
 
 
-exports.updateMessage = (id, message) => {
-    return MessagesModel.update(message, {
-        where: { id: id }
+exports.updateMessage = (ID, Message) => {
+    return MessagesModel.update({ Message: Message }, {
+
+        where: {ID: ID  }
     });
+}
+
+
+exports.updateMessageStatus = (ID, Status) => {
+    return MessagesModel.update({ Status: Status },
+        {
+            where: { ID: ID }
+        });
 }
 
 exports.deleteMessage = (id) => {

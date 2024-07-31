@@ -1,30 +1,24 @@
 .patientEnterCont {
     display: flex;
+    height: 100vh;
+    flex-direction: row-reverse;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    flex-direction: column;
-    margin: 30px;
+    direction: rtl;
+    background-image: linear-gradient(109.6deg, rgb(141, 244, 239) 11.2%, rgb(32, 50, 213) 91.1%);
+
 }
 
 .enterBoardCont {
     background-color: white;
-    width: 800px;
-    height: 600px;
+    width: fit-content;
+    height: fit-content;
     border-radius: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
-}
-
-.doctorImg {
-    position: absolute;
-    width: 200px;
-    bottom: 0;
-    right: 0;
-    margin-right: 5%;
-
+    padding: 100px;
 }
 
 .enterBoard {
@@ -34,13 +28,13 @@
 }
 
 
-/* logo ------------------------------------- */
-.logo {
-    position: absolute;
-    width: 200px;
-    top: 0;
+/* doctorImg ------------------------------------- */
+.doctorImg {
+    height: 50%;
+    bottom: 0;
+    position: fixed;
     right: 0;
-    margin: 20px;
+    margin-right: 2%;
 }
 
 /* Keyboard style ------------------------------------ */
@@ -65,7 +59,7 @@
 }
 
 .keyboard:hover {
-    background-color: #352ce1 ;
+    background-color: #352ce1;
     color: white;
     cursor: pointer;
 }
@@ -85,22 +79,17 @@
 }
 
 .continueBtn {
-    background-image: linear-gradient(to right, #36D1DC 0%, #1c33de  51%, #36D1DC  100%);
-    text-align: center;
-    text-transform: uppercase;
-    transition: 0.5s;
+    margin-top: 50px;
+    background-image: linear-gradient(to right, #4cd1f9 0%, #3762f0 51%, #368cdc 100%);
     background-size: 200% auto;
-    color: white;            
-    box-shadow: 0 0 20px #eee;
-    border: none;
-    padding: 8px;
-    margin: 20px;
-    width: 120px;
     border-radius: 20px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 7px;
+    width: 32%;
     font-weight: 600;
-    font-size: 13pt;
-    cursor: pointer;
+    color: #ffffff;
+    border: none;
+
+
 
 }
 
@@ -156,7 +145,7 @@
 }
 
 .clinic:hover {
-    background-color: #352ce1 ;
+    background-color: #352ce1;
     color: white;
     cursor: pointer;
 }
@@ -174,11 +163,6 @@
     font-weight: 600;
     font-size: 15pt;
 
-}
-
-.clinic.selected {
-    background-color: #352ce1 ;
-    color: white;
 }
 
 
@@ -205,12 +189,12 @@
     width: 200px;
     height: 150px;
     border-radius: 10px;
-    background-image: linear-gradient(to right, #36D1DC 0%, #1c33de  51%, #36D1DC  100%);
+    background-image: linear-gradient(to right, #36D1DC 0%, #1c33de 51%, #36D1DC 100%);
     text-align: center;
     text-transform: uppercase;
     transition: 0.5s;
     background-size: 200% auto;
-    color: white;            
+    color: white;
     box-shadow: 0 0 20px #eee;
     font-weight: 600;
     font-size: 13pt;
@@ -256,11 +240,10 @@
     }
 
     .doctorImg {
-        position: absolute;
-        width: 130px;
+        height: 50%;
         bottom: 0;
+        position: fixed;
         right: 0;
-        margin-right: 5%;
     }
 
 
@@ -303,17 +286,17 @@
 
 
 
-    .inputNameBtn {       
+    .inputNameBtn {
         width: 170px;
         padding: 15px;
-        margin: 10px;        
+        margin: 10px;
         font-size: 13pt;
     }
 
-    .continueBtn {    
+    .continueBtn {
         padding: 8px;
         margin: 20px;
-        width: 100px;      
+        width: 100px;
         font-size: 12pt;
     }
 
@@ -333,7 +316,3 @@
 
 
 }
-
-         
-
- 

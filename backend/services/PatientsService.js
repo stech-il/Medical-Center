@@ -106,8 +106,7 @@ exports.deletePatient = (id) => {
         where: { id: id }
     });
 }
-
-exports.createPatient = async (firstName, lastName, HMOid, phone) => {
+exports.createPatient = async (firstName, lastName, HMOid, phone,tz) => {
     try {
         const uniqueNumber = await generateNumber();
         const data = {
@@ -116,6 +115,7 @@ exports.createPatient = async (firstName, lastName, HMOid, phone) => {
             LastName: lastName,
             Phone: phone,
             HMOid: HMOid,
+            tz:tz,
             CheckIn: new Date(),
             CheckOut: new Date(),
             Status: true
@@ -140,14 +140,40 @@ exports.createPatient = async (firstName, lastName, HMOid, phone) => {
     }
 };
 
+exports.addManualPatient = async (firstName, lastName, HMOid, phone , Tz , roomId) => {
+    try {
+        const uniqueNumber = await generateNumber();
+        const data = {
+            UniqueNumber: uniqueNumber,
+            FirstName: firstName,
+            LastName: lastName,
+            Phone: phone,
+            HMOid: HMOid,
+            Tz:Tz,
+            CheckIn: new Date(),
+            CheckOut: new Date(),
+            Status: true
+        };
+
+        const patientEnter = await PatientModel.create(data);
+        console.log('Patient created:', patientEnter);
+
+        await QueueService.createAppointment(patientEnter.ID, roomId);
+
+        return patientEnter;
+    } catch (error) {
+        console.error('Error in createPatient:', error.message);
+        throw new Error(error.message);
+    }
+};
+
 
 async function generateNumber() {
-    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const numbers = '0123456789';
     const i = Math.floor(Math.random() * 10);
     const k = Math.floor(Math.random() * 10);
-    const j = Math.floor(Math.random() * 26);
-    const number = letters[j] +'-' +numbers[i] + numbers[k];
+    const j = Math.floor(Math.random() * 10);
+    const number = numbers[j] +numbers[i] + numbers[k];
 
     const allPatients = await PatientModel.findAll();
 

@@ -21,8 +21,40 @@ export default function PatientsTable({patients,setPatients, onSelectPatient }) 
         const fetchPatients = async () => {
             try {
                 const response = await getAllPatientsWithQueueDetails();
-                setPatients(response.data.data);
-                console.log(response.data.data);
+                let p=response.data.data;
+
+                // Group patients by queue
+                let queues = {};
+                p.forEach(patient => {
+                    patient.queues.forEach(queue => {
+                        const queueId = queue.RoomId;
+                        if (!queues[queueId]) {
+                            queues[queueId] = [];
+                        }
+                        queues[queueId].push(patient);
+                    });
+                });
+
+                // Sort patients within each queue and assign PriorityNumber
+                Object.keys(queues).forEach(queueId => {
+                    queues[queueId].sort((a, b) => {
+                        return a.queues.find(q => q.RoomId === parseInt(queueId)).PriorityNumber -
+                            b.queues.find(q => q.RoomId === parseInt(queueId)).PriorityNumber;
+                    });
+
+                    queues[queueId].forEach((patient, index) => {
+                        const queue = patient.queues.find(q => q.RoomId === parseInt(queueId));
+                        queue.PriorityNumber = index + 1;
+                    });
+                });
+
+                // Flatten the queues object back into patientsData array
+                let sortedPatients = [];
+                Object.keys(queues).forEach(queueId => {
+                    sortedPatients = sortedPatients.concat(queues[queueId]);
+                });
+
+                setPatients(sortedPatients);
             } catch (error) {
                 console.error('Error fetching patients:', error);
             }
@@ -30,7 +62,7 @@ export default function PatientsTable({patients,setPatients, onSelectPatient }) 
 
         fetchPatients();
     }, []);
-
+    
 
     const handleRowClick = (patient) => {
         setSelectedPatientId(patient.ID);
@@ -50,16 +82,14 @@ export default function PatientsTable({patients,setPatients, onSelectPatient }) 
     const filteredPatients = patients.filter((patient) => {
         const fullName = `${patient.FirstName} ${patient.LastName}`.toLowerCase();
         const uniqueNumber = (patient.UniqueNumber || '').toLowerCase();
-        const roomName = patient.queues ? (patient.queues[0].room.Name || '').toLowerCase() : '';
-        const priorityNumber = patient.queues ? (patient.queues[0].PriorityNumber || '').toString().toLowerCase() : '';
-        // const hmoId = (patient.HMOid || '').toLowerCase();
+        const roomName = patient.queues.length > 0 ? (patient.queues[0].room.Name || '').toLowerCase() : '';
+        const priorityNumber = patient.queues.length > 0 ? (patient.queues[0].PriorityNumber || '').toString().toLowerCase() : '';
 
         return (
             fullName.includes(searchQuery.toLowerCase()) ||
             uniqueNumber.includes(searchQuery.toLowerCase()) ||
             roomName.includes(searchQuery.toLowerCase()) ||
-            priorityNumber.includes(searchQuery.toLowerCase()) 
-            // hmoId.includes(searchQuery.toLowerCase())
+            priorityNumber.includes(searchQuery.toLowerCase())
         );
     });
 
@@ -72,7 +102,7 @@ export default function PatientsTable({patients,setPatients, onSelectPatient }) 
             return order === 'asc' ? aRoom.localeCompare(bRoom) : bRoom.localeCompare(aRoom);
         } else if (orderBy === 'PriorityNumber') {
             const aNumber = a.queues.length > 0 ? a.queues[0].PriorityNumber : '';
-            const bNumber = b.queues.length > 0 ? b.queues[0].priorityNumber : '';
+            const bNumber = b.queues.length > 0 ? b.queues[0].PriorityNumber : '';
             return order === 'asc' ? aNumber - bNumber : bNumber - aNumber;
         } else {
             return order === 'asc' ? a[orderBy] - b[orderBy] : b[orderBy] - a[orderBy];
@@ -139,6 +169,7 @@ export default function PatientsTable({patients,setPatients, onSelectPatient }) 
                                     קופת חולים
                                 </TableSortLabel>
                             </TableCell>
+                            <TableCell align="center">שעת כניסה</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -168,6 +199,9 @@ export default function PatientsTable({patients,setPatients, onSelectPatient }) 
                                     {patient.queues.length > 0 ? patient.queues[0].PriorityNumber : 'N/A'}
                                 </TableCell>
                                 <TableCell align="center">{patient.HMO.Name}</TableCell>
+                                <TableCell align="center">
+                                    {patient.CheckIn ? new Date(patient.CheckIn).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'N/A'}
+                                </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

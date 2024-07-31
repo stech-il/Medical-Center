@@ -18,7 +18,7 @@ import UserLogin from './components/AdminPage/usersControl/usersLoginControl';
 import './App.css';
 import ConfirmPassword from './components/AdminPage/usersControl/checkPassword';
 import NewPassword from './components/AdminPage/usersControl/newPassword';
-
+import ReportsPage from './components/ReportsPage/ReportsPage'
 function App() {
   return (
     <Router>
@@ -34,6 +34,8 @@ function App() {
           <Route path="/doctorPage/:id" element={<DoctorPage />} />
           <Route path="/messages" element={<MessagePage />} />
           <Route path="/monitor" element={<MonitorPage />} />
+          <Route path="/reports" element={<ReportsPage />} />
+
           <Route path="/QueueManagment" element={<QueueManagmentPage />} />
           <Route path="/checkPassword" element={<ConfirmPassword />} />
           <Route path="/newPassword" element={<NewPassword />} />

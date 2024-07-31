@@ -20,6 +20,8 @@ exports.findRoomByName = async (name) => {
     }
 };
 
+
+
 exports.findAllRooms = () => {
     return RoomsModel.findAll();
 }
@@ -40,6 +42,7 @@ exports.updateRoom = (id, roomData) => {
 }
 
 exports.deleteRoom = (id) => {
+    
     return RoomsModel.destroy({
         where: { ID: id }
     });

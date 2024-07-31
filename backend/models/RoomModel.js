@@ -12,10 +12,6 @@ const RoomModel = db.define("rooms", {
         type: DataTypes.STRING,
         allowNull: false
     },
-    CurrentQueueNumber: {
-        type: DataTypes.INTEGER,
-        allowNull: false
-    },
     Status: {
         type: DataTypes.BOOLEAN,
         allowNull: false,

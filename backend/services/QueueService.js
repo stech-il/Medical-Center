@@ -49,6 +49,7 @@ exports.updateQueue = (queueData) => {
     console.log(queueData);
     return QueueModel.update(queueData, {
         where: { ID: queueData.ID }
+
     });
 }
 
@@ -129,7 +130,6 @@ exports.createAppointment = async (patientId, roomId) => {
         throw new Error(error.message);
     }
 }
-
 exports.moveBetweenRooms = async (patientId, newRoomId, place) => {
     try {        
         console.log("patient id",patientId,"new roomid",newRoomId);

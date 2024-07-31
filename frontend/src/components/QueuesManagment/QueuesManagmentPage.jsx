@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import './QueuesManagmentPage.css';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PersonIcon from '@mui/icons-material/Person';
@@ -10,31 +10,43 @@ import PatientsTable from './PatientsTable';
 import RoomsTable from './RoomsTable';
 import Sidebar from '../sidebar/sidebar';
 import SelectRoom from './SelectRoom';
-import { deletePatient } from '../../clientServices/PatientsService';
+import { deletePatient  } from '../../clientServices/PatientsService';
 import DeletePatientModal from './modals/DeletePatient';
 import EmergencyDoctorAlertModal from './modals/EmergencyDoctorAlert';
-import AddPatientModal from './modals/AddNewPatient'; // Import the new modal
+import AddPatientModal from './modals/AddNewPatient';
+import AddRoomModal from './modals/AddNewRoom';
+import DeleteRoomModal from './modals/DeleteRoom';
+import { deleteRoom } from '../../clientServices/RoomService';
 import useReceptionSocket from '../../clientServices/ReceptionSocket';
 
 const QueueManagmentPage = () => {
     const [selectedPatient, setSelectedPatient] = useState(null);
     const [selectedRoom, setSelectedRoom] = useState(null);
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // State to manage the delete modal
-    const [isEmergencyModalOpen, setIsEmergencyModalOpen] = useState(false); // State to manage the emergency modal
-    const [isAddPatientModalOpen, setIsAddPatientModalOpen] = useState(false);
-
+    const [selectedRoomInTable, setSelectedRoomInTable] = useState(null);
     const [patients, setPatients] = useState([]);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [isEmergencyModalOpen, setIsEmergencyModalOpen] = useState(false);
+    const [isAddPatientModalOpen, setIsAddPatientModalOpen] = useState(false);
+    const [isAddRoomModalOpen, setIsAddRoomModalOpen] = useState(false);
+    const [isRoomDeleteModalOpen, setIsRoomDeleteModalOpen] = useState(false);
 
-    const { moveRoom,emergencyAlertToDoctor,endOfTreatment } = useReceptionSocket(setSelectedPatient,patients,setPatients);
+    const { moveRoom,emergencyAlertToDoctor,endOfTreatment ,insertPatient} = useReceptionSocket(setSelectedPatient,patients,setPatients);
+
 
     const handleSelectPatient = (patient) => {
         setSelectedPatient(patient);
     };
+    const handleSelectRoomInTable = (room) => {
+        setSelectedRoomInTable(room);
+    };
+
+    const childRef = useRef();
 
     const handleMoveToEndOfQueue = async () => {
         if (selectedPatient && selectedRoom) {
             try {
-                await moveRoom(selectedRoom.ID,selectedPatient.ID, true);
+                console.log(selectedPatient.ID);
+                await moveRoom(selectedRoom.ID, selectedPatient.ID, true);
                 alert('המטופל הועבר לסוף התור בהצלחה');
             } catch (error) {
                 console.error('Error moving patient to end of queue:', error);
@@ -53,7 +65,7 @@ const QueueManagmentPage = () => {
     const handleMoveToFrontOfQueue = async () => {
         if (selectedPatient && selectedRoom) {
             try {
-                await moveRoom( selectedRoom.ID, selectedPatient.ID,false);
+                await moveRoom(selectedRoom.ID, selectedPatient.ID, false);
                 alert('המטופל הועבר לתחילת התור בהצלחה');
                 setSelectedPatient(null);
                 setSelectedRoom(null);
@@ -91,6 +103,10 @@ const QueueManagmentPage = () => {
         setIsDeleteModalOpen(false);
     };
 
+    const handleCloseRoomDeleteModal = () => {
+        setIsRoomDeleteModalOpen(false);
+    };
+
     const handleCloseEmergencyModal = () => {
         setIsEmergencyModalOpen(false);
     };
@@ -107,6 +123,20 @@ const QueueManagmentPage = () => {
         }
     };
 
+    const handleConfirmRoomDeleteModal = async () => {
+        try {
+            console.log(selectedRoomInTable.ID)
+            await deleteRoom(selectedRoomInTable.ID);
+
+            alert('החדר נמחק בהצלחה');
+            setSelectedRoomInTable(null);
+            handleCloseRoomDeleteModal();
+        } catch (error) {
+            console.error('Error deleting room:', error);
+            alert('כרגע החדר בשימוש, אין אפשרות למחוק אותו');
+        } 
+    };
+
     const handleConfirmEmergencyModal = () => {
         emergencyAlertToDoctor(selectedPatient.UniqueNumber,selectedRoom.Name);
         alert('קריאת חירום נשלחה לרופא');
@@ -121,10 +151,19 @@ const QueueManagmentPage = () => {
         setIsAddPatientModalOpen(false);
     };
 
-    const handleAddPatient = (patient) => {
-        alert(`מטופל חדש נוסף: ${patient.name}, קופת חולים: ${patient.hmo}`);
-        // Add the logic to add the patient to the list
+  
+
+    const handleOpenAddRoomModal = () => {
+        setIsAddRoomModalOpen(true);
     };
+
+    const handleCloseAddRoomModal = () => {
+        setIsAddRoomModalOpen(false);
+    };
+
+
+
+    const formattedCheckInTime = selectedPatient ? new Date(selectedPatient.CheckIn).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) : '---';
 
     return (
         <>
@@ -180,6 +219,15 @@ const QueueManagmentPage = () => {
                                     {selectedPatient && selectedPatient.queues.length > 0 ? selectedPatient.queues[0].PriorityNumber : '---'}
                                 </div>
                             </div>
+                            <div className='patientDetail'>
+                                <div className='detailTitleContainer'>
+                                    <FormatListNumberedRtlIcon className='detailTitle' />
+                                    <div className='detailTitle'>שעת כניסה</div>
+                                </div>
+                                <div className='detailProperty'>
+                                    {formattedCheckInTime}
+                                </div>
+                            </div>
                         </div>
                         <div className='tableAndOperationCont'>
                             <PatientsTable patients={patients} setPatients={setPatients} onSelectPatient={handleSelectPatient} />
@@ -203,14 +251,11 @@ const QueueManagmentPage = () => {
 
                             <div className='moreOperationCont'>
                                 <div className='actionOfPatientContainer'>
-                                    <button className='moreOperation'>
-                                        פתיחת תור חירום
-                                    </button>
                                     <button className='moreOperation' onClick={handleOpenAddPatientModal}>
                                         הוספת מטופל חדש
                                     </button>
                                     <button className='moreOperation' onClick={handleOpenEmergencyModal}>
-                                        התראת חירום לרופא
+                                        התרעת חירום לרופא
                                     </button>
                                 </div>
                             </div>
@@ -220,11 +265,12 @@ const QueueManagmentPage = () => {
                 <div className='roomsDetailsTableContainer'>
                     <div className='managmentTitle'>חדרים</div>
 
-                    <RoomsTable />
+                    <RoomsTable ref={childRef} onSelectRoomInTable={handleSelectRoomInTable} />
                     <div className='moreOperationCont'>
                         <div className='actionOfPatientContainer'>
-                            <button className='moreOperation'>מחיקת חדר</button>
-                            <button className='moreOperation'>הוספת חדר</button>
+                            <button className='moreOperation' onClick={() => setIsRoomDeleteModalOpen(true)}>מחיקת חדר</button>
+                            <button className='moreOperation' onClick={handleOpenAddRoomModal}>הוספת חדר</button>
+                            <button className='moreOperation' onClick={() => childRef.current.handleToggleStatus()}>שנה סטטוס פעילות</button>
                         </div>
                     </div>
                 </div>
@@ -236,19 +282,30 @@ const QueueManagmentPage = () => {
                 handleConfirm={handleConfirmDeleteModal}
                 patientName={selectedPatient ? `${selectedPatient.FirstName} ${selectedPatient.LastName}` : ''}
             />
+            <DeleteRoomModal
+                open={isRoomDeleteModalOpen}
+                handleClose={handleCloseRoomDeleteModal}
+                handleConfirm={handleConfirmRoomDeleteModal}
+                roomName={selectedRoomInTable ? `${selectedRoomInTable.Name}` : ''}
+            />
 
             <EmergencyDoctorAlertModal
                 open={isEmergencyModalOpen}
                 handleClose={handleCloseEmergencyModal}
                 handleConfirm={handleConfirmEmergencyModal}
                 patientName={selectedPatient ? `${selectedPatient.FirstName} ${selectedPatient.LastName}` : ''}
-                roomName={selectedRoom ? selectedRoom.Name : ''}
+                roomName={selectedRoomInTable ? selectedRoomInTable.Name : ''}
             />
 
             <AddPatientModal
                 open={isAddPatientModalOpen}
                 handleClose={handleCloseAddPatientModal}
-                handleAddPatient={handleAddPatient}
+                insert={insertPatient}
+            />
+
+            <AddRoomModal
+                open={isAddRoomModalOpen}
+                handleClose={handleCloseAddRoomModal}
             />
         </>
     );

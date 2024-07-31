@@ -2,22 +2,25 @@ import React, { useEffect, useState } from 'react';
 import './MessagePage.css';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { updateMessage, deleteMessage } from '../../clientServices/MessagesService';
+import { updateMessage, deleteMessage, updateMessageStatus } from '../../clientServices/MessagesService';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
 
-const MessageItem = ({ content, id, onMessageUpdated, status }) => {
+const MessageItem = ({ content, id, status, fetchAllMessages }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [newContent, setNewContent] = useState(content);
-    const [activeOrPassive, setActiveOrPassive] = useState('')
+    const [activeOrPassive, setActiveOrPassive] = useState('');
 
     useEffect(() => {
         setActiveOrPassive(status ? 'הפוך ללא פעיל' : 'הפוך לפעיל');
     }, [status]);
+
     const handleDeleteMessage = async () => {
         const userConfirmed = window.confirm('האם אתה בטוח שברצונך למחוק הודעה זו?');
         if (userConfirmed) {
             try {
                 await deleteMessage(id);
-                onMessageUpdated(); // Call the callback to refresh the message list
+                fetchAllMessages(); // Re-fetch messages after deletion
             } catch (error) {
                 console.error('Error deleting message:', error);
             }
@@ -26,9 +29,9 @@ const MessageItem = ({ content, id, onMessageUpdated, status }) => {
 
     const handleUpdateMessage = async () => {
         try {
-            await updateMessage(id, { message: newContent });
+            await updateMessage(id, newContent);
             setIsEditing(false);
-            onMessageUpdated(); // Call the callback to refresh the message list
+            fetchAllMessages(); // Re-fetch messages after updating
         } catch (error) {
             console.error('Error updating message:', error);
         }
@@ -41,6 +44,15 @@ const MessageItem = ({ content, id, onMessageUpdated, status }) => {
     const closeEditWindow = () => {
         setIsEditing(false);
         setNewContent(content); // Reset content on cancel
+    };
+
+    const handleToggleStatus = async () => {
+        try {
+            await updateMessageStatus(id, !status);
+            fetchAllMessages(); // Re-fetch messages after updating status
+        } catch (error) {
+            console.error('Error updating message status:', error);
+        }
     };
 
     return (
@@ -58,16 +70,22 @@ const MessageItem = ({ content, id, onMessageUpdated, status }) => {
                         <button className='updateBtns' onClick={closeEditWindow}>ביטול</button>
                     </div>
                 </div>
-            ) : (<>
-                <div className='messageContent'>{content}</div>
-                <div className='messagesActions'>
-                    <button className='messageActivity-btn'>{activeOrPassive} </button>
-                    <button className='action-btn' onClick={openEditWindow}><EditIcon /></button>
-                    <button className='action-btn' onClick={handleDeleteMessage}><DeleteIcon /></button>
-                </div>
-            </>
-            )}
+            ) : (
+                <>
+                    <div className='messageContent'>{content}</div>
+                    <div className='messagesActions'>
+                        <button className='messageActivity-btn' onClick={handleToggleStatus}>
 
+                            {activeOrPassive}
+                            <div style={{marginRight:'5px'}}></div>
+
+                            {status ? <CheckCircleIcon color="success" /> : <CancelIcon color="error" />}
+                        </button>
+                        <button className='action-btn' onClick={openEditWindow}><EditIcon /></button>
+                        <button className='action-btn' onClick={handleDeleteMessage}><DeleteIcon /></button>
+                    </div>
+                </>
+            )}
         </div>
     );
 };
