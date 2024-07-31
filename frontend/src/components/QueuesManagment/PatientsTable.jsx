@@ -11,17 +11,25 @@ import TableSortLabel from '@mui/material/TableSortLabel';
 import TextField from '@mui/material/TextField';
 import { getAllPatientsWithQueueDetails } from '../../clientServices/PatientsService';
 
-export default function PatientsTable({patients,setPatients, onSelectPatient }) {
+export default function PatientsTable({ patients, setPatients, onSelectPatient }) {
     const [selectedPatientId, setSelectedPatientId] = useState(null);
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('FirstName');
     const [searchQuery, setSearchQuery] = useState('');
 
-    useEffect(() => {
+    useEffect(()=>{
+        const fetchFirst = async () => {
+            const response = await getAllPatientsWithQueueDetails();
+            setPatients(response.data.data);
+        }
+        fetchFirst();
+    },[]);
+
+    useEffect(() => {        
+
         const fetchPatients = async () => {
             try {
-                const response = await getAllPatientsWithQueueDetails();
-                let p=response.data.data;
+                 let p = patients;
 
                 // Group patients by queue
                 let queues = {};
@@ -61,8 +69,8 @@ export default function PatientsTable({patients,setPatients, onSelectPatient }) 
         };
 
         fetchPatients();
-    }, []);
-    
+    }, [patients]);
+
 
     const handleRowClick = (patient) => {
         setSelectedPatientId(patient.ID);
@@ -79,7 +87,7 @@ export default function PatientsTable({patients,setPatients, onSelectPatient }) 
         setSearchQuery(event.target.value);
     };
 
-    const filteredPatients = patients.filter((patient) => {
+    const filteredPatients = patients?patients.filter((patient) => {
         const fullName = `${patient.FirstName} ${patient.LastName}`.toLowerCase();
         const uniqueNumber = (patient.UniqueNumber || '').toLowerCase();
         const roomName = patient.queues.length > 0 ? (patient.queues[0].room.Name || '').toLowerCase() : '';
@@ -91,9 +99,9 @@ export default function PatientsTable({patients,setPatients, onSelectPatient }) 
             roomName.includes(searchQuery.toLowerCase()) ||
             priorityNumber.includes(searchQuery.toLowerCase())
         );
-    });
+    }):[];
 
-    const sortedPatients = filteredPatients.sort((a, b) => {
+    const sortedPatients = filteredPatients?filteredPatients.sort((a, b) => {
         if (orderBy === 'FirstName' || orderBy === 'LastName') {
             return order === 'asc' ? a[orderBy].localeCompare(b[orderBy]) : b[orderBy].localeCompare(a[orderBy]);
         } else if (orderBy === 'room') {
@@ -107,7 +115,7 @@ export default function PatientsTable({patients,setPatients, onSelectPatient }) 
         } else {
             return order === 'asc' ? a[orderBy] - b[orderBy] : b[orderBy] - a[orderBy];
         }
-    });
+    }):[];
 
     return (
         <div>
