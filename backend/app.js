@@ -11,7 +11,6 @@ const MessagesRouter = require('./routes/MessagesRoutes.js')
 const RoomRouter = require('./routes/RoomRoute.js')
 const QueueRouter = require('./routes/QueueRoute.js')
 const ReportRouter=require('./routes/ReportRoutes.js')
-const ReportGenerationRouter=require('./routes/ReportGenerationRoutes.js')
 const session = require('express-session');
 const bodyParser = require('body-parser');
 
@@ -27,7 +26,6 @@ app.use("/messages", MessagesRouter);
 app.use("/rooms", RoomRouter);
 app.use("/queues", QueueRouter);
 app.use("/reports", ReportRouter);
-app.use("/reportGeneration", ReportGenerationRouter);
 
 app.use(session({
     secret: 'userDetails', // Replace with your actual secret
