@@ -24,7 +24,9 @@ exports.getRoomByID = async (req, res) => {
 
 exports.createRoom = async (req, res) => {
     try {
+        
         const newRoom = await RoomsService.createRoom(req.body);
+        
         res.status(201).json({
             message: "Room created successfully!",
             data: newRoom

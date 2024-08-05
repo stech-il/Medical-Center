@@ -68,8 +68,9 @@ const createSocketServer = (app) => {
                     const updatedPatient = await PatientsService.getPatientWithQueueDetailsByID(currentPatient);
                     io.to(getKeyByValue(clientRooms, "reception")).emit("queueUpdate", updatedPatient);
                     //update the room - the next and the next-next clients  
-                    currentClient = await queueService.getFirstInQueueByRoom(newRoomId);
-                    nextClient = await queueService.getSecondInQueueByRoom(newRoomId);
+                    currentClient = await queueService.getFirstInQueueByRoom(room);
+                    nextClient = await queueService.getSecondInQueueByRoom(room);
+                    console.log("current: ",currentClient,"next: ",nextClient);
                     io.to(getKeyByValue(clientRooms, room)).emit("updateCurrentPatient", currentClient ? currentClient.patient : null);
                     io.to(getKeyByValue(clientRooms, room)).emit("updateNextPatient", nextClient ? nextClient.patient : null);
                 } catch (error) {

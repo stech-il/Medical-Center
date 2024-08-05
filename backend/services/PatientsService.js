@@ -39,9 +39,8 @@ exports.getAllPatientsWithQueueDetails = async () => {
         });
 
         if (!patients || patients.length === 0) {
-            throw new Error('No patients found.');
+            return null;
         }
-
         return patients;
     } catch (error) {
         console.error('Error fetching patients with queue details:', error.message);
