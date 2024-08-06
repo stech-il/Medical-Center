@@ -3,6 +3,8 @@ import SidebarMenu from '../sidebar/sidebar'
 import './AdminPage.css'
 const AdminPage = () => {
 
+    const role = location.state;
+
     return (
         <>
             <div className='AdminPageContainer' style={{ direction:"rtl" }}>

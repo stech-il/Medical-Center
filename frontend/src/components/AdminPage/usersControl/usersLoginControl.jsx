@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { getUserByEmailAddress, userLogin } from '../../../clientServices/UserService';
+import { getRoleById } from '../../../clientServices/RoleService';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import emailjs from 'emailjs-com';
 
@@ -18,10 +19,21 @@ function MyVerticallyCenteredModal(props) {
 
     const handleUserLogin = async () => {
         try {
-            var isExist = await userLogin(user);
-            sessionStorage.setItem('email', user.Email);
-            if (isExist)
-                navigate('/admin');
+            var userData = await userLogin(user);
+            if (userData) {
+                sessionStorage.setItem('email', userData.Email);
+                var role = await getRoleById(userData.RoleID);
+                if (role.Role == 'admin')
+                    navigate('/admin', { state: 0 });
+                else {
+                    if (role.Role == 'secretary')
+                        navigate('/admin', { state: 1 })
+                    else
+                        navigate();
+                }
+                // navigate('/admin');
+                // if(userData)
+            }
             else
                 alert("error");
         } catch (error) {
@@ -39,9 +51,9 @@ function MyVerticallyCenteredModal(props) {
         return password;
     }
 
-    
+
     const handleForgotPassword = async (e) => {
-        
+
         if (!user.Email) {
             alert("Email address required");
         }
@@ -52,7 +64,7 @@ function MyVerticallyCenteredModal(props) {
             }
             else {
                 e.preventDefault();
-                
+
                 var generatedPassword;
 
                 sessionStorage.setItem('email', user.Email);
