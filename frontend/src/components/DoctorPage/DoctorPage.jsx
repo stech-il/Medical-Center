@@ -19,6 +19,7 @@ const DoctorPage = () => {
     const [roomData, setRoomData] = useState({});
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // State to manage the delete modal
     const [isEmergencyModalOpen, setIsEmergencyModalOpen] = useState(false); // State to manage the emergency modal
+    
 
     useEffect(() => {
         const fetchRoomData = async () => {
