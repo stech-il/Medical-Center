@@ -20,3 +20,20 @@ exports.generateDailyReport = async (req, res) => {
         });
     }
 };
+
+
+
+exports.getTodayReports = async (req, res) => {
+    try {
+        const todayReports = await ReportsService.getTodayReports();
+        return res.status(200).json({
+            message: 'Today\'s reports fetched successfully.',
+            data: todayReports
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: 'Internal Server Error',
+            error: error.message
+        });
+    }
+};

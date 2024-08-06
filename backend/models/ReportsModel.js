@@ -18,7 +18,7 @@ const ReportModel = db.define('reports', {
         }
     },
     currentDate: {
-        type: DataTypes.DATE, // Use DATE for 'currentDate' field
+        type: DataTypes.STRING(255), // Use STRING for 'currentDate' field
         allowNull: false
     },
     amountOfPatients: {
@@ -32,5 +32,3 @@ const ReportModel = db.define('reports', {
 });
 
 module.exports = ReportModel;
-
-

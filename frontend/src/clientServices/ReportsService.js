@@ -60,3 +60,25 @@ export const deleteReport = async (id) => {
         throw error;
     }
 };
+
+// Generate a daily report for a specific date
+export const generateDailyReport = async (date) => {
+    try {
+        const response = await axios.post(`${API_URL}/generate/getGenerateReport`, { date });
+        return response.data;
+    } catch (error) {
+        console.error('Error generating daily report:', error);
+        throw error;
+    }
+};
+
+// Get today's reports
+export const getTodayReports = async () => {
+    try {
+        const response = await axios.get(`${API_URL}/generate/today`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching today\'s reports:', error);
+        throw error;
+    }
+};

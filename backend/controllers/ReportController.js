@@ -10,7 +10,7 @@ exports.findReportById = async (req, res) => {
             });
         } else {
             return res.status(404).json({
-                message: 'Report not found.'
+                message: 'Report not founvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvd.'
             });
         }
     } catch (error) {
@@ -66,7 +66,7 @@ exports.updateReport = async (req, res) => {
             });
         } else {
             return res.status(404).json({
-                message: 'Report not found.'
+                message: 'Report not found vvvvvvvvvvvvvvvvvvvvvvvvvvv.'
             });
         }
     } catch (error) {
@@ -86,9 +86,51 @@ exports.deleteReport = async (req, res) => {
             });
         } else {
             return res.status(404).json({
-                message: 'Report not found.'
+                message: 'Report not found vfvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv.'
             });
         }
+    } catch (error) {
+        return res.status(500).json({
+            message: 'Internal Server Error',
+            error: error.message
+        });
+    }
+};
+
+
+
+exports.generateDailyReport = async (req, res) => {
+    try {
+        const { date } = req.body;
+        if (!date) {
+            return res.status(400).json({
+                message: 'Date is required.'
+            });
+        }
+
+        const result = await ReportsService.generateDailyReport(date);
+        return res.status(200).json({
+            message: result.message
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: 'Internal Server Error',
+            error: error.message
+        });
+    }
+};
+
+
+
+exports.getTodayReports = async (req, res) => {
+    try {
+        console.log('ffffffffffff')
+        const todayReports = await ReportsService.getTodayReports();
+        console.log('ffffffffffff')
+        return res.status(200).json({
+            message: 'Today\'s reports fetched successfully.',
+            data: todayReports
+        });
     } catch (error) {
         return res.status(500).json({
             message: 'Internal Server Error',
