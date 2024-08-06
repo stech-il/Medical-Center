@@ -6,34 +6,77 @@ import { useParams } from 'react-router-dom';
 import ZoomOutMapIcon from '@mui/icons-material/ZoomOutMap';
 import useRoomSocket from '../../clientServices/RoomSocket.js';
 import './DoctorPage.css';
-import { getRoomById } from '../../clientServices/RoomService.js';
+import { getAllRooms, getRoomById } from '../../clientServices/RoomService.js';
 import EmergencyDoctorAlertModal from '../QueuesManagment/modals/EmergencyDoctorAlert.jsx';
 import DeletePatientModal from '../QueuesManagment/modals/DeletePatient.jsx';
+
 
 
 const DoctorPage = () => {
     const { id } = useParams();
     const [currentPatient, setCurrentPatient] = useState();
     const [nextPatient, setNextPatient] = useState();
-    const { moveRoom, emergencyAlertToDoctor,endOfTreatment } = useRoomSocket(id, currentPatient, setCurrentPatient, nextPatient, setNextPatient);
     const [roomData, setRoomData] = useState({});
+    const [rooms,setRooms]=useState([]);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // State to manage the delete modal
     const [isEmergencyModalOpen, setIsEmergencyModalOpen] = useState(false); // State to manage the emergency modal
+    const [roomButtons,setRoomButtons]=useState([]);
+
+    const startAudio=()=>{
+        const alertSound = new Audio('/security-alarm-63578.mp3');
+        alertSound.play();
+    }
+
+    const { moveRoom, emergencyAlertToDoctor,endOfTreatment } = useRoomSocket(id, currentPatient, setCurrentPatient, nextPatient, setNextPatient,startAudio);
+    
     
 
+    const getIconForRoom = (roomId) => {
+        switch (roomId) {
+            case 5:
+                return <VaccinesIcon className='queueIcon' />;
+            case 4:
+                return <MonitorHeartIcon className='queueIcon' />;
+            case 3:
+                return <ZoomOutMapIcon className='queueIcon' />;
+            case 2:
+                return <VaccinesIcon className='queueIcon' />;
+            case 1:
+                return <VaccinesIcon className='queueIcon' />;
+            default:
+                return null;
+        }
+    };
+
     useEffect(() => {
-        const fetchRoomData = async () => {
+        const fetchAllRooms = async () => {
             try {
-                const response = await getRoomById(id);
-                setRoomData(response.data);
-                console.log(response.data);
+                const response = await getAllRooms();
+                const fetchedRooms = response.data;
+                setRooms(fetchedRooms);
+                console.log(fetchedRooms);
+    
+                const roomData = fetchedRooms.find(room => room.ID === parseInt(id));
+                setRoomData(roomData);
+                console.log(roomData);
+    
+                const mappedRoomButtons = fetchedRooms.map(room => ({
+                    roomId: room.ID,
+                    icon: getIconForRoom(room.ID),
+                    label: `העבר ל${room.Name}`
+                }));
+    
+                setRoomButtons(mappedRoomButtons);
             } catch (error) {
-                console.error('Error fetching room data:', error);
+                console.error('Error fetching rooms', error);
             }
         };
-
-        fetchRoomData();
+    
+        fetchAllRooms();
     }, [id]);
+
+    
+
 
     //emergencyAlert
     const handleConfirmEmergencyModal = () => {
@@ -72,13 +115,13 @@ const DoctorPage = () => {
         }
     };
 
-    const roomButtons = [
-        { roomId: 5, icon: <VaccinesIcon className='queueIcon' />, label: 'העבר לקבלה' },
-        { roomId: 4, icon: <MonitorHeartIcon className='queueIcon' />, label: 'העבר לחדר אקג' },
-        { roomId: 3, icon: <ZoomOutMapIcon className='queueIcon' />, label: 'העבר לחדר טריאג' },
-        { roomId: 2, icon: <VaccinesIcon className='queueIcon' />, label: 'העבר לחדר טיפולים' },
-        { roomId: 1, icon: <VaccinesIcon className='queueIcon' />, label: 'העבר לחדר רופא' },
-    ];
+    // const roomButtons = [
+    //     { roomId: 5, icon: <VaccinesIcon className='queueIcon' />, label: 'העבר לקבלה' },
+    //     { roomId: 4, icon: <MonitorHeartIcon className='queueIcon' />, label: 'העבר לחדר אקג' },
+    //     { roomId: 3, icon: <ZoomOutMapIcon className='queueIcon' />, label: 'העבר לחדר טריאג' },
+    //     { roomId: 2, icon: <VaccinesIcon className='queueIcon' />, label: 'העבר לחדר טיפולים' },
+    //     { roomId: 1, icon: <VaccinesIcon className='queueIcon' />, label: 'העבר לחדר רופא' },
+    // ];
 
     const anotherButtons = [
         { roomId: 1, icon: <CheckCircleIcon />, label: 'סיום טיפול', className: 'EndOfTreatment anotherButtons', onclick: handleFinishTreatment },
@@ -129,7 +172,7 @@ const DoctorPage = () => {
                         {anotherButtons.map(button => (
                             button.Id !== parseInt(id) && (
                                 <button key={button.Id} className={button.className} onClick={button.onclick}>
-                                    {button.icon}
+                                    {getIconForRoom(button.ID)}
                                     <span>{button.label}</span>
                                 </button>
                             )

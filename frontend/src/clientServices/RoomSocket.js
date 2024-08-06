@@ -1,10 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 import socketIO from 'socket.io-client';
 
-const useRoomSocket = (roomId, currentPatient, setCurrentPatient, nextPatient, setNextPatient) => {
+
+const useRoomSocket = (roomId, currentPatient, setCurrentPatient, nextPatient, setNextPatient,startAudio) => {
     const socketRef = useRef(null);
 
+    const [isAudioAllowed, setIsAudioAllowed] = useState(false);
+
     useEffect(() => {
+
         socketRef.current = socketIO("http://localhost:8000", {
             query: { clientId: roomId }
         });
@@ -23,16 +27,27 @@ const useRoomSocket = (roomId, currentPatient, setCurrentPatient, nextPatient, s
             alert(message);
             console.log(message);
         });
+        socketRef.current.on("Emergencymessage", (message) => {
+            alert(message);            
+            startAudio();          
+            console.log(message);
+        });
 
         return () => {
             socketRef.current.disconnect();
         };
-    }, [roomId]);
+    }, [roomId,isAudioAllowed]);
+
+    const enableAudio = () => {
+        setIsAudioAllowed(true);
+    };
 
     const moveRoom = (roomId) => {
         try {
-            if (currentPatient == null)
+            if (currentPatient == null) {
+                alert("אין מטופל בחדר");
                 console.log("not valid");
+            }
             else {
                 console.log("move client ", currentPatient.ID, " to room ", roomId);
                 const place = true;

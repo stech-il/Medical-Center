@@ -97,7 +97,7 @@ const createSocketServer = (app) => {
                 try {
                     const doctorRoom = await RoomService.findRoomByName("רופא");
                     console.log(doctorRoom, " key ", getKeyByValue(clientRooms, doctorRoom));
-                    io.to(getKeyByValue(clientRooms, doctorRoom)).emit("message", `קריאת חירום לרופא לחדר ${room} עבור מטופל מספר ${patient}`);
+                    io.to(getKeyByValue(clientRooms, doctorRoom)).emit("Emergencymessage", `קריאת חירום לרופא לחדר ${room} עבור מטופל מספר ${patient}`);
                 } catch (error) {
                     console.log(error.message);
                     console.error('Stack Trace:', error.stack);
