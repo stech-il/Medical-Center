@@ -4,6 +4,7 @@ const { Server } = require("socket.io");
 const queueService = require("./QueueService.js");
 const PatientsService = require("./PatientsService.js");
 const RoomService = require("./RoomService.js");
+const MessagesService=require("./MessagesService.js")
 const { nextTick } = require("process");
 
 const getKeyByValue = (map, value) => {
@@ -55,7 +56,7 @@ const createSocketServer = (app) => {
                     //update in the db
                     await queueService.moveBetweenRooms(currentPatient, newRoomId, place);
                     //return approval to the caller
-                    socket.emit("message", "moved Client To Another Room successfully");
+                    // socket.emit("message", "moved Client To Another Room successfully");
                     //update the new room next client- if the movement is to the beginning of the queue
                     nextClient = await queueService.getSecondInQueueByRoom(newRoomId);
                     io.to(getKeyByValue(clientRooms, newRoomId)).emit("updateNextPatient", nextClient ? nextClient.patient : null);
@@ -169,6 +170,21 @@ const createSocketServer = (app) => {
                 }
             });
 
+
+            socket.on("createMessage", async (content, status) => {
+                try {
+                    const message = await MessagesService.createMessage(content, status);       
+                    const allMessages = MessagesService.findAllMessages();
+                    io.to(getKeyByValue(clientRooms, "monitor")).emit("messageUpdate", roomId, allMessages);
+                    
+                    io.to(socket.id).emit(`messageUpdate`, message.dataValues);
+
+                } catch (error) {
+                    console.log(error.message);
+                    console.error('Stack Trace:', error.stack);
+                    throw new Error(error.message);
+                }
+            });
             socket.on("disconnect", () => {
                 clientRooms.delete(socket.id);
                 console.log(socket.id, " disconnected");

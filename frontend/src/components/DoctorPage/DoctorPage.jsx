@@ -10,16 +10,14 @@ import { getRoomById } from '../../clientServices/RoomService.js';
 import EmergencyDoctorAlertModal from '../QueuesManagment/modals/EmergencyDoctorAlert.jsx';
 import DeletePatientModal from '../QueuesManagment/modals/DeletePatient.jsx';
 
-
 const DoctorPage = () => {
     const { id } = useParams();
     const [currentPatient, setCurrentPatient] = useState();
     const [nextPatient, setNextPatient] = useState();
-    const { moveRoom, emergencyAlertToDoctor,endOfTreatment } = useRoomSocket(id, currentPatient, setCurrentPatient, nextPatient, setNextPatient);
+    const { moveRoom, emergencyAlertToDoctor, endOfTreatment, alertComponent } = useRoomSocket(id, currentPatient, setCurrentPatient, nextPatient, setNextPatient);
     const [roomData, setRoomData] = useState({});
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // State to manage the delete modal
-    const [isEmergencyModalOpen, setIsEmergencyModalOpen] = useState(false); // State to manage the emergency modal
-    
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); 
+    const [isEmergencyModalOpen, setIsEmergencyModalOpen] = useState(false); 
 
     useEffect(() => {
         const fetchRoomData = async () => {
@@ -35,10 +33,10 @@ const DoctorPage = () => {
         fetchRoomData();
     }, [id]);
 
-    //emergencyAlert
+    // Emergency Alert Handlers
     const handleConfirmEmergencyModal = () => {
         emergencyAlertToDoctor(currentPatient.UniqueNumber, roomData.Name);
-        alert('קריאת חירום נשלחה לרופא');
+        // alert('קריאת חירום נשלחה לרופא');
         handleCloseEmergencyModal();
     };
 
@@ -50,7 +48,7 @@ const DoctorPage = () => {
         setIsEmergencyModalOpen(true);
     };
 
-    //finish treatment
+    // Finish Treatment Handlers
     const handleFinishTreatment = async () => {
         setIsDeleteModalOpen(true);
     };
@@ -61,11 +59,9 @@ const DoctorPage = () => {
 
     const handleConfirmDeleteModal = async () => {
         try {
-            //await deletePatient(currentPatient.ID);
             endOfTreatment(currentPatient.ID);
-            alert('הטיפול הסתיים בהצלחה');            
+            alert('הטיפול הסתיים בהצלחה');
             handleCloseDeleteModal();
-            
         } catch (error) {
             console.error('Error deleting patient:', error);
             alert('Failed to delete patient.');
@@ -82,7 +78,7 @@ const DoctorPage = () => {
 
     const anotherButtons = [
         { roomId: 1, icon: <CheckCircleIcon />, label: 'סיום טיפול', className: 'EndOfTreatment anotherButtons', onclick: handleFinishTreatment },
-        { roomId: 2,  label: 'התראת חירום לרופא ', className: 'emergencyAlert anotherButtons', onclick: handleOpenEmergencyModal }
+        { roomId: 2, label: 'התראת חירום לרופא ', className: 'emergencyAlert anotherButtons', onclick: handleOpenEmergencyModal }
     ];
 
     return (
@@ -152,11 +148,10 @@ const DoctorPage = () => {
                 patientName={currentPatient ? `${currentPatient.FirstName} ${currentPatient.LastName}` : ''}
                 roomName={id ? roomData.Name : ''}
             />
-        </div>
 
-        
+            {alertComponent} {/* This renders the custom alert */}
+        </div>
     );
 };
-
 
 export default DoctorPage;
