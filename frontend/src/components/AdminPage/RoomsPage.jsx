@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
-import { getAllRooms } from '../../../clientServices/RoomService';
+import { getAllRooms } from '../../clientServices/RoomService';
 import { useNavigate } from 'react-router-dom';
 
-import './pagesNavigate.css'
+import '../HomePage/pagesNavigate/pagesNavigate.css';
+
 const RoomsPage = () => {
   const [rooms, setRooms] = useState([]);
 

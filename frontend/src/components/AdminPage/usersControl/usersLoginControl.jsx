@@ -22,14 +22,13 @@ function MyVerticallyCenteredModal(props) {
             var userData = await userLogin(user);
             if (userData) {
                 sessionStorage.setItem('email', userData.Email);
-                var role = await getRoleById(userData.RoleID);
-                if (role.Role == 'admin')
+                if (userData.RoleID === 1)
                     navigate('/admin', { state: 0 });
                 else {
-                    if (role.Role == 'secretary')
-                        navigate('/admin', { state: 1 })
+                    if (userData.RoleID === 2)
+                        navigate('/rooms');
                     else
-                        navigate();
+                        navigate('/admin', { state: 1 });
                 }
                 // navigate('/admin');
                 // if(userData)
@@ -98,11 +97,6 @@ function MyVerticallyCenteredModal(props) {
             aria-labelledby="contained-modal-title-vcenter"
             centered
         >
-            <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
-                    כניסת משתמש
-                </Modal.Title>
-            </Modal.Header>
             <Modal.Body>
                 <h4>כניסת משתמש</h4>
                 <form>
@@ -121,7 +115,7 @@ function MyVerticallyCenteredModal(props) {
                 </form>
             </Modal.Body>
             <Modal.Footer>
-                <Button onClick={props.onHide}>סגירה</Button>
+                <Button onClick={() => navigate('/pagesNavigate')}>סגירה</Button>
                 <Button onClick={handleForgotPassword}>שכחתי סיסמא</Button>
                 <Button onClick={handleUserLogin}>כניסה</Button>
             </Modal.Footer>
@@ -131,14 +125,10 @@ function MyVerticallyCenteredModal(props) {
 
 
 const UserLogin = () => {
-    const [modalShow, setModalShow] = useState(false);
+    const [modalShow, setModalShow] = useState(true);
 
     return (
         <div>
-            <Button variant="primary" onClick={() => setModalShow(true)}>
-                כניסת משתמש
-            </Button>
-
             <MyVerticallyCenteredModal
                 show={modalShow}
                 onHide={() => setModalShow(false)}

@@ -1,14 +1,16 @@
 import React from 'react';
 import SidebarMenu from '../sidebar/sidebar'
 import './AdminPage.css'
+import { useLocation } from 'react-router-dom';
 const AdminPage = () => {
 
+    const location = useLocation();
     const role = location.state;
 
     return (
         <>
             <div className='AdminPageContainer' style={{ direction:"rtl" }}>
-                <SidebarMenu />
+                <SidebarMenu role={role} />
                 <div>ניהול מערכת</div>
                 <div>
                     <div>עדכון אחרון</div>
