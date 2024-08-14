@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import socketIO from 'socket.io-client';
 import CustomAlert from './CustomAlert'; // Import the CustomAlert component
 
+
 const useRoomSocket = (roomId, currentPatient, setCurrentPatient, nextPatient, setNextPatient) => {
     const [alertOpen, setAlertOpen] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
@@ -12,6 +13,7 @@ const useRoomSocket = (roomId, currentPatient, setCurrentPatient, nextPatient, s
     };
 
     useEffect(() => {
+
         socketRef.current = socketIO("http://localhost:8000", {
             query: { clientId: roomId }
         });
@@ -31,6 +33,10 @@ const useRoomSocket = (roomId, currentPatient, setCurrentPatient, nextPatient, s
             setAlertOpen(true);
             console.log(message);
         });
+        socketRef.current.on("Emergencymessage", (message) => {
+            alert(message);
+            console.log(message);
+        });
 
         return () => {
             socketRef.current.disconnect();
@@ -39,8 +45,10 @@ const useRoomSocket = (roomId, currentPatient, setCurrentPatient, nextPatient, s
 
     const moveRoom = (roomId) => {
         try {
-            if (currentPatient == null)
+            if (currentPatient == null) {
+                alert("אין מטופל בחדר");
                 console.log("not valid");
+            }
             else {
                 console.log("move client ", currentPatient.ID, " to room ", roomId);
                 const place = true;
