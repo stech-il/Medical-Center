@@ -23,6 +23,7 @@ exports.findUserById = async (req, res) => {
 
 exports.findUserByEmailAddress = async (req, res) => {
     try {
+        console.log(req.params.emailAddress)
         const user = await UsersService.findUserByEmailAddress(req.params.emailAddress);
         if (user) {
             return res.json({
