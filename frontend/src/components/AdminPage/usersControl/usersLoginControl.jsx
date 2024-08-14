@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { getUserByEmailAddress, userLogin } from '../../../clientServices/UserService';
-import { getRoleById } from '../../../clientServices/RoleService';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import emailjs from 'emailjs-com';
 
