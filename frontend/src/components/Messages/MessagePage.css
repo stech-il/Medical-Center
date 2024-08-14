@@ -1,6 +1,6 @@
 .MessageItemContainer {
     display: flex;
-    width: 25%;
+    width: 400px;
     height: 280px;
     margin: 20px;
     justify-content: center;
