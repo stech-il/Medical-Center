@@ -2,10 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import socketIO from 'socket.io-client';
 
 
-const useRoomSocket = (roomId, currentPatient, setCurrentPatient, nextPatient, setNextPatient,startAudio) => {
+const useRoomSocket = (roomId, currentPatient, setCurrentPatient, nextPatient, setNextPatient) => {
     const socketRef = useRef(null);
-
-    const [isAudioAllowed, setIsAudioAllowed] = useState(false);
 
     useEffect(() => {
 
@@ -28,19 +26,14 @@ const useRoomSocket = (roomId, currentPatient, setCurrentPatient, nextPatient, s
             console.log(message);
         });
         socketRef.current.on("Emergencymessage", (message) => {
-            alert(message);            
-            startAudio();          
+            alert(message);
             console.log(message);
         });
 
         return () => {
             socketRef.current.disconnect();
         };
-    }, [roomId,isAudioAllowed]);
-
-    const enableAudio = () => {
-        setIsAudioAllowed(true);
-    };
+    }, [roomId]);
 
     const moveRoom = (roomId) => {
         try {

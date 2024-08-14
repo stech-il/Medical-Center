@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useRef, useEffect, useState } from 'react';
 import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
 import VaccinesIcon from '@mui/icons-material/Vaccines';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -17,19 +17,16 @@ const DoctorPage = () => {
     const [currentPatient, setCurrentPatient] = useState();
     const [nextPatient, setNextPatient] = useState();
     const [roomData, setRoomData] = useState({});
-    const [rooms,setRooms]=useState([]);
+    const [rooms, setRooms] = useState([]);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // State to manage the delete modal
     const [isEmergencyModalOpen, setIsEmergencyModalOpen] = useState(false); // State to manage the emergency modal
-    const [roomButtons,setRoomButtons]=useState([]);
-
-    const startAudio=()=>{
-        const alertSound = new Audio('/security-alarm-63578.mp3');
-        alertSound.play();
-    }
-
-    const { moveRoom, emergencyAlertToDoctor,endOfTreatment } = useRoomSocket(id, currentPatient, setCurrentPatient, nextPatient, setNextPatient,startAudio);
+    const [roomButtons, setRoomButtons] = useState([]);
     
-    
+
+
+    const { moveRoom, emergencyAlertToDoctor, endOfTreatment } = useRoomSocket(id, currentPatient, setCurrentPatient, nextPatient, setNextPatient);
+
+
 
     const getIconForRoom = (roomId) => {
         switch (roomId) {
@@ -55,27 +52,27 @@ const DoctorPage = () => {
                 const fetchedRooms = response.data;
                 setRooms(fetchedRooms);
                 console.log(fetchedRooms);
-    
+
                 const roomData = fetchedRooms.find(room => room.ID === parseInt(id));
                 setRoomData(roomData);
                 console.log(roomData);
-    
+
                 const mappedRoomButtons = fetchedRooms.map(room => ({
                     roomId: room.ID,
                     icon: getIconForRoom(room.ID),
                     label: `העבר ל${room.Name}`
                 }));
-    
+
                 setRoomButtons(mappedRoomButtons);
             } catch (error) {
                 console.error('Error fetching rooms', error);
             }
         };
-    
+
         fetchAllRooms();
     }, [id]);
 
-    
+
 
 
     //emergencyAlert
@@ -90,7 +87,11 @@ const DoctorPage = () => {
     };
 
     const handleOpenEmergencyModal = () => {
-        setIsEmergencyModalOpen(true);
+        if (currentPatient == null) {
+            alert("אין מטופל בחדר");
+        }
+        else
+            setIsEmergencyModalOpen(true);
     };
 
     //finish treatment
@@ -106,9 +107,9 @@ const DoctorPage = () => {
         try {
             //await deletePatient(currentPatient.ID);
             endOfTreatment(currentPatient.ID);
-            alert('הטיפול הסתיים בהצלחה');            
+            alert('הטיפול הסתיים בהצלחה');
             handleCloseDeleteModal();
-            
+
         } catch (error) {
             console.error('Error deleting patient:', error);
             alert('Failed to delete patient.');
@@ -125,7 +126,7 @@ const DoctorPage = () => {
 
     const anotherButtons = [
         { roomId: 1, icon: <CheckCircleIcon />, label: 'סיום טיפול', className: 'EndOfTreatment anotherButtons', onclick: handleFinishTreatment },
-        { roomId: 2,  label: 'התראת חירום לרופא ', className: 'emergencyAlert anotherButtons', onclick: handleOpenEmergencyModal }
+        { roomId: 2, label: 'התראת חירום לרופא ', className: 'emergencyAlert anotherButtons', onclick: handleOpenEmergencyModal }
     ];
 
     return (
@@ -197,7 +198,7 @@ const DoctorPage = () => {
             />
         </div>
 
-        
+
     );
 };
 
