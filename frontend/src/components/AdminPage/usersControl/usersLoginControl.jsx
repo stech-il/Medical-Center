@@ -5,6 +5,7 @@ import Modal from 'react-bootstrap/Modal';
 import { getUserByEmailAddress, userLogin } from '../../../clientServices/UserService';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import emailjs from 'emailjs-com';
+import { getRoleById } from '../../../clientServices/RoleService';
 
 function MyVerticallyCenteredModal(props) {
     const navigate = useNavigate();
@@ -22,15 +23,13 @@ function MyVerticallyCenteredModal(props) {
             if (userData) {
                 sessionStorage.setItem('email', userData.Email);
                 if (userData.RoleID === 1)
-                    navigate('/admin', { state: 0 });
+                    navigate('/admin', { state: 1 });
                 else {
                     if (userData.RoleID === 2)
                         navigate('/rooms');
                     else
-                        navigate('/admin', { state: 1 });
+                        navigate('/admin', { state: 0 });
                 }
-                // navigate('/admin');
-                // if(userData)
             }
             else
                 alert("error");
@@ -65,7 +64,10 @@ function MyVerticallyCenteredModal(props) {
 
                 var generatedPassword;
 
+                var role = await getRoleById(user.RoleID);
                 sessionStorage.setItem('email', user.Email);
+                sessionStorage.setItem('role', role.Role);
+
                 generatedPassword = generateRandomPassword();
                 const templateParams = {
                     to_email: user.Email,
@@ -114,7 +116,7 @@ function MyVerticallyCenteredModal(props) {
                 </form>
             </Modal.Body>
             <Modal.Footer>
-                <Button onClick={() => navigate('/pagesNavigate')}>סגירה</Button>
+                <Button onClick={() => navigate('/')}>סגירה</Button>
                 <Button onClick={handleForgotPassword}>שכחתי סיסמא</Button>
                 <Button onClick={handleUserLogin}>כניסה</Button>
             </Modal.Footer>
