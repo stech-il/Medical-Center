@@ -9,7 +9,10 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import MonitorIcon from '@mui/icons-material/Monitor';
 
 import './sidebar.css'
-function SidebarMenu() {
+function SidebarMenu({ role }) {
+
+  role = 1;
+
   const [collapsed, setCollapsed] = useState(true);
 
   const navigate = useNavigate();
@@ -48,7 +51,9 @@ function SidebarMenu() {
       <Sidebar className='sidebar' rtl={true} collapsed={collapsed} style={{ height: "100vh" }}>
         <Menu >
           <MenuItem icon={<Home className='icon' />} onClick={goToHomePage}>בית</MenuItem>
-          <MenuItem icon={<PeopleAltIcon className='icon' />} onClick={goToUsersPage}>משתמשים</MenuItem>
+          {role === 1 && (
+            <MenuItem icon={<PeopleAltIcon className='icon' />} onClick={goToUsersPage}>משתמשים</MenuItem>
+          )}
           <MenuItem icon={<MeetingRoomIcon className='icon' />} onClick={goToQueueManagmentPage}>ניהול תורים</MenuItem>
           <MenuItem icon={<MessageIcon className='icon' />} onClick={goToMessagesPage}>הודעות</MenuItem>
           <MenuItem icon={<AssessmentIcon className='icon' />} onClick={goToReportsPage}>ניתוח נתונים</MenuItem>
