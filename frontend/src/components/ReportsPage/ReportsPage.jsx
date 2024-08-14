@@ -7,6 +7,7 @@ import { getAllReports, getTodayReports, generateDailyReport } from '../../clien
 import GenerateReportModal from './generateNewReportModal';
 import { DownloadTableExcel } from 'react-export-table-to-excel';
 import excelImg from './excelImg.png';
+import { useNavigate } from 'react-router-dom';
 
 const ReportsPage = () => {
     const [allReports, setAllReports] = useState([]);
@@ -18,6 +19,8 @@ const ReportsPage = () => {
     const [selectedDate, setSelectedDate] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
     const tableRef = useRef(null);
+
+    const navigate = useNavigate();
 
     const fetchAllReports = async () => {
         try {
@@ -38,8 +41,13 @@ const ReportsPage = () => {
     };
 
     useEffect(() => {
-        fetchAllReports();
-        fetchTodayReports();
+        if (!sessionStorage.getItem('email')) {
+            navigate('/');
+        }
+        else {
+            fetchAllReports();
+            fetchTodayReports();
+        }
     }, []);
 
     useEffect(() => {

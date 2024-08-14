@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar';
 import { useNavigate } from 'react-router-dom';
 import { Home } from '@mui/icons-material';
@@ -9,11 +9,18 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import MonitorIcon from '@mui/icons-material/Monitor';
 
 import './sidebar.css'
+
 function SidebarMenu({ role }) {
 
   const [collapsed, setCollapsed] = useState(true);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!sessionStorage.getItem('email')) {
+      navigate('/');
+    }
+  }, []);
 
   const handleToggleSidebar = () => {
     setCollapsed(!collapsed);
