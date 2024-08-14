@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require('cors');
+require('dotenv').config();
 const db = require('./database/db.js');
 const createSocketServer = require('./services/SocketServer.js')
 
