@@ -5,6 +5,7 @@ import Modal from 'react-bootstrap/Modal';
 import { getUsers, createUser, getUserByEmailAddress } from '../../../clientServices/UserService';
 import { getRoles } from '../../../clientServices/RoleService';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -18,6 +19,8 @@ function MyVerticallyCenteredModal(props) {
         Status: true
     });
 
+    const navigate = useNavigate();
+
     const [roles, setRoles] = useState([]);
 
     const fetchRoles = async () => {
@@ -30,7 +33,12 @@ function MyVerticallyCenteredModal(props) {
     };
 
     useEffect(() => {
-        fetchRoles();
+        if (!sessionStorage.getItem('email')) {
+            navigate('/');
+        }
+        else {
+            fetchRoles();
+        }
     }, []);
 
     const validateUserName = () => {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -126,13 +126,11 @@ function MyVerticallyCenteredModal(props) {
 
 
 const UserLogin = () => {
-    const [modalShow, setModalShow] = useState(true);
 
     return (
         <div>
             <MyVerticallyCenteredModal
-                show={modalShow}
-                onHide={() => setModalShow(false)}
+                show={true}
             />
         </div>
     );
