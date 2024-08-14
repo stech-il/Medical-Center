@@ -98,10 +98,10 @@ function MyVerticallyCenteredModal(props) {
     }
 
     const validateInputs = () => {
-        return validateUserName() && 
-            validateRole() && 
-            validatePassword() && 
-            validateEmail() && 
+        return validateUserName() &&
+            validateRole() &&
+            validatePassword() &&
+            validateEmail() &&
             validatePhoneNumber();
     }
 
@@ -112,8 +112,8 @@ function MyVerticallyCenteredModal(props) {
                 alert("Invalid input");
                 return;
             }
-            var user = await getUserByEmailAddress(newUser.Email);
-            if(user.data) {
+            var isExist = await getUserByEmailAddress(newUser.Email);
+            if (!isExist || !isExist.data) {
                 alert('Email already Exist');
                 return;
             }

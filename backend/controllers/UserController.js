@@ -75,6 +75,7 @@ exports.createUser = async (req, res) => {
         }
     } catch (error) {
         return res.status(500).json({
+            data: null,
             message: 'Internal Server Error',
             error: error.message
         });

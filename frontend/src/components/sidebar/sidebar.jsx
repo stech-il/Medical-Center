@@ -11,8 +11,6 @@ import MonitorIcon from '@mui/icons-material/Monitor';
 import './sidebar.css'
 function SidebarMenu({ role }) {
 
-  role = 1;
-
   const [collapsed, setCollapsed] = useState(true);
 
   const navigate = useNavigate();
