@@ -149,9 +149,7 @@ const QueueManagmentPage = () => {
 
     const handleCloseAddPatientModal = () => {
         setIsAddPatientModalOpen(false);
-    };
-
-  
+    }; 
 
     const handleOpenAddRoomModal = () => {
         setIsAddRoomModalOpen(true);
