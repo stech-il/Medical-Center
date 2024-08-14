@@ -17,4 +17,7 @@ router.put('/:id', ReportController.updateReport);
 // Delete a report by ID
 router.delete('/:id', ReportController.deleteReport);
 
+router.post('/generate/getGenerateReport', ReportController.generateDailyReport);
+router.get('/generate/today', ReportController.getTodayReports);
+
 module.exports = router;

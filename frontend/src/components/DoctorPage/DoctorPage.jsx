@@ -10,8 +10,6 @@ import { getAllRooms, getRoomById } from '../../clientServices/RoomService.js';
 import EmergencyDoctorAlertModal from '../QueuesManagment/modals/EmergencyDoctorAlert.jsx';
 import DeletePatientModal from '../QueuesManagment/modals/DeletePatient.jsx';
 
-
-
 const DoctorPage = () => {
     const { id } = useParams();
     const [currentPatient, setCurrentPatient] = useState();
@@ -21,10 +19,9 @@ const DoctorPage = () => {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // State to manage the delete modal
     const [isEmergencyModalOpen, setIsEmergencyModalOpen] = useState(false); // State to manage the emergency modal
     const [roomButtons, setRoomButtons] = useState([]);
-    
 
+    const { moveRoom, emergencyAlertToDoctor, endOfTreatment, alertComponent } = useRoomSocket(id, currentPatient, setCurrentPatient, nextPatient, setNextPatient);
 
-    const { moveRoom, emergencyAlertToDoctor, endOfTreatment } = useRoomSocket(id, currentPatient, setCurrentPatient, nextPatient, setNextPatient);
 
 
 
@@ -73,12 +70,10 @@ const DoctorPage = () => {
     }, [id]);
 
 
-
-
-    //emergencyAlert
+    // Emergency Alert Handlers
     const handleConfirmEmergencyModal = () => {
         emergencyAlertToDoctor(currentPatient.UniqueNumber, roomData.Name);
-        alert('קריאת חירום נשלחה לרופא');
+        // alert('קריאת חירום נשלחה לרופא');
         handleCloseEmergencyModal();
     };
 
@@ -94,7 +89,7 @@ const DoctorPage = () => {
             setIsEmergencyModalOpen(true);
     };
 
-    //finish treatment
+    // Finish Treatment Handlers
     const handleFinishTreatment = async () => {
         setIsDeleteModalOpen(true);
     };
@@ -105,7 +100,6 @@ const DoctorPage = () => {
 
     const handleConfirmDeleteModal = async () => {
         try {
-            //await deletePatient(currentPatient.ID);
             endOfTreatment(currentPatient.ID);
             alert('הטיפול הסתיים בהצלחה');
             handleCloseDeleteModal();
@@ -196,11 +190,9 @@ const DoctorPage = () => {
                 patientName={currentPatient ? `${currentPatient.FirstName} ${currentPatient.LastName}` : ''}
                 roomName={id ? roomData.Name : ''}
             />
+            {alertComponent} {/* This renders the custom alert */}
         </div>
-
-
     );
 };
-
 
 export default DoctorPage;

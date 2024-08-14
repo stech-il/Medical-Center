@@ -17,19 +17,19 @@ export default function PatientsTable({ patients, setPatients, onSelectPatient }
     const [orderBy, setOrderBy] = useState('FirstName');
     const [searchQuery, setSearchQuery] = useState('');
 
-    useEffect(()=>{
+    useEffect(() => {
         const fetchFirst = async () => {
             const response = await getAllPatientsWithQueueDetails();
             setPatients(response.data.data);
         }
         fetchFirst();
-    },[]);
+    }, []);
 
-    useEffect(() => {        
+    useEffect(() => {
 
         const fetchPatients = async () => {
             try {
-                 let p = patients;
+                let p = patients;
 
                 // Group patients by queue
                 let queues = {};
@@ -87,7 +87,7 @@ export default function PatientsTable({ patients, setPatients, onSelectPatient }
         setSearchQuery(event.target.value);
     };
 
-    const filteredPatients = patients?patients.filter((patient) => {
+    const filteredPatients = patients ? patients.filter((patient) => {
         const fullName = `${patient.FirstName} ${patient.LastName}`.toLowerCase();
         const uniqueNumber = (patient.UniqueNumber || '').toLowerCase();
         const roomName = patient.queues.length > 0 ? (patient.queues[0].room.Name || '').toLowerCase() : '';
@@ -99,9 +99,9 @@ export default function PatientsTable({ patients, setPatients, onSelectPatient }
             roomName.includes(searchQuery.toLowerCase()) ||
             priorityNumber.includes(searchQuery.toLowerCase())
         );
-    }):[];
+    }) : [];
 
-    const sortedPatients = filteredPatients?filteredPatients.sort((a, b) => {
+    const sortedPatients = filteredPatients ? filteredPatients.sort((a, b) => {
         if (orderBy === 'FirstName' || orderBy === 'LastName') {
             return order === 'asc' ? a[orderBy].localeCompare(b[orderBy]) : b[orderBy].localeCompare(a[orderBy]);
         } else if (orderBy === 'room') {
@@ -115,7 +115,7 @@ export default function PatientsTable({ patients, setPatients, onSelectPatient }
         } else {
             return order === 'asc' ? a[orderBy] - b[orderBy] : b[orderBy] - a[orderBy];
         }
-    }):[];
+    }) : [];
 
     return (
         <div>
@@ -177,6 +177,15 @@ export default function PatientsTable({ patients, setPatients, onSelectPatient }
                                     קופת חולים
                                 </TableSortLabel>
                             </TableCell>
+                            <TableCell align="center">
+                                <TableSortLabel
+                                    active={orderBy === 'tz'}
+                                    direction={orderBy === 'tz' ? order : 'asc'}
+                                    onClick={() => handleRequestSort('tz')}
+                                >
+                                    מספר זהות
+                                </TableSortLabel>
+                            </TableCell>
                             <TableCell align="center">שעת כניסה</TableCell>
                         </TableRow>
                     </TableHead>
@@ -207,6 +216,8 @@ export default function PatientsTable({ patients, setPatients, onSelectPatient }
                                     {patient.queues.length > 0 ? patient.queues[0].PriorityNumber : 'N/A'}
                                 </TableCell>
                                 <TableCell align="center">{patient.HMO.Name}</TableCell>
+                                <TableCell align="center">{patient.Tz}</TableCell>
+
                                 <TableCell align="center">
                                     {patient.CheckIn ? new Date(patient.CheckIn).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'N/A'}
                                 </TableCell>

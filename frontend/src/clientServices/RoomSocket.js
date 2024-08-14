@@ -1,9 +1,16 @@
 import { useState, useEffect, useRef } from 'react';
 import socketIO from 'socket.io-client';
+import CustomAlert from './CustomAlert'; // Import the CustomAlert component
 
 
 const useRoomSocket = (roomId, currentPatient, setCurrentPatient, nextPatient, setNextPatient) => {
+    const [alertOpen, setAlertOpen] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
     const socketRef = useRef(null);
+
+    const handleAlertClose = () => {
+        setAlertOpen(false);
+    };
 
     useEffect(() => {
 
@@ -22,7 +29,8 @@ const useRoomSocket = (roomId, currentPatient, setCurrentPatient, nextPatient, s
         });
 
         socketRef.current.on("message", (message) => {
-            alert(message);
+            setAlertMessage(message);
+            setAlertOpen(true);
             console.log(message);
         });
         socketRef.current.on("Emergencymessage", (message) => {
@@ -80,7 +88,14 @@ const useRoomSocket = (roomId, currentPatient, setCurrentPatient, nextPatient, s
         }
     }
 
-    return { emergencyAlertToDoctor, endOfTreatment, currentPatient, nextPatient, moveRoom };
+    return { 
+        emergencyAlertToDoctor, 
+        endOfTreatment, 
+        currentPatient, 
+        nextPatient, 
+        moveRoom, 
+        alertComponent: <CustomAlert open={alertOpen} onClose={handleAlertClose} message={alertMessage} />
+    };
 };
 
 export default useRoomSocket;

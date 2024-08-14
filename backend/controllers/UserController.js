@@ -68,6 +68,7 @@ exports.createUser = async (req, res) => {
             });
         } else {
             return res.status(404).json({
+                data: null,
                 message: 'Failed.'
             });
         }
@@ -83,13 +84,15 @@ exports.userLogin = async (req, res) => {
     try {
         const email = req.body.Email;
         const password = req.body.Password;
-        const loggedIn = await UsersService.userLogin(email, password);
-        if (loggedIn) {
+        const user = await UsersService.userLogin(email, password);
+        if (user) {
             return res.json({
+                data: user,
                 message: 'Login successful'
             });
         } else {
             return res.status(401).json({
+                data: null,
                 message: 'Login failed. Wrong password.'
             });
         }

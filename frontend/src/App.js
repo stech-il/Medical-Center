@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
 
 import AdminPage from './components/AdminPage/AdminPage';
+import RoomsPage from './components/AdminPage/RoomsPage';
 import HomePage from './components/HomePage/HomePage';
 import UsersControl from './components/AdminPage/usersControl/usersControl';
 import PagesNavigation from './components/HomePage/pagesNavigate/pagesNavigate';
@@ -35,6 +36,7 @@ function App() {
           <Route path="/messages" element={<MessagePage />} />
           <Route path="/monitor" element={<MonitorPage />} />
           <Route path="/reports" element={<ReportsPage />} />
+          <Route path="/rooms" element={<RoomsPage />} />
 
           <Route path="/QueueManagment" element={<QueueManagmentPage />} />
           <Route path="/checkPassword" element={<ConfirmPassword />} />

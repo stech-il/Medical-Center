@@ -217,6 +217,17 @@ const QueueManagmentPage = () => {
                                     {selectedPatient && selectedPatient.queues.length > 0 ? selectedPatient.queues[0].PriorityNumber : '---'}
                                 </div>
                             </div>
+
+                            <div className='patientDetail'>
+                                <div className='detailTitleContainer'>
+                                    <FormatListNumberedRtlIcon className='detailTitle' />
+                                    <div className='detailTitle'>מספר זהות</div>
+                                </div>
+                                <div className='detailProperty'>
+                                    {selectedPatient && selectedPatient.queues.length > 0 ? selectedPatient.Tz : '---'}
+                                </div>
+                            </div>
+
                             <div className='patientDetail'>
                                 <div className='detailTitleContainer'>
                                     <FormatListNumberedRtlIcon className='detailTitle' />

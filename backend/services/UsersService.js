@@ -14,7 +14,7 @@ exports.createUser = async (userData) => {
     try {
         const user = await this.findUserByEmailAddress(userData.Email);
 
-        if(user) {
+        if (user) {
             return null;
         }
 
@@ -51,15 +51,34 @@ exports.userLogin = async (emailAddress, password) => {
         const user = await this.findUserByEmailAddress(emailAddress);
         if (user) {
             const passwordMatch = await bcrypt.compare(password, user.Password);
-            return passwordMatch;
+            if (passwordMatch) {
+                return user;
+            }
+            return null;
         }
-        return false; // User not found
+        return null;
     } catch (error) {
         throw error;
     }
 }
 
-exports.updateUser = (id, userData) => {
+exports.updateUser = async (id, userData, flag) => {
+    // update password
+    if (flag == true) {
+        const salt = await bcrypt.genSalt(10);
+
+        const hashPassword = await new Promise((resolve, reject) => {
+            bcrypt.hash(userData.Password, salt, function (err, hashedPassword) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(hashedPassword);
+                }
+            });
+        });
+
+        userData.Password = hashPassword;
+    }
     return UsersModel.update(userData, {
         where: { ID: id }
     });

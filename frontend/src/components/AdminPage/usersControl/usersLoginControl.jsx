@@ -9,7 +9,7 @@ import emailjs from 'emailjs-com';
 function MyVerticallyCenteredModal(props) {
     const navigate = useNavigate();
 
-    emailjs.init('MWdKGN28PpafQHXOI');
+    emailjs.init('OGeC5v16OEXHrsSlr');
 
     const [user, setUser] = useState({
         Password: '',
@@ -18,10 +18,20 @@ function MyVerticallyCenteredModal(props) {
 
     const handleUserLogin = async () => {
         try {
-            var isExist = await userLogin(user);
-            sessionStorage.setItem('email', user.Email);
-            if (isExist)
-                navigate('/admin');
+            var userData = await userLogin(user);
+            if (userData) {
+                sessionStorage.setItem('email', userData.Email);
+                if (userData.RoleID === 1)
+                    navigate('/admin', { state: 0 });
+                else {
+                    if (userData.RoleID === 2)
+                        navigate('/rooms');
+                    else
+                        navigate('/admin', { state: 1 });
+                }
+                // navigate('/admin');
+                // if(userData)
+            }
             else
                 alert("error");
         } catch (error) {
@@ -39,7 +49,6 @@ function MyVerticallyCenteredModal(props) {
         return password;
     }
 
-    var generatedPassword;
 
     const handleForgotPassword = async (e) => {
 
@@ -54,6 +63,8 @@ function MyVerticallyCenteredModal(props) {
             else {
                 e.preventDefault();
 
+                var generatedPassword;
+
                 sessionStorage.setItem('email', user.Email);
                 generatedPassword = generateRandomPassword();
                 const templateParams = {
@@ -62,15 +73,14 @@ function MyVerticallyCenteredModal(props) {
                 };
 
                 emailjs.send(
-                    'service_537hb2a', // service ID
-                    'template_87mgofj', // template ID
+                    'service_b5emsma', // service ID
+                    'template_5f0jjve', // template ID
                     templateParams
                 )
                     .then((response) => {
                         console.log('SUCCESS!', response.status, response.text);
                         props.onHide();
                         navigate('/checkPassword', { state: generatedPassword });
-                        // confirmPassword();
                     })
                     .catch((error) => {
                         console.error('FAILED...', error);
@@ -86,11 +96,6 @@ function MyVerticallyCenteredModal(props) {
             aria-labelledby="contained-modal-title-vcenter"
             centered
         >
-            <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
-                    כניסת משתמש
-                </Modal.Title>
-            </Modal.Header>
             <Modal.Body>
                 <h4>כניסת משתמש</h4>
                 <form>
@@ -109,7 +114,7 @@ function MyVerticallyCenteredModal(props) {
                 </form>
             </Modal.Body>
             <Modal.Footer>
-                <Button onClick={props.onHide}>סגירה</Button>
+                <Button onClick={() => navigate('/pagesNavigate')}>סגירה</Button>
                 <Button onClick={handleForgotPassword}>שכחתי סיסמא</Button>
                 <Button onClick={handleUserLogin}>כניסה</Button>
             </Modal.Footer>
@@ -119,14 +124,10 @@ function MyVerticallyCenteredModal(props) {
 
 
 const UserLogin = () => {
-    const [modalShow, setModalShow] = useState(false);
+    const [modalShow, setModalShow] = useState(true);
 
     return (
         <div>
-            <Button variant="primary" onClick={() => setModalShow(true)}>
-                כניסת משתמש
-            </Button>
-
             <MyVerticallyCenteredModal
                 show={modalShow}
                 onHide={() => setModalShow(false)}

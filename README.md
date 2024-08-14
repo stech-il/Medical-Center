@@ -137,6 +137,12 @@ This project is a real-time queue management system designed for a medical cente
 - `queueUpdate`: Broadcasted when the queue is updated.
 - `patientTransfer`: Broadcasted when a patient is transferred to another room.
 
+### Install Packages
+
+- npm install @mui/icons-material @mui/material @emotion/styled @emotion/react
+- npm install @mui/x-charts
+- npm install react-export-table-to-excel
+- npm install react-bootstrap bootstrap
 ## Contributing
 
 Contributions are welcome! Please fork the repository and submit a pull request for review.
