@@ -11,24 +11,20 @@ const AdminPage = () => {
 
     useEffect(() => {
         if (!sessionStorage.getItem('email')) {
-            navigate('/userLogin');
+            navigate('/');
         }
     }, []);
 
     return (
         <>
-            {sessionStorage.getItem('email') ? (
-                <div className='AdminPageContainer' style={{ direction: "rtl" }}>
-                    <SidebarMenu role={role} />
-                    <div>ניהול מערכת</div>
-                    <div>
-                        <div>עדכון אחרון</div>
-                        <div>15-02-2024 14:32</div>
-                    </div>
+            <div className='AdminPageContainer' style={{ direction: "rtl" }}>
+                <SidebarMenu role={role} />
+                <div>ניהול מערכת</div>
+                <div>
+                    <div>עדכון אחרון</div>
+                    <div>15-02-2024 14:32</div>
                 </div>
-            ) : (
-                <div>Redirecting...</div>
-            )}
+            </div>
         </>
 
     );

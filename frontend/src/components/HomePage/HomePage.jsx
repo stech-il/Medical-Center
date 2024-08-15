@@ -9,7 +9,7 @@ const HomePage = () => {
   const navigate = useNavigate();
 
   const goToPagesNavigate = () => {
-    navigate('/userLogin');
+    navigate('/pagesNavigate');
   };
   return (
     <>
