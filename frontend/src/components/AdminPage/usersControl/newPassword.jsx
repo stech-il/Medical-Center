@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
+import {
+    Modal,
+    Box,
+    Typography,
+    TextField,
+    Button
+} from '@mui/material';
 import { updateUser, getUserByEmailAddress } from '../../../clientServices/UserService';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 function MyVerticallyCenteredModal(props) {
 
@@ -38,9 +42,9 @@ function MyVerticallyCenteredModal(props) {
                 alert("Invalid input");
                 return;
             }
-            var email = sessionStorage.getItem('email');
-            var user = await getUserByEmailAddress(email);
-            var updatedUser = {
+            const email = sessionStorage.getItem('email');
+            const user = await getUserByEmailAddress(email);
+            const updatedUser = {
                 Name: user.data.Name,
                 RoleID: user.data.roleID,
                 Password: password.NewPassword,
@@ -48,9 +52,10 @@ function MyVerticallyCenteredModal(props) {
                 Phone: user.data.Phone,
                 Status: user.data.Status
             };
+            console.log(updatedUser)
             await updateUser(user.data.ID, updatedUser);
-            navigate('/admin');
-            props.onHide();
+            navigate('/pagesNavigate');
+            props.onClose();
         } catch (error) {
             console.error('Error creating user:', error);
         }
@@ -58,41 +63,95 @@ function MyVerticallyCenteredModal(props) {
 
     return (
         <Modal
-            {...props}
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
+            open={props.open}
+            onClose={props.onClose}
+            aria-labelledby="modal-title"
+            aria-describedby="modal-description"
         >
-            <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
+            <Box
+                sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: 450,
+                    bgcolor: 'background.paper',
+                    boxShadow: 24,
+                    p: 4,
+                    borderRadius: '10px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 2,
+                    direction: 'rtl', // Set RTL direction
+
+                }}
+            >
+                <Typography id="modal-title" variant="h6" component="h2" sx={{ fontFamily: 'Segoe UI, sans-serif' }}>
                     עדכון סיסמא
-                </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <h4>עדכון סיסמא</h4>
-                <form>
-                    <input
-                        type="password"
-                        placeholder="New Password"
-                        value={password.NewPassword}
-                        onChange={(e) => setPassword({ ...password, NewPassword: e.target.value })}
-                    />
-                    <input
-                        type="password"
-                        placeholder="Confirm Password"
-                        value={password.ConfirmPassword}
-                        onChange={(e) => setPassword({ ...password, ConfirmPassword: e.target.value })}
-                    />
-                </form>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button onClick={props.onHide}>סגירה</Button>
-                <Button onClick={handleUpdateUser}>שמירה</Button>
-            </Modal.Footer>
-        </Modal>
+                </Typography>
+
+                <TextField
+                    type="password"
+                    label=" סיסמא חדשה  "
+                    value={password.NewPassword}
+                    onChange={(e) => setPassword({ ...password, NewPassword: e.target.value })}
+                    variant="outlined"
+                    fullWidth
+                    sx={{ fontFamily: 'Segoe UI, sans-serif' }} // Apply the font here to the input
+                    InputLabelProps={{
+                        sx: { fontFamily: 'Segoe UI, sans-serif' } // Apply the font here to the label
+                    }}
+                />
+                <TextField
+                    type="password"
+                    label="  אשר סיסמא  "
+                    value={password.ConfirmPassword}
+                    onChange={(e) => setPassword({ ...password, ConfirmPassword: e.target.value })}
+                    variant="outlined"
+                    fullWidth
+                    sx={{ fontFamily: 'Segoe UI, sans-serif' }} // Apply the font here to the input
+                    InputLabelProps={{
+                        sx: { fontFamily: 'Segoe UI, sans-serif' } // Apply the font here to the label
+                    }}
+                />
+
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        mt: 2,
+                        fontFamily: 'Segoe UI, sans-serif', // Apply the font here (if any text inside Box)
+                    }}
+                >
+                    <Button
+                        onClick={props.onClose}
+                        variant="outlined"
+                        sx={{
+                            fontFamily: 'Segoe UI, sans-serif', // Apply the font
+                            color: 'red',                       // Change the text color to red
+                            borderColor: 'red',                 // Change the border color to red
+                            '&:hover': {
+                                borderColor: 'darkred',         // Optionally, change the border color on hover
+                                color: 'darkred',               // Optionally, change the text color on hover
+                            }
+                        }}
+                    >
+                        סגירה
+                    </Button>
+                    <Button
+                        onClick={handleUpdateUser}
+                        variant="contained"
+                        color="primary"
+                        sx={{ fontFamily: 'Segoe UI, sans-serif' }} // Apply the font here
+                    >
+                        שמירה
+                    </Button>
+                </Box>
+
+            </Box>
+        </Modal >
     );
 }
-
 
 const NewPassword = () => {
     const [modalShow, setModalShow] = useState(true);
@@ -100,8 +159,8 @@ const NewPassword = () => {
     return (
         <div>
             <MyVerticallyCenteredModal
-                show={modalShow}
-                onHide={() => setModalShow(false)}
+                open={modalShow}
+                onClose={() => setModalShow(false)}
             />
         </div>
     );

@@ -23,15 +23,20 @@ const PatientEnter = () => {
     const hebrewCharacters = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ך', 'ל', 'מ', 'ם', 'נ', 'ן', 'ס', 'ע', 'פ', 'ף', 'צ', 'ץ', 'ק', 'ר', 'ש', 'ת'];
     const numberCharacters = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
-    const handleKeyPress = (key, setState) => {
-        if (key === 'x') {
-            // Delete the last character
-            setState((prev) => prev.slice(0, -1));
-        } else {
-            // Append the character
-            setState((prev) => prev + key);
+    // ------בדיקת תקינות ת''ז
+    function IDValidator(id) {
+        if (id.length !== 9 || isNaN(id)) {  // Make sure ID is formatted properly
+            return false;
         }
-    };
+        let sum = 0, incNum;
+        for (let i = 0; i < id.length; i++) {
+            incNum = Number(id[i]) * ((i % 2) + 1);  // Multiply number by 1 or 2
+            sum += (incNum > 9) ? incNum - 9 : incNum;  // Sum the digits up and add to total
+        }
+        return (sum % 10 === 0);
+    }
+
+    // --------------------------
 
     useEffect(() => {
         const fetchClinics = async () => {
@@ -46,6 +51,21 @@ const PatientEnter = () => {
         fetchClinics();
     }, []
     );
+
+    
+  
+
+
+    const handleKeyPress = (key, setState) => {
+        if (key === 'x') {
+            // Delete the last character
+            setState((prev) => prev.slice(0, -1));
+        } else {
+            // Append the character
+            setState((prev) => prev + key);
+        }
+    };
+
 
     const handleSubmitStep1 = () => {
         if (firstName.trim() === '') {
@@ -77,21 +97,13 @@ const PatientEnter = () => {
         setCurrentStep(4);
     };
 
-    function IDValidator(id) {
-        if (id.length !== 9 || isNaN(id)) {  // Make sure ID is formatted properly
-            return false;
-        }
-        let sum = 0, incNum;
-        for (let i = 0; i < id.length; i++) {
-            incNum = Number(id[i]) * ((i % 2) + 1);  // Multiply number by 1 or 2
-            sum += (incNum > 9) ? incNum - 9 : incNum;  // Sum the digits up and add to total
-        }
-        return (sum % 10 === 0);
-    }
+
+
 
     const handleClinicSelection = (selectedClinic) => {
         setPatientClinic(selectedClinic);
     };
+
 
     const handleClinicSubmit = () => {
         if (patientClinic === '') {
@@ -110,8 +122,34 @@ const PatientEnter = () => {
 
         const now = new Date();
         const currentTime = padTo2Digits(now.getHours()) + ':' + padTo2Digits(now.getMinutes());
-        printSection()
         setCurrentTime(currentTime);
+
+
+
+        const printWindow = window.open('', '', 'height=500,width=400');
+        
+        if (!printWindow || printWindow.closed || typeof printWindow.closed === 'undefined') {
+            alert('Failed to open print window. Please check your popup blocker settings.');
+            return;
+        }
+    
+        printWindow.document.write('<html><head><title>Print</title>');
+        printWindow.document.write('<style>.numberNote{ font-family: Arial, sans-serif; direction:rtl }  .numberCont{ font-weight: bold; } .uniqueNumber{ color: red; } .moreDetails{ margin: 10px 0; }</style>');
+        printWindow.document.write('</head><body >');
+        printWindow.document.write('<div class="numberNote">');
+        printWindow.document.write('<div class="patientInfo">');
+        printWindow.document.write('<div class="numberCont"><div>מספרך בתור:</div><div class="uniqueNumber">' + patientDetails.UniqueNumber + '</div></div>');
+        printWindow.document.write('<div class="moreDetails">שם: ' + `${firstName} ${lastName}` + '</div>');
+        printWindow.document.write('<div class="moreDetails">קופת חולים: ' + (patientClinic) + '</div>');
+        printWindow.document.write('<div class="moreDetails">שעה: ' + currentTime + '</div>');
+        printWindow.document.write('</div>');
+        printWindow.document.write('<div class="saveNumber">יש לשמור את המספר לאורך הטיפול</div>');
+        printWindow.document.write('</div>');
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.focus();
+        printWindow.print();
+
         // Reset the state after 10 seconds
         setTimeout(() => {
             setFirstName('');
@@ -127,27 +165,7 @@ const PatientEnter = () => {
 
 
     };
-
-    const printSection = () => {
-        const printWindow = window.open('', '', 'height=500,width=400');
-        printWindow.document.write('<html><head><title>Print</title>');
-        printWindow.document.write('<style>.numberNote{ font-family: Arial, sans-serif; direction:rtl }  .numberCont{ font-weight: bold; } .uniqueNumber{ color: red; } .moreDetails{ margin: 10px 0; }</style>');
-        printWindow.document.write('</head><body >');
-        printWindow.document.write('<div class="numberNote">');
-        printWindow.document.write('<div class="patientInfo">');
-        printWindow.document.write('<div class="numberCont"><div>מספרך בתור:</div><div class="uniqueNumber">' + patientDetails.UniqueNumber + '</div></div>');
-        printWindow.document.write('<div class="moreDetails">שם: ' + `${patientDetails.FirstName} ${patientDetails.LastName}` + '</div>');
-        printWindow.document.write('<div class="moreDetails">קופת חולים: ' + (patientDetails?.HMO?.Name || '') + '</div>');
-        printWindow.document.write('<div class="moreDetails">שעה: ' + currentTime + '</div>');
-        printWindow.document.write('</div>');
-        printWindow.document.write('<div class="saveNumber">יש לשמור את המספר לאורך הטיפול</div>');
-        printWindow.document.write('</div>');
-        printWindow.document.write('</body></html>');
-        printWindow.document.close();
-        printWindow.focus();
-        printWindow.print();
-    };
-
+ 
 
     return (
         <>

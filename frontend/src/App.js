@@ -14,7 +14,7 @@ import MonitorPage from './components/MonitorPage/MonitorPage';
 import QueueManagmentPage from './components/QueuesManagment/QueuesManagmentPage';
 import logo from './logo.png';
 
-import UserLogin from './components/AdminPage/usersControl/usersLoginControl';
+import Login from './components/AdminPage/usersControl/usersLoginControl';
 
 import './App.css';
 import ConfirmPassword from './components/AdminPage/usersControl/checkPassword';
@@ -24,12 +24,12 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <Logo />
+        {/* <Logo /> */}
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/pagesNavigate" element={<PagesNavigation />} />
           <Route path="/admin" element={<AdminPage />} />
-          <Route path="/userLogin" element={<UserLogin />} />
+          <Route path="/userLogin" element={<Login />} />
           <Route path="/users" element={<UsersControl />} />
           <Route path="/patientEnter" element={<PatientEnter />} />
           <Route path="/doctorPage/:id" element={<DoctorPage />} />

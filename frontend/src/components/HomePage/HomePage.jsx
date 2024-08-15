@@ -14,11 +14,12 @@ const HomePage = () => {
   return (
     <>
       <div className='HomePageContainer'>
+
         <button className='pagesNavigate-btn' onClick={goToPagesNavigate}><ArrowBackIcon />
           <span className='pagesNavigate-text'>
             מכאן מתחילים
           </span>
-        </button>
+        </button> 
       </div>
     </>
   );

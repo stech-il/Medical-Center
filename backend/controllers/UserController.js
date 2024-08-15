@@ -23,6 +23,7 @@ exports.findUserById = async (req, res) => {
 
 exports.findUserByEmailAddress = async (req, res) => {
     try {
+        console.log(req.params.emailAddress)
         const user = await UsersService.findUserByEmailAddress(req.params.emailAddress);
         if (user) {
             return res.json({
@@ -85,6 +86,7 @@ exports.userLogin = async (req, res) => {
     try {
         const email = req.body.Email;
         const password = req.body.Password;
+        console.log(email,password)
         const user = await UsersService.userLogin(email, password);
         if (user) {
             return res.json({

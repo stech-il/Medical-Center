@@ -6,7 +6,7 @@ const AdminPage = () => {
 
     const location = useLocation();
     const role = location.state;
-
+    console.log(role)
     const navigate = useNavigate();
 
     useEffect(() => {

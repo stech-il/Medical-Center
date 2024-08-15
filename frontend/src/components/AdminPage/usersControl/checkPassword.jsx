@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import {
+    Modal,
+    Box,
+    Typography,
+    TextField,
+    Button
+} from '@mui/material';
 
 function MyVerticallyCenteredModal(props) {
 
@@ -11,56 +15,85 @@ function MyVerticallyCenteredModal(props) {
 
     const navigate = useNavigate();
 
-    const [temporaryPassword, setTemporaryPassword] = useState();
+    const [temporaryPassword, setTemporaryPassword] = useState('');
 
     const checkTemporaryPassword = () => {
-
         if (temporaryPassword === generatedPassword) {
             navigate('/newPassword');
-        }
-        else {
+        } else {
             alert("The password is incorrect");
         }
-    }
+    };
 
     return (
         <Modal
-            {...props}
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
+            open={props.open}
+            onClose={props.onClose}
+            aria-labelledby="modal-title"
+            aria-describedby="modal-description"
         >
-            <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
+            <Box
+                sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: 450,
+                    bgcolor: 'background.paper',
+                    boxShadow: 24,
+                    p: 4,
+                    borderRadius: '10px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 2,
+                    direction: 'rtl', // Set RTL direction
+
+                }}
+            >
+
+
+                <Typography id="modal-title" variant="h6" component="h2"
+                    sx={{ fontFamily: 'Segoe UI, sans-serif' }}>
                     סיסמא זמנית
-                </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <h4>סיסמא זמנית</h4>
-                <form>
-                    <input
-                        type="password"
-                        placeholder="Temporary Password"
-                        value={temporaryPassword}
-                        onChange={(e) => setTemporaryPassword(e.target.value)}
-                    />
-                </form>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button onClick={checkTemporaryPassword}>אישור</Button>
-            </Modal.Footer>
+                </Typography>
+           
+
+                <TextField
+                    type="password"
+                    label="הזן סיסמא זמנית" 
+                    value={temporaryPassword}
+                    onChange={(e) => setTemporaryPassword(e.target.value)}
+                    variant="outlined"
+                    fullWidth
+                    sx={{ fontFamily: 'Segoe UI, sans-serif'}} // Change the font here
+                />
+
+                <Button
+                    onClick={checkTemporaryPassword}
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                    sx={{ fontFamily: 'Segoe UI, sans-serif'}} // Change the font here
+                >
+                    אישור
+                </Button>
+            </Box>
         </Modal>
     );
 }
 
-
-
 const ConfirmPassword = () => {
+    const [modalOpen, setModalOpen] = useState(true);
+
+    const handleClose = () => {
+        setModalOpen(false);
+    };
 
     return (
         <div>
             <MyVerticallyCenteredModal
-                show={true}
+                open={modalOpen}
+                onClose={handleClose}
             />
         </div>
     );
