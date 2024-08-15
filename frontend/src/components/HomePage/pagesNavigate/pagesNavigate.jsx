@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { getAllRooms } from '../../../clientServices/RoomService';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+
 import './pagesNavigate.css';
 
 const PagesNavigation = () => {
   const [rooms, setRooms] = useState([]);
 
+  const location = useLocation();
+  const role = location.state;
   useEffect(() => {
     const fetchRooms = async () => {
       try {
@@ -22,7 +25,7 @@ const PagesNavigation = () => {
   const navigate = useNavigate();
 
   const goToAdminPage = () => {
-    navigate('/admin');
+    navigate('/admin' ,{ state: role });
   };
 
   const goToUserLoginPage = () => {
@@ -43,22 +46,29 @@ const PagesNavigation = () => {
 
   return (
     <>
-      <div className='pagesContainer'>
-        <h2>בחר עמוד</h2>
-        <div className='pagesBtnsContainer'>
-          <button onClick={goToAdminPage} className='page-btn'>מנהל</button>
-          <button onClick={goToUserLoginPage} className='page-btn'>כניסת משתמש</button>
-          <button onClick={goToPatientEnterPage} className='page-btn'>תור חדש</button>
-          <button className='page-btn' onClick={goToMonitorPage}>מוניטור</button>
-          {rooms.map(room => (
-            <button
-              key={room.ID}
-              onClick={() => goToDoctorPage(room.ID)}
-              className='page-btn'
-            >
-              {room.Name}
-            </button>
-          ))}
+      <div className='PagesNavigationContainer'>
+        <div className='pagesContainerContainer'>
+          <div className='pagesContainerTitle'>בחירת עמוד</div>
+          <div className='pagesContainer'>
+            <h3>בחר עמוד שברצונך להיכנס אליו:</h3>
+            <div className='pagesBtnsContainer'>
+              {role === 1 && (<button onClick={goToAdminPage} className='page-btn'>מנהל</button>)}
+              {(role === 1 || role === 2) && (<button onClick={goToUserLoginPage} className='page-btn'>כניסת משתמש</button>)}
+              {(role === 1 || role === 2) && (<button onClick={goToPatientEnterPage} className='page-btn'>תור חדש</button>)}
+              {(role === 1 || role === 2) && (<button className='page-btn' onClick={goToMonitorPage}>מוניטור</button>)}
+              {rooms.map(room => (
+                (role === 1 || role === 2 || room.Name !== "קבלה") && (
+                  <button
+                    key={room.ID}
+                    onClick={() => goToDoctorPage(room.ID)}
+                    className='page-btn'
+                  >
+                    {room.Name}
+                  </button>
+                )
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </>

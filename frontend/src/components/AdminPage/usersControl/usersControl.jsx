@@ -1,12 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import Table from 'react-bootstrap/Table';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
+import {
+    Button,
+    Modal,
+    Box,
+    TextField,
+    MenuItem,
+    Typography,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Paper
+} from '@mui/material';
 import { getUsers, createUser, getUserByEmailAddress } from '../../../clientServices/UserService';
 import { getRoles } from '../../../clientServices/RoleService';
-import 'bootstrap/dist/css/bootstrap.min.css';
-
-
 
 function MyVerticallyCenteredModal(props) {
     const [newUser, setNewUser] = useState({
@@ -15,7 +24,7 @@ function MyVerticallyCenteredModal(props) {
         Password: '',
         Email: '',
         Phone: '',
-        Status: true
+        Status: true,
     });
 
     const [roles, setRoles] = useState([]);
@@ -25,7 +34,7 @@ function MyVerticallyCenteredModal(props) {
             const response = await getRoles();
             setRoles(response.data);
         } catch (error) {
-            console.error('Error fetching users:', error);
+            console.error('Error fetching roles:', error);
         }
     };
 
@@ -34,91 +43,55 @@ function MyVerticallyCenteredModal(props) {
     }, []);
 
     const validateUserName = () => {
-        // Check if username is empty
-        if (!newUser.Name) {
-            return false;
-        }
-
-        // Check if username contains allowed characters
+        if (!newUser.Name) return false;
         const regex = /^[a-zA-Z0-9-_]{3,30}$/;
-        if (!regex.test(newUser.Name)) {
-            return false;
-        }
-
-        return true;
+        console.log(regex.test(newUser.Name) +'שם')
+        return regex.test(newUser.Name);
     };
 
     const validatePhoneNumber = () => {
-        // Check if phone number is empty
-        if (!newUser.Phone) {
-            return false;
-        }
-
+        if (!newUser.Phone) return false;
         const regex = /^\d{10}$/;
-        if (!regex.test(newUser.Phone)) {
-            return false;
-        }
+          console.log(regex.test(newUser.Phone)+'טלפון')
+        return regex.test(newUser.Phone);
 
-        return true;
     };
 
     const validatePassword = () => {
-        // Check if password is empty
-        if (!newUser.Password) {
-            return false;
-        }
-
+        if (!newUser.Password) return false;
         const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*]{6,}$/;
-        if (!regex.test(newUser.Password)) {
-            return false;
-        }
-
-        return true;
+        console.log( regex.test(newUser.Password)+'סיסמא')
+        return regex.test(newUser.Password);
     };
 
     const validateEmail = () => {
-        // Check if email is empty
-        if (!newUser.Email) {
-            return false;
-        }
-
+        if (!newUser.Email) return false;
         const regex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-        if (!regex.test(newUser.Email)) {
-            return false;
-        }
-
-        return true;
+        console.log(regex.test(newUser.Email)+'מייל')
+        return regex.test(newUser.Email);
     };
 
     const validateRole = () => {
-        if (newUser.RoleID === 0) {
-            return false;
-        }
-        return true;
-    }
+        return newUser.RoleID !== 0;
+    };
 
     const validateInputs = () => {
-        return validateUserName() &&
-            validateRole() &&
-            validatePassword() &&
-            validateEmail() &&
-            validatePhoneNumber();
-    }
+        return validateUserName() && validateRole() && validatePassword() && validateEmail() && validatePhoneNumber();
+    };
 
     const handleCreateUser = async () => {
         try {
-            var result = await validateInputs();
-            if (!result) {
+            if (!validateInputs()) {
                 alert("Invalid input");
                 return;
             }
-            var isExist = await getUserByEmailAddress(newUser.Email);
+            const isExist = await getUserByEmailAddress(newUser.Email);
             if (!isExist || !isExist.data) {
-                alert('Email already Exist');
+                alert('Email already exists');
                 return;
             }
             await createUser(newUser);
-            props.onHide();
+            props.onClose();
             props.refreshUsers();
         } catch (error) {
             console.error('Error creating user:', error);
@@ -127,65 +100,71 @@ function MyVerticallyCenteredModal(props) {
 
     return (
         <Modal
-            {...props}
-            size="lg"
+            open={props.open}
+            onClose={props.onClose}
             aria-labelledby="contained-modal-title-vcenter"
-            centered
+            sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', direction: 'rtl' }}
         >
-            <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
-                    הוספת משתמש        </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <h4>הוספת משתמש חדש</h4>
-                <form>
-                    <input
-                        type="text"
-                        placeholder="Name"
+            <Box sx={{ bgcolor: 'background.paper', p: 4, borderRadius: 1, width: 400 }}>
+                <Typography id="contained-modal-title-vcenter" variant="h6" component="h2">
+                    הוספת משתמש
+                </Typography>
+                <Box component="form" noValidate autoComplete="off" sx={{ mt: 2 }}>
+                    <TextField
+                        label="שם"
                         value={newUser.Name}
                         onChange={(e) => setNewUser({ ...newUser, Name: e.target.value })}
+                        fullWidth
+                        margin="normal"
                     />
-                    {roles ? (
-                        <select
-                            value={newUser.RoleID}
-                            onChange={(e) => setNewUser({ ...newUser, RoleID: e.target.value })}
-                        >
-                            <option key={0} value={0}>
-                                Role
-                            </option>
-                            {roles.map((role) => (
-                                <option key={role.ID} value={role.ID}>
-                                    {role.Role}
-                                </option>
-                            ))}
-                        </select>
-                    ) : (
-                        <p>Loading roles...</p>
-                    )}
-                    <input
+                    <TextField
+                        select
+                        label="תפקיד"
+                        value={newUser.RoleID}
+                        onChange={(e) => setNewUser({ ...newUser, RoleID: e.target.value })}
+                        fullWidth
+                        margin="normal"
+                    >
+                        <MenuItem value={0}>בחר תפקיד</MenuItem>
+                        {roles.map((role) => (
+                            <MenuItem key={role.ID} value={role.ID}>
+                                {role.Role}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+                    <TextField
                         type="password"
-                        placeholder="Password"
+                        label="סיסמה"
                         value={newUser.Password}
                         onChange={(e) => setNewUser({ ...newUser, Password: e.target.value })}
+                        fullWidth
+                        margin="normal"
                     />
-                    <input
+                    <TextField
                         type="email"
-                        placeholder="Email"
+                        label="אימייל"
                         value={newUser.Email}
                         onChange={(e) => setNewUser({ ...newUser, Email: e.target.value })}
+                        fullWidth
+                        margin="normal"
                     />
-                    <input
-                        type="text"
-                        placeholder="Phone"
+                    <TextField
+                        label="טלפון"
                         value={newUser.Phone}
                         onChange={(e) => setNewUser({ ...newUser, Phone: e.target.value })}
+                        fullWidth
+                        margin="normal"
                     />
-                </form>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button onClick={props.onHide}>סגירה</Button>
-                <Button onClick={handleCreateUser}>אישור</Button>
-            </Modal.Footer>
+                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+                    <Button variant="outlined" color="secondary" onClick={props.onClose}>
+                        סגירה
+                    </Button>
+                    <Button variant="contained" color="primary" onClick={handleCreateUser}>
+                        אישור
+                    </Button>
+                </Box>
+            </Box>
         </Modal>
     );
 }
@@ -207,55 +186,59 @@ const UsersTable = () => {
     }, []);
 
     return (
-        <Table striped bordered hover>
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                </tr>
-            </thead>
-            <tbody>
-                {users.map((user, index) => (
-                    <tr key={user.ID}>
-                        <td>{index + 1}</td>
-                        <td>{user.Name}</td>
-                        <td>{user.Email}</td>
-                        <td>{user.Phone}</td>
-                    </tr>
-                ))}
-            </tbody>
-        </Table>
+        <Box sx={{ display: 'flex', justifyContent: 'center', width: '50%', direction: 'rtl' }}>
+            <TableContainer component={Paper} sx={{ width: '100%' }}>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>#</TableCell>
+                            <TableCell>שם משתמש</TableCell>
+                            <TableCell>מייל</TableCell>
+                            <TableCell>מספר טלפון</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {users.map((user, index) => (
+                            <TableRow key={user.ID}>
+                                <TableCell>{index + 1}</TableCell>
+                                <TableCell>{user.Name}</TableCell>
+                                <TableCell>{user.Email}</TableCell>
+                                <TableCell>{user.Phone}</TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </Box>
+
     );
 };
 
 const UsersControl = () => {
-    const [modalShow, setModalShow] = useState(false);
+    const [modalOpen, setModalOpen] = useState(false);
 
     const refreshUsers = () => {
-        // Function to refresh the users list after creating a new user
         window.location.reload();
     };
 
     return (
-        <div>
-            <h1>ניהול משתמשים</h1>
-            <Button variant="primary" onClick={() => setModalShow(true)}>
+        <Box sx={{ p: 3, direction: 'rtl' }}>
+            <Typography variant="h4" gutterBottom>
+                ניהול משתמשים
+            </Typography>
+            <Button variant="contained" color="primary" onClick={() => setModalOpen(true)}>
                 הוספת משתמש חדש
             </Button>
-
             <MyVerticallyCenteredModal
-                show={modalShow}
-                onHide={() => setModalShow(false)}
+                open={modalOpen}
+                onClose={() => setModalOpen(false)}
                 refreshUsers={refreshUsers}
             />
-
-            <div>
-                <h2>משתמשים</h2>
+            <Box sx={{ mt: 3 }}>
+                <Typography variant="h5">משתמשים</Typography>
                 <UsersTable />
-            </div>
-        </div>
+            </Box>
+        </Box>
     );
 };
 
