@@ -37,7 +37,7 @@ const PagesNavigation = () => {
   };
 
   const goToDoctorPage = (id) => {
-    navigate(`/doctorPage/${id}`);
+    navigate(`/doctorPage/${id}`,{ state: role });
   };
 
   const goToMonitorPage = () => {
