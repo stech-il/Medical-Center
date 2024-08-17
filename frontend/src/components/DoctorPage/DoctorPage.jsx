@@ -1,4 +1,6 @@
 import React, {useRef, useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import SidebarMenu from '../sidebar/sidebar.jsx'
 import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
 import VaccinesIcon from '@mui/icons-material/Vaccines';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -11,6 +13,9 @@ import EmergencyDoctorAlertModal from '../QueuesManagment/modals/EmergencyDoctor
 import DeletePatientModal from '../QueuesManagment/modals/DeletePatient.jsx';
 
 const DoctorPage = () => {
+
+
+
     const { id } = useParams();
     const [currentPatient, setCurrentPatient] = useState();
     const [nextPatient, setNextPatient] = useState();
@@ -22,8 +27,16 @@ const DoctorPage = () => {
 
     const { moveRoom, emergencyAlertToDoctor, endOfTreatment, alertComponent } = useRoomSocket(id, currentPatient, setCurrentPatient, nextPatient, setNextPatient);
 
+    const navigate = useNavigate();
+    useEffect(() => {
+        if (!sessionStorage.getItem('email')) {
+            navigate('/');
+        }
+    }, []);
 
-
+    const location = useLocation();
+    const role = location.state;
+    console.log(role)
 
     const getIconForRoom = (roomId) => {
         switch (roomId) {
@@ -110,13 +123,7 @@ const DoctorPage = () => {
         }
     };
 
-    // const roomButtons = [
-    //     { roomId: 5, icon: <VaccinesIcon className='queueIcon' />, label: 'העבר לקבלה' },
-    //     { roomId: 4, icon: <MonitorHeartIcon className='queueIcon' />, label: 'העבר לחדר אקג' },
-    //     { roomId: 3, icon: <ZoomOutMapIcon className='queueIcon' />, label: 'העבר לחדר טריאג' },
-    //     { roomId: 2, icon: <VaccinesIcon className='queueIcon' />, label: 'העבר לחדר טיפולים' },
-    //     { roomId: 1, icon: <VaccinesIcon className='queueIcon' />, label: 'העבר לחדר רופא' },
-    // ];
+
 
     const anotherButtons = [
         { roomId: 1, icon: <CheckCircleIcon />, label: 'סיום טיפול', className: 'EndOfTreatment anotherButtons', onclick: handleFinishTreatment },
@@ -125,6 +132,7 @@ const DoctorPage = () => {
 
     return (
         <div className='doctorPageContainer'>
+            {roomData.Name==="קבלה"&&(<SidebarMenu role={role}/>)}
             <div className='queuesCont'>
                 <h2>חדר {roomData.Name}</h2>
                 <div className='queueDetails'>
