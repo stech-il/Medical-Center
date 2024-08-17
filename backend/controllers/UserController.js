@@ -25,15 +25,16 @@ exports.findUserByEmailAddress = async (req, res) => {
     try {
         console.log(req.params.emailAddress)
         const user = await UsersService.findUserByEmailAddress(req.params.emailAddress);
-        if (user) {
+        console.log(user,"---------------")
+        if (user!=null) {
             return res.json({
                 data: user,
                 message: 'Success.'
             });
         } else {
-            return res.status(404).json({
-                data: null,
-                message: 'User not found.'
+            return res.json({
+                data: user,
+                message: 'not found.'
             });
         }
     } catch (error) {
@@ -109,6 +110,7 @@ exports.userLogin = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
     try {
+        console.log("hey",req.params.id, req.body)
         const updatedUser = await UsersService.updateUser(req.params.id, req.body);
         if (updatedUser[0] === 1) { // Sequelize returns an array with the number of affected rows
             return res.json({

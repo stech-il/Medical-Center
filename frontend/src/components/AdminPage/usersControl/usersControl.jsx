@@ -45,14 +45,14 @@ function MyVerticallyCenteredModal(props) {
     const validateUserName = () => {
         if (!newUser.Name) return false;
         const regex = /^[a-zA-Z0-9-_]{3,30}$/;
-        console.log(regex.test(newUser.Name) +'שם')
+        console.log(regex.test(newUser.Name) + 'שם')
         return regex.test(newUser.Name);
     };
 
     const validatePhoneNumber = () => {
         if (!newUser.Phone) return false;
         const regex = /^\d{10}$/;
-          console.log(regex.test(newUser.Phone)+'טלפון')
+        console.log(regex.test(newUser.Phone) + 'טלפון')
         return regex.test(newUser.Phone);
 
     };
@@ -60,14 +60,14 @@ function MyVerticallyCenteredModal(props) {
     const validatePassword = () => {
         if (!newUser.Password) return false;
         const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*]{6,}$/;
-        console.log( regex.test(newUser.Password)+'סיסמא')
+        console.log(regex.test(newUser.Password) + 'סיסמא')
         return regex.test(newUser.Password);
     };
 
     const validateEmail = () => {
         if (!newUser.Email) return false;
         const regex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-        console.log(regex.test(newUser.Email)+'מייל')
+        console.log(regex.test(newUser.Email) + 'מייל')
         return regex.test(newUser.Email);
     };
 
@@ -82,17 +82,21 @@ function MyVerticallyCenteredModal(props) {
     const handleCreateUser = async () => {
         try {
             if (!validateInputs()) {
-                alert("Invalid input");
+                alert("נתונים לא תקינים");
                 return;
             }
             const isExist = await getUserByEmailAddress(newUser.Email);
-            if (!isExist || !isExist.data) {
-                alert('Email already exists');
+            console.log(isExist)
+            if (isExist.data!=null) {
+                alert('כתובת מייל כבר קיימת');
                 return;
             }
-            await createUser(newUser);
-            props.onClose();
-            props.refreshUsers();
+            else{
+                await createUser(newUser);
+                props.onClose();
+                props.refreshUsers();
+            }
+           
         } catch (error) {
             console.error('Error creating user:', error);
         }

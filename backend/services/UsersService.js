@@ -62,9 +62,8 @@ exports.userLogin = async (emailAddress, password) => {
     }
 }
 
-exports.updateUser = async (id, userData, flag) => {
+exports.updateUser = async (id, userData) => {
     // update password
-    if (flag == true) {
         const salt = await bcrypt.genSalt(10);
 
         const hashPassword = await new Promise((resolve, reject) => {
@@ -78,7 +77,7 @@ exports.updateUser = async (id, userData, flag) => {
         });
 
         userData.Password = hashPassword;
-    }
+    
     return UsersModel.update(userData, {
         where: { ID: id }
     });

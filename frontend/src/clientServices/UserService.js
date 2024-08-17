@@ -29,6 +29,7 @@ export const getUserById = async (id) => {
 export const getUserByEmailAddress = async (emailAddress) => {
   try {
     const response = await axios.get(`${API_URL}/email/${emailAddress}`);
+    console.log("checkEmail",response.data)
     return response.data;
   }
   catch (error) {

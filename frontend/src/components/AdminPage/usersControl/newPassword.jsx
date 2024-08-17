@@ -44,20 +44,22 @@ function MyVerticallyCenteredModal(props) {
             }
             const email = sessionStorage.getItem('email');
             const user = await getUserByEmailAddress(email);
+            console.log(user)
             const updatedUser = {
                 Name: user.data.Name,
-                RoleID: user.data.roleID,
+                RoleID: user.data.RoleID,
                 Password: password.NewPassword,
                 Email: user.data.Email,
                 Phone: user.data.Phone,
                 Status: user.data.Status
             };
             console.log(updatedUser)
-            await updateUser(user.data.ID, updatedUser);
-            navigate('/pagesNavigate');
+            const userUpdateData = await updateUser(user.data.ID, updatedUser);
+            console.log(userUpdateData)
+            navigate('/pagesNavigate', { state: user.data.RoleID});
             props.onClose();
         } catch (error) {
-            console.error('Error creating user:', error);
+            console.error('Error update user:', error);
         }
     };
 

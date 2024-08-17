@@ -29,16 +29,10 @@ const Login = () => {
         e.preventDefault();
         try {
             const userData = await userLogin(user);
-            if (userData) {
+            if (userData) {                
                 sessionStorage.setItem('email', userData.Email);
-                console.log(userData.RoleID ,userData)
-                if (userData.data.RoleID === 1) {
-                    navigate('/pagesNavigate', { state: 1 });
-                } else if (userData.data.RoleID === 2) {
-                    navigate('/pagesNavigate', { state: 2 });
-                } else {
-                    navigate('/pagesNavigate', { state: 3 });
-                }
+                console.log(userData.RoleID ,userData)             
+                    navigate('/pagesNavigate', { state: userData.data.RoleID });               
             } else {
                 alert("error");
             }
