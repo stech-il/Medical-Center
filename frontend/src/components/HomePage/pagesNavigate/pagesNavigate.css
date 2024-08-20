@@ -62,3 +62,16 @@
     width: 20%;
     padding: 8px;
 }
+
+
+/* role style */
+.roleContainer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    margin: 20px;
+}
+
+.role {
+    width: 100px;
+}

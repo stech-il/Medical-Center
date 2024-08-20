@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
     Modal,
@@ -7,6 +7,7 @@ import {
     TextField,
     Button
 } from '@mui/material';
+import Role from '../../role';
 
 function MyVerticallyCenteredModal(props) {
 
@@ -16,6 +17,27 @@ function MyVerticallyCenteredModal(props) {
     const navigate = useNavigate();
 
     const [temporaryPassword, setTemporaryPassword] = useState('');
+
+    const startTime = new Date().getTime();
+    // const [error, setError] = useState('');
+    const [errorStatus, setErrorStatus] = useState(false);
+
+    useEffect(() => {
+        if (!sessionStorage.getItem('email')) {
+            navigate('/userLogin');
+        }
+        const timer = setInterval(() => {
+            const currentTime = new Date().getTime();
+            if (currentTime - startTime >= 5 * 60 * 1000) {
+                // setError("הזמן להכניס את הסיסמה הזמנית פג. בבקשה בקש סיסמה זמנית חדשה");
+                setErrorStatus(true);
+                alert("5 minutes have passed since you started.");
+                clearInterval(timer);
+            }
+        }, 50000);
+
+        return () => clearInterval(timer);
+    }, []);
 
     const checkTemporaryPassword = () => {
         if (temporaryPassword === generatedPassword) {
@@ -56,27 +78,36 @@ function MyVerticallyCenteredModal(props) {
                     sx={{ fontFamily: 'Segoe UI, sans-serif' }}>
                     סיסמא זמנית
                 </Typography>
-           
+
 
                 <TextField
                     type="password"
-                    label="הזן סיסמא זמנית" 
+                    label="הזן סיסמא זמנית"
                     value={temporaryPassword}
                     onChange={(e) => setTemporaryPassword(e.target.value)}
                     variant="outlined"
                     fullWidth
-                    sx={{ fontFamily: 'Segoe UI, sans-serif'}} // Change the font here
+                    sx={{ fontFamily: 'Segoe UI, sans-serif' }} // Change the font here
                 />
 
-                <Button
+                {!errorStatus && (<Button
                     onClick={checkTemporaryPassword}
                     variant="contained"
                     color="primary"
                     fullWidth
-                    sx={{ fontFamily: 'Segoe UI, sans-serif'}} // Change the font here
+                    sx={{ fontFamily: 'Segoe UI, sans-serif' }} // Change the font here
                 >
                     אישור
-                </Button>
+                </Button>)}
+                {errorStatus && (<Button
+                    onClick={() => navigate('/userLogin')}
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                    sx={{ fontFamily: 'Segoe UI, sans-serif' }} // Change the font here
+                >
+                    שכחתי סיסמא
+                </Button>)}
             </Box>
         </Modal>
     );
@@ -95,6 +126,7 @@ const ConfirmPassword = () => {
                 open={modalOpen}
                 onClose={handleClose}
             />
+            <Role />
         </div>
     );
 };

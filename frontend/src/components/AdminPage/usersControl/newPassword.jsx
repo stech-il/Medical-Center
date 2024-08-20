@@ -44,14 +44,15 @@ function MyVerticallyCenteredModal(props) {
             }
             const email = sessionStorage.getItem('email');
             const user = await getUserByEmailAddress(email);
-            console.log(user)
+            console.log(user);
+
             const updatedUser = {
                 Name: user.data.Name,
                 RoleID: user.data.RoleID,
                 Password: password.NewPassword,
                 Email: user.data.Email,
                 Phone: user.data.Phone,
-                Status: user.data.Status
+                Status: user.data.Status === true? 1: 0
             };
             console.log(updatedUser)
             const userUpdateData = await updateUser(user.data.ID, updatedUser);

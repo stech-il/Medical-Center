@@ -3,6 +3,7 @@ import { getAllRooms } from '../../../clientServices/RoomService';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 import './pagesNavigate.css';
+import Role from '../../role';
 
 const PagesNavigation = () => {
   const [rooms, setRooms] = useState([]);
@@ -25,7 +26,7 @@ const PagesNavigation = () => {
   const navigate = useNavigate();
 
   const goToAdminPage = () => {
-    navigate('/admin' ,{ state: role });
+    navigate('/admin', { state: role });
   };
 
   const goToUserLoginPage = () => {
@@ -37,7 +38,7 @@ const PagesNavigation = () => {
   };
 
   const goToDoctorPage = (id) => {
-    navigate(`/doctorPage/${id}`,{ state: role });
+    navigate(`/doctorPage/${id}`, { state: role });
   };
 
   const goToMonitorPage = () => {
@@ -70,6 +71,9 @@ const PagesNavigation = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div className='roleContainer'>
+        <Role />
       </div>
     </>
   );

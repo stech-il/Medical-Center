@@ -14,7 +14,7 @@ import MonitorPage from './components/MonitorPage/MonitorPage';
 import QueueManagmentPage from './components/QueuesManagment/QueuesManagmentPage';
 import logo from './logo.png';
 
-import Login from './components/AdminPage/usersControl/usersLoginControl';
+import Login from './components/AdminPage/usersControl/Login';
 
 import './App.css';
 import ConfirmPassword from './components/AdminPage/usersControl/checkPassword';
