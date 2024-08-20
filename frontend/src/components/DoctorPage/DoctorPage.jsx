@@ -1,4 +1,4 @@
-import React, {useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import SidebarMenu from '../sidebar/sidebar.jsx'
 import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
@@ -11,6 +11,7 @@ import './DoctorPage.css';
 import { getAllRooms, getRoomById } from '../../clientServices/RoomService.js';
 import EmergencyDoctorAlertModal from '../QueuesManagment/modals/EmergencyDoctorAlert.jsx';
 import DeletePatientModal from '../QueuesManagment/modals/DeletePatient.jsx';
+import Role from '../role.jsx';
 
 const DoctorPage = () => {
 
@@ -132,7 +133,7 @@ const DoctorPage = () => {
 
     return (
         <div className='doctorPageContainer'>
-            {roomData.Name==="קבלה"&&(<SidebarMenu role={role}/>)}
+            {roomData.Name === "קבלה" && (<SidebarMenu role={role} />)}
             <div className='queuesCont'>
                 <h2>חדר {roomData.Name}</h2>
                 <div className='queueDetails'>
@@ -199,6 +200,9 @@ const DoctorPage = () => {
                 roomName={id ? roomData.Name : ''}
             />
             {alertComponent} {/* This renders the custom alert */}
+            <div className='roleContainer'>
+                <Role />
+            </div>
         </div>
     );
 };

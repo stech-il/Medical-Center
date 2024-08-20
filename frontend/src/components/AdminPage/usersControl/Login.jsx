@@ -5,6 +5,7 @@ import logo from '../../../logo.png';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { getUserByEmailAddress, userLogin } from '../../../clientServices/UserService';
 import emailjs from 'emailjs-com';
+import { getRoleById } from '../../../clientServices/RoleService';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -31,12 +32,14 @@ const Login = () => {
             const userData = await userLogin(user);
             if (userData) {
                 sessionStorage.setItem('email', userData.Email);
+                var role = await getRoleById(userData.RoleID);
+                sessionStorage.setItem('role', role.data.Role);
                 if (userData.RoleID === 1) {
-                    navigate('/admin', { state: 0 });
+                    navigate('/admin', { state: 1 });
                 } else if (userData.RoleID === 2) {
                     navigate('/rooms');
                 } else {
-                    navigate('/admin', { state: 1 });
+                    navigate('/admin', { state: 0 });
                 }
             } else {
                 alert("error");
@@ -66,8 +69,12 @@ const Login = () => {
                 if (!isExist || !isExist.data) {
                     alert("מייל זה לא קיים במערכת");
                 } else {
+                    sessionStorage.setItem('email', isExist.data.Email);
+                    var role = await getRoleById(isExist.data.RoleID);
+                    sessionStorage.setItem('role', role.data.Role);
                     const generatedPassword = generateRandomPassword();
                     const templateParams = {
+                        to_name: isExist.Name,
                         to_email: user.Email,
                         message: generatedPassword,
                     };
@@ -79,7 +86,6 @@ const Login = () => {
                     )
                         .then((response) => {
                             console.log('SUCCESS!', response.status, response.text);
-                            sessionStorage.setItem('email', user.Email);
                             navigate('/checkPassword', { state: generatedPassword });
                         })
                         .catch((error) => {
