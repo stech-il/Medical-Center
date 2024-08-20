@@ -8,12 +8,13 @@ import background from "./background.jpg";
 
 const MonitorPage = () => {
     const [rooms, setRooms] = useState([]);
-    const socketUrl = "http://localhost:8000";  // Replace with your server address
-    const { subscribeToRoom, queuesByRoom,socket } = useMonitorSocket(socketUrl);
+    const socketUrl = "http://localhost:8000"; 
+    const [messages, setMessages]=useState([]);
+    const { subscribeToRoom, queuesByRoom,socket } = useMonitorSocket(socketUrl,messages,setMessages);
     const [currentDate, setCurrentDate] = useState('');
 
     useEffect(() => {
-        console.log("monitorPage");
+
         const fetchRooms = async () => {
             try {
                 const response = await getAllRooms();
@@ -24,7 +25,6 @@ const MonitorPage = () => {
                 console.error('Error fetching rooms:', error);
             }
         };
-
         fetchRooms();
 
 
@@ -45,7 +45,7 @@ const MonitorPage = () => {
     return (
         <div className='monitorPageContainerFull' style={{ backgroundImage: `url(${background})`, backgroundSize: '100%' }}>
             <div className='monitorPageContainer' >
-                <MonitorMessages />
+                <MonitorMessages messages={messages} setMessages={setMessages} />
 
                 <div className='queuesRoomsMonitorContainer'>
                     {rooms.length > 0 ? (

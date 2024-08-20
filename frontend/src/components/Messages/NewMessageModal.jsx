@@ -22,13 +22,14 @@ const style = {
     textAlign: 'center',
 };
 
-export default function AddMessageModal({ open, handleClose }) {
+export default function AddMessageModal({ open, handleClose,updateMessagesFromClient }) {
     const [content, setContent] = useState('');
     const [status, setStatus] = useState(false);
 
     const handleSubmit = async () => {
         try {
             await createMessage(content, status);
+            updateMessagesFromClient();
             alert(`נוספה הודעה חדשה ${content}`);
             handleClose();
         } catch (error) {

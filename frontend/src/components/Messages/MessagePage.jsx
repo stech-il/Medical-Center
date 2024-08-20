@@ -4,11 +4,13 @@ import MessageItem from './MessageItem';
 import { getAllMessages } from '../../clientServices/MessagesService';
 import NewMessageModal from './NewMessageModal';
 import Sidebar from '../sidebar/sidebar';
+import useMessagesSocket from '../../clientServices/MessagesSocket';
 
 
 const MessagePage = () => {
     const [allMessages, setAllMessages] = useState([]);
     const [isAddMessageModalOpen, setIsAddMessageModalOpen] = useState(false);
+    const {updateMessagesFromClient}=useMessagesSocket();
 
 
     const fetchAllMessages = async () => {
@@ -24,7 +26,7 @@ const MessagePage = () => {
         fetchAllMessages();
     }, []);
 
-    const handleOpenAddMessagModal = () => {
+    const handleOpenAddMessageModal = () => {
         setIsAddMessageModalOpen(true);
     };
 
@@ -42,7 +44,7 @@ const MessagePage = () => {
                     <div className='titleAndNewMessage'>
                         <h2>הודעות מערכת</h2>
 
-                        <button className='newMsg-Btn' onClick={handleOpenAddMessagModal}>הודעה חדשה</button>
+                        <button className='newMsg-Btn' onClick={handleOpenAddMessageModal}>הודעה חדשה</button>
                     </div>
 
 
@@ -55,6 +57,7 @@ const MessagePage = () => {
                                     content={message.Message}
                                     status={message.Status}
                                     fetchAllMessages={fetchAllMessages}
+                                    updateMessagesFromClient={updateMessagesFromClient}
                                 />
                             ))
                         ) : (
@@ -67,6 +70,7 @@ const MessagePage = () => {
             <NewMessageModal
                 open={isAddMessageModalOpen}
                 handleClose={handleCloseAddMessageModal}
+                updateMessagesFromClient={updateMessagesFromClient}
             />
         </>
     );
