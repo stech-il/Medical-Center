@@ -49,8 +49,11 @@ exports.findUserByEmailAddress = async (emailAddress) => {
 exports.userLogin = async (emailAddress, password) => {
     try {
         const user = await this.findUserByEmailAddress(emailAddress);
+        console.log(user);
         if (user) {
-            const passwordMatch = await bcrypt.compare(password, user.Password);
+            const passwordMatch = await bcrypt.compare(password, user.dataValues.Password);
+            console.log(password,"\n",user.dataValues.Password);
+            console.log(passwordMatch);
             if (passwordMatch) {
                 return user;
             }
