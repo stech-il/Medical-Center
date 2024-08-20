@@ -12,7 +12,7 @@ exports.findAllMessages = () => {
 exports.updateMessage = (ID, Message) => {
     return MessagesModel.update({ Message: Message }, {
 
-        where: {ID: ID  }
+        where: { ID: ID }
     });
 }
 
@@ -36,10 +36,11 @@ exports.createMessage = async (message, status) => {
             Message: message,
             Status: status
         };
-
         const newMessage = await MessagesModel.create(data);
         return newMessage;
     } catch (error) {
+        console.log(error.message);
+        console.error('Stack Trace:', error.stack);
         throw new Error(error.message);
     }
 }

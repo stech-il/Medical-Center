@@ -6,7 +6,7 @@ import { updateMessage, deleteMessage, updateMessageStatus } from '../../clientS
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 
-const MessageItem = ({ content, id, status, fetchAllMessages }) => {
+const MessageItem = ({ content, id, status, fetchAllMessages ,updateMessagesFromClient}) => {
     const [isEditing, setIsEditing] = useState(false);
     const [newContent, setNewContent] = useState(content);
     const [activeOrPassive, setActiveOrPassive] = useState('');
@@ -20,6 +20,7 @@ const MessageItem = ({ content, id, status, fetchAllMessages }) => {
         if (userConfirmed) {
             try {
                 await deleteMessage(id);
+                updateMessagesFromClient();
                 fetchAllMessages(); // Re-fetch messages after deletion
             } catch (error) {
                 console.error('Error deleting message:', error);
@@ -30,6 +31,7 @@ const MessageItem = ({ content, id, status, fetchAllMessages }) => {
     const handleUpdateMessage = async () => {
         try {
             await updateMessage(id, newContent);
+            updateMessagesFromClient();
             setIsEditing(false);
             fetchAllMessages(); // Re-fetch messages after updating
         } catch (error) {
@@ -49,6 +51,7 @@ const MessageItem = ({ content, id, status, fetchAllMessages }) => {
     const handleToggleStatus = async () => {
         try {
             await updateMessageStatus(id, !status);
+            updateMessagesFromClient();
             fetchAllMessages(); // Re-fetch messages after updating status
         } catch (error) {
             console.error('Error updating message status:', error);

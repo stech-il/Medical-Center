@@ -4,7 +4,7 @@ const { Server } = require("socket.io");
 const queueService = require("./QueueService.js");
 const PatientsService = require("./PatientsService.js");
 const RoomService = require("./RoomService.js");
-const MessagesService=require("./MessagesService.js")
+const MessagesService = require("./MessagesService.js")
 const { nextTick } = require("process");
 
 const getKeyByValue = (map, value) => {
@@ -52,7 +52,7 @@ const createSocketServer = (app) => {
                 try {
                     //source room
                     //console.log(await queueService.findQueueByPatient(currentPatient));
-                    const room = clientRooms.get(socket.id) != "reception" ? clientRooms.get(socket.id) :(await queueService.findQueueByPatient(currentPatient)).dataValues.RoomId;
+                    const room = clientRooms.get(socket.id) != "reception" ? clientRooms.get(socket.id) : (await queueService.findQueueByPatient(currentPatient)).dataValues.RoomId;
                     //update in the db
                     await queueService.moveBetweenRooms(currentPatient, newRoomId, place);
                     //return approval to the caller
@@ -71,7 +71,7 @@ const createSocketServer = (app) => {
                     //update the room - the next and the next-next clients  
                     currentClient = await queueService.getFirstInQueueByRoom(room);
                     nextClient = await queueService.getSecondInQueueByRoom(room);
-                    console.log("current: ",currentClient,"next: ",nextClient);
+                    console.log("current: ", currentClient, "next: ", nextClient);
                     io.to(getKeyByValue(clientRooms, room)).emit("updateCurrentPatient", currentClient ? currentClient.patient : null);
                     io.to(getKeyByValue(clientRooms, room)).emit("updateNextPatient", nextClient ? nextClient.patient : null);
                 } catch (error) {
@@ -140,11 +140,12 @@ const createSocketServer = (app) => {
                 try {
                     //update reception table, monitor, reception room
                     let patient;
-                    if (!room){
-                        console.log("enter patient",room);
-                        patient = await PatientsService.createPatient(firstName, lastName, HMOid, phone, tz);}
-                    else{
-                        console.log("reception manual patient",room);
+                    if (!room) {
+                        console.log("enter patient", room);
+                        patient = await PatientsService.createPatient(firstName, lastName, HMOid, phone, tz);
+                    }
+                    else {
+                        console.log("reception manual patient", room);
                         patient = await PatientsService.addManualPatient(firstName, lastName, HMOid, phone, tz, room);
                     }
                     //reception table
@@ -170,13 +171,19 @@ const createSocketServer = (app) => {
                 }
             });
 
+            socket.on("messageUpdated", async () => {
+                const messages = await MessagesService.findAllMessages();
+                console.log("messages ",messages);
+                io.to(getKeyByValue(clientRooms, "monitor")).emit("messageUpdated", messages);
+            });
+
 
             socket.on("createMessage", async (content, status) => {
                 try {
-                    const message = await MessagesService.createMessage(content, status);       
+                    const message = await MessagesService.createMessage(content, status);
                     const allMessages = MessagesService.findAllMessages();
                     io.to(getKeyByValue(clientRooms, "monitor")).emit("messageUpdate", roomId, allMessages);
-                    
+
                     io.to(socket.id).emit(`messageUpdate`, message.dataValues);
 
                 } catch (error) {
@@ -185,6 +192,7 @@ const createSocketServer = (app) => {
                     throw new Error(error.message);
                 }
             });
+            
             socket.on("disconnect", () => {
                 clientRooms.delete(socket.id);
                 console.log(socket.id, " disconnected");

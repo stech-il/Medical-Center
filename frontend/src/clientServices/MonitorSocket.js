@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import socketIO from 'socket.io-client';
 
-const useMonitorSocket = (socketUrl) => {
+const useMonitorSocket = (socketUrl,messages,setMessages) => {
     const [socket, setSocket] = useState(null);
     const [queuesByRoom, setQueuesByRoom] = useState({});
 
@@ -27,6 +27,12 @@ const useMonitorSocket = (socketUrl) => {
             }));
         });
 
+        newSocket.on(`messageUpdated`,(message)=>{
+            console.log("updateMessages",message);
+            const activeMessages = message.filter(message => message.Status === true);
+            setMessages(activeMessages);
+        });
+
         // Clean up on component unmount
         return () => {
             newSocket.disconnect();
@@ -40,7 +46,7 @@ const useMonitorSocket = (socketUrl) => {
         }
     },[socket]);
 
-    return { subscribeToRoom, queuesByRoom,socket };
+    return { subscribeToRoom, queuesByRoom,socket,messages };
 };
 
 export default useMonitorSocket;
