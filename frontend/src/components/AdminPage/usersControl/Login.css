@@ -8,8 +8,16 @@
     border-radius: 20px;
     direction: rtl;
     padding: 50px;
-}
 
+    
+}
+.loginPageCont{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+}
 .login-form {
     display: flex;
     flex-direction: column;

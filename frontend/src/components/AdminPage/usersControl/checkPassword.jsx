@@ -7,7 +7,7 @@ import {
     TextField,
     Button
 } from '@mui/material';
-import Role from '../../role';
+import Role from '../../Role/role';
 
 function MyVerticallyCenteredModal(props) {
 
@@ -68,7 +68,7 @@ function MyVerticallyCenteredModal(props) {
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 2,
-                    direction: 'rtl', // Set RTL direction
+                    direction: 'rtl', 
 
                 }}
             >
@@ -87,7 +87,7 @@ function MyVerticallyCenteredModal(props) {
                     onChange={(e) => setTemporaryPassword(e.target.value)}
                     variant="outlined"
                     fullWidth
-                    sx={{ fontFamily: 'Segoe UI, sans-serif' }} // Change the font here
+                    sx={{ fontFamily: 'Segoe UI, sans-serif' }} 
                 />
 
                 {!errorStatus && (<Button
@@ -95,7 +95,7 @@ function MyVerticallyCenteredModal(props) {
                     variant="contained"
                     color="primary"
                     fullWidth
-                    sx={{ fontFamily: 'Segoe UI, sans-serif' }} // Change the font here
+                    sx={{ fontFamily: 'Segoe UI, sans-serif' }} 
                 >
                     אישור
                 </Button>)}
@@ -104,7 +104,7 @@ function MyVerticallyCenteredModal(props) {
                     variant="contained"
                     color="primary"
                     fullWidth
-                    sx={{ fontFamily: 'Segoe UI, sans-serif' }} // Change the font here
+                    sx={{ fontFamily: 'Segoe UI, sans-serif' }} 
                 >
                     שכחתי סיסמא
                 </Button>)}
