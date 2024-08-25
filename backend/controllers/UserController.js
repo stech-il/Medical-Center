@@ -4,10 +4,10 @@ exports.findUserById = async (req, res) => {
     try {
         const user = await UsersService.findUserById(req.params.id);
         // if (user) {
-            return res.json({
-                data: user,
-                message: 'Success.'
-            });
+        return res.json({
+            data: user,
+            message: 'Success.'
+        });
         // } else {
         //     return res.status(404).json({
         //         message: 'User not found.'
@@ -25,8 +25,8 @@ exports.findUserByEmailAddress = async (req, res) => {
     try {
         console.log(req.params.emailAddress)
         const user = await UsersService.findUserByEmailAddress(req.params.emailAddress);
-        console.log(user,"---------------")
-        if (user!=null) {
+        console.log(user, "---------------")
+        if (user != null) {
             return res.json({
                 data: user,
                 message: 'Success.'
@@ -69,7 +69,7 @@ exports.createUser = async (req, res) => {
                 message: 'User created successfully.'
             });
         } else {
-            return res.status(404).json({
+            return res.json({
                 data: null,
                 message: 'Failed.'
             });
@@ -87,37 +87,36 @@ exports.userLogin = async (req, res) => {
     try {
         const email = req.body.Email;
         const password = req.body.Password;
-        console.log(email,password)
         const user = await UsersService.userLogin(email, password);
-        if (user) {
+        if (user != null) {
             return res.json({
                 data: user,
                 message: 'Login successful'
             });
-        } else {
-            return res.status(401).json({
-                data: null,
-                message: 'Login failed. Wrong password.'
-            });
         }
+        else
+            return null;
     } catch (error) {
+        console.log("בעיה מוזרה!!!!")
+
         return res.status(500).json({
             message: 'Internal Server Error',
             error: error.message
         });
+
     }
 }
 
 exports.updateUser = async (req, res) => {
     try {
-        console.log("hey",req.params.id, req.body)
+        console.log("hey", req.params.id, req.body)
         const updatedUser = await UsersService.updateUser(req.params.id, req.body);
         if (updatedUser[0] === 1) { // Sequelize returns an array with the number of affected rows
             return res.json({
                 message: 'User updated successfully.'
             });
         } else {
-            return res.status(404).json({
+            return res.json({
                 message: 'User not found.'
             });
         }
@@ -148,7 +147,7 @@ exports.deleteUser = async (req, res) => {
                 message: 'User deleted successfully.'
             });
         } else {
-            return res.status(404).json({
+            return res.json({
                 message: 'User not found.'
             });
         }

@@ -60,3 +60,14 @@
     margin: 10px;
     font-size: 10pt;
 }
+
+@media (max-width: 768px) {
+  
+    .currentPatientNumber {
+        font-size: 30pt;
+    }
+    .roomMonitorTitle {
+        font-size: 18pt;       
+        width: 60%;
+    }
+}

@@ -5,13 +5,18 @@ import { getAllMessages } from '../../clientServices/MessagesService';
 import NewMessageModal from './NewMessageModal';
 import Sidebar from '../sidebar/sidebar';
 import useMessagesSocket from '../../clientServices/MessagesSocket';
+import { useLocation } from 'react-router-dom';
+import Role from '../Role/role';
 
 
 const MessagePage = () => {
     const [allMessages, setAllMessages] = useState([]);
     const [isAddMessageModalOpen, setIsAddMessageModalOpen] = useState(false);
-    const {updateMessagesFromClient}=useMessagesSocket();
+    const { updateMessagesFromClient } = useMessagesSocket();
 
+    const location = useLocation();
+    const role = location.state;
+    console.log(role)
 
     const fetchAllMessages = async () => {
         try {
@@ -38,7 +43,7 @@ const MessagePage = () => {
     return (
         <>
             <div className='MessagePageContainer'>
-                <Sidebar />
+                <Sidebar role={role} />
 
                 <>
                     <div className='titleAndNewMessage'>
@@ -65,6 +70,7 @@ const MessagePage = () => {
                         )}
                     </div>
                 </>
+                <Role />
 
             </div>
             <NewMessageModal

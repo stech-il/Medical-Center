@@ -10,7 +10,6 @@ import PatientsTable from './PatientsTable';
 import RoomsTable from './RoomsTable';
 import Sidebar from '../sidebar/sidebar';
 import SelectRoom from './SelectRoom';
-import { deletePatient  } from '../../clientServices/PatientsService';
 import DeletePatientModal from './modals/DeletePatient';
 import EmergencyDoctorAlertModal from './modals/EmergencyDoctorAlert';
 import AddPatientModal from './modals/AddNewPatient';
@@ -18,6 +17,8 @@ import AddRoomModal from './modals/AddNewRoom';
 import DeleteRoomModal from './modals/DeleteRoom';
 import { deleteRoom } from '../../clientServices/RoomService';
 import useReceptionSocket from '../../clientServices/ReceptionSocket';
+import { useLocation } from 'react-router-dom';
+import Role from '../Role/role';
 
 const QueueManagmentPage = () => {
     const [selectedPatient, setSelectedPatient] = useState(null);
@@ -30,9 +31,11 @@ const QueueManagmentPage = () => {
     const [isAddRoomModalOpen, setIsAddRoomModalOpen] = useState(false);
     const [isRoomDeleteModalOpen, setIsRoomDeleteModalOpen] = useState(false);
 
-    const { moveRoom,emergencyAlertToDoctor,endOfTreatment ,insertPatient} = useReceptionSocket(setSelectedPatient,patients,setPatients);
+    const { moveRoom, emergencyAlertToDoctor, endOfTreatment, insertPatient } = useReceptionSocket(setSelectedPatient, patients, setPatients);
 
-
+    const location = useLocation();
+    const role = location.state;
+    console.log(role)
     const handleSelectPatient = (patient) => {
         setSelectedPatient(patient);
     };
@@ -134,11 +137,11 @@ const QueueManagmentPage = () => {
         } catch (error) {
             console.error('Error deleting room:', error);
             alert('כרגע החדר בשימוש, אין אפשרות למחוק אותו');
-        } 
+        }
     };
 
     const handleConfirmEmergencyModal = () => {
-        emergencyAlertToDoctor(selectedPatient.UniqueNumber,selectedRoom.Name);
+        emergencyAlertToDoctor(selectedPatient.UniqueNumber, selectedRoom.Name);
         alert('קריאת חירום נשלחה לרופא');
         handleCloseEmergencyModal();
     };
@@ -149,7 +152,7 @@ const QueueManagmentPage = () => {
 
     const handleCloseAddPatientModal = () => {
         setIsAddPatientModalOpen(false);
-    }; 
+    };
 
     const handleOpenAddRoomModal = () => {
         setIsAddRoomModalOpen(true);
@@ -166,7 +169,7 @@ const QueueManagmentPage = () => {
     return (
         <>
             <div className='queueManagmentContainer'>
-                <Sidebar />
+                <Sidebar role={role} />
                 <div className='patientsDetailsTableContainer'>
                     <div className='managmentTitle'>מטופלים</div>
                     <div className='patientsDetailsTableCont'>
@@ -283,6 +286,8 @@ const QueueManagmentPage = () => {
                         </div>
                     </div>
                 </div>
+                <Role />
+
             </div>
 
             <DeletePatientModal

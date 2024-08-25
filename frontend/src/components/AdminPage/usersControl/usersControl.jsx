@@ -16,6 +16,11 @@ import {
 } from '@mui/material';
 import { getUsers, createUser, getUserByEmailAddress } from '../../../clientServices/UserService';
 import { getRoles } from '../../../clientServices/RoleService';
+import { useLocation } from 'react-router-dom';
+import Sidebar from '../../sidebar/sidebar';
+import Role from '../../Role/role';
+import './usersControl.css'
+
 
 function MyVerticallyCenteredModal(props) {
     const [newUser, setNewUser] = useState({
@@ -44,9 +49,7 @@ function MyVerticallyCenteredModal(props) {
 
     const validateUserName = () => {
         if (!newUser.Name) return false;
-        const regex = /^[a-zA-Z0-9-_]{3,30}$/;
-        console.log(regex.test(newUser.Name) + 'שם')
-        return regex.test(newUser.Name);
+
     };
 
     const validatePhoneNumber = () => {
@@ -87,16 +90,16 @@ function MyVerticallyCenteredModal(props) {
             }
             const isExist = await getUserByEmailAddress(newUser.Email);
             console.log(isExist)
-            if (isExist.data!=null) {
+            if (isExist.data != null) {
                 alert('כתובת מייל כבר קיימת');
                 return;
             }
-            else{
+            else {
                 await createUser(newUser);
                 props.onClose();
                 props.refreshUsers();
             }
-           
+
         } catch (error) {
             console.error('Error creating user:', error);
         }
@@ -192,7 +195,7 @@ const UsersTable = () => {
     return (
         <Box sx={{ display: 'flex', justifyContent: 'center', width: '50%', direction: 'rtl' }}>
             <TableContainer component={Paper} sx={{ width: '100%' }}>
-                <Table>
+                <Table >
                     <TableHead>
                         <TableRow>
                             <TableCell>#</TableCell>
@@ -220,29 +223,38 @@ const UsersTable = () => {
 
 const UsersControl = () => {
     const [modalOpen, setModalOpen] = useState(false);
+    const location = useLocation();
+    const role = location.state;
 
     const refreshUsers = () => {
         window.location.reload();
     };
 
     return (
-        <Box sx={{ p: 3, direction: 'rtl' }}>
-            <Typography variant="h4" gutterBottom>
-                ניהול משתמשים
-            </Typography>
-            <Button variant="contained" color="primary" onClick={() => setModalOpen(true)}>
-                הוספת משתמש חדש
-            </Button>
-            <MyVerticallyCenteredModal
-                open={modalOpen}
-                onClose={() => setModalOpen(false)}
-                refreshUsers={refreshUsers}
-            />
-            <Box sx={{ mt: 3 }}>
-                <Typography variant="h5">משתמשים</Typography>
-                <UsersTable />
-            </Box>
-        </Box>
+        <>
+            <div className='usersPageContainer'>
+
+                <Sidebar role={role} />
+                <div className='usersPageCont'>
+                    <div>
+                        ניהול משתמשים
+                    </div>
+                    <button onClick={() => setModalOpen(true)}>
+                        הוספת משתמש חדש
+                    </button>
+                    <MyVerticallyCenteredModal
+                        open={modalOpen}
+                        onClose={() => setModalOpen(false)}
+                        refreshUsers={refreshUsers}
+                    />
+
+                    <UsersTable />
+
+
+                </div>
+                <Role />
+            </div>
+        </>
     );
 };
 

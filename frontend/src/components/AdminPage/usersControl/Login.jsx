@@ -28,25 +28,28 @@ const Login = () => {
 
     const handleUserLogin = async (e) => {
         e.preventDefault();
+        console.log(1,user)
         try {
             const userData = await userLogin(user);
+            console.log(2,userData)
+
             if (userData) {
-                sessionStorage.setItem('email', userData.Email);
-                var role = await getRoleById(userData.RoleID);
+                sessionStorage.setItem('email', userData.data.Email);
+                sessionStorage.setItem('name', userData.data.Name);
+
+                var role = await getRoleById(userData.data.RoleID);
                 sessionStorage.setItem('role', role.data.Role);
-                if (userData.RoleID === 1) {
+                if (userData.data.RoleID === 1) {
                     navigate('/admin', { state: 1 });
-                } else if (userData.RoleID === 2) {
-                    navigate('/rooms');
+                } else if (userData.data.RoleID === 2) {
+                    navigate('/rooms', { state: 2 });
                 } else {
-                    navigate('/admin', { state: 0 });
+                    navigate('/admin' , { state: 3 });
                 }
-            } else {
-                alert("error");
             }
         } catch (error) {
-            console.error('Error login user:', error);
-            alert("error");
+            console.error('בעיה בכניסת משתמש',3, error);
+            alert("שגיאה בהזנת הפרטים");
         }
     };
 
@@ -70,8 +73,11 @@ const Login = () => {
                     alert("מייל זה לא קיים במערכת");
                 } else {
                     sessionStorage.setItem('email', isExist.data.Email);
+                    sessionStorage.setItem('name',  isExist.data.Name);
+
                     var role = await getRoleById(isExist.data.RoleID);
                     sessionStorage.setItem('role', role.data.Role);
+
                     const generatedPassword = generateRandomPassword();
                     const templateParams = {
                         to_name: isExist.Name,
@@ -104,6 +110,8 @@ const Login = () => {
     };
 
     return (
+        <>
+        <div className='loginPageCont'>
         <div className="login-container">
             <img className='logo-img' alt='logo' src={logo} />
 
@@ -148,6 +156,8 @@ const Login = () => {
                 שכחתי סיסמא
             </button>
         </div>
+        </div>
+        </>
     );
 };
 

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { getAllRooms } from '../../../clientServices/RoomService';
 import { useNavigate, useLocation } from 'react-router-dom';
+import SidebarMenu from '../../sidebar/sidebar'
 
 import './pagesNavigate.css';
-import Role from '../../role';
+import Role from '../../Role/role';
 
 const PagesNavigation = () => {
   const [rooms, setRooms] = useState([]);
@@ -48,13 +49,15 @@ const PagesNavigation = () => {
   return (
     <>
       <div className='PagesNavigationContainer'>
+        {(role===1||role===2)&&<SidebarMenu role={role} />}
+
         <div className='pagesContainerContainer'>
           <div className='pagesContainerTitle'>בחירת עמוד</div>
           <div className='pagesContainer'>
             <h3>בחר עמוד שברצונך להיכנס אליו:</h3>
             <div className='pagesBtnsContainer'>
-              {role === 1 && (<button onClick={goToAdminPage} className='page-btn'>מנהל</button>)}
-              {(role === 1 || role === 2) && (<button onClick={goToUserLoginPage} className='page-btn'>כניסת משתמש</button>)}
+              {/* {role === 1 && (<button onClick={goToAdminPage} className='page-btn'>מנהל</button>)} */}
+              {/* {(role === 1 || role === 2) && (<button onClick={goToUserLoginPage} className='page-btn'>כניסת משתמש</button>)} */}
               {(role === 1 || role === 2) && (<button onClick={goToPatientEnterPage} className='page-btn'>תור חדש</button>)}
               {(role === 1 || role === 2) && (<button className='page-btn' onClick={goToMonitorPage}>מוניטור</button>)}
               {rooms.map(room => (
@@ -72,9 +75,7 @@ const PagesNavigation = () => {
           </div>
         </div>
       </div>
-      <div className='roleContainer'>
         <Role />
-      </div>
     </>
   );
 };

@@ -7,7 +7,8 @@ import { getAllReports, getTodayReports, generateDailyReport } from '../../clien
 import GenerateReportModal from './generateNewReportModal';
 import { DownloadTableExcel } from 'react-export-table-to-excel';
 import excelImg from './excelImg.png';
-import { useNavigate } from 'react-router-dom';
+import { useLocation,useNavigate } from 'react-router-dom';
+import Role from '../Role/role';
 
 const ReportsPage = () => {
     const [allReports, setAllReports] = useState([]);
@@ -21,7 +22,9 @@ const ReportsPage = () => {
     const tableRef = useRef(null);
 
     const navigate = useNavigate();
-
+    const location = useLocation();
+    const role = location.state;
+    console.log(role)
     const fetchAllReports = async () => {
         try {
             const response = await getAllReports();
@@ -106,8 +109,8 @@ const ReportsPage = () => {
 
     return (
         <div className='ReportsPageContainer'>
-            <Sidebar />
-            <div>
+                <Sidebar role={role}/>
+                <div>
                 <table ref={tableRef} style={{ display: 'none' }}>
                     <thead>
                         <tr>
@@ -237,6 +240,8 @@ const ReportsPage = () => {
                 onSubmit={handleGenerateReport}
                 successMessage={successMessage}
             />
+                    <Role />
+
         </div>
     );
 };
