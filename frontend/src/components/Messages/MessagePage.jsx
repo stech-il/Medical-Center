@@ -16,7 +16,6 @@ const MessagePage = () => {
 
     const location = useLocation();
     const role = location.state;
-    console.log(role)
 
     const fetchAllMessages = async () => {
         try {

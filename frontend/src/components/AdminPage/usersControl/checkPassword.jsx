@@ -7,7 +7,6 @@ import {
     TextField,
     Button
 } from '@mui/material';
-import Role from '../../Role/role';
 
 function MyVerticallyCenteredModal(props) {
 
@@ -126,7 +125,6 @@ const ConfirmPassword = () => {
                 open={modalOpen}
                 onClose={handleClose}
             />
-            <Role />
         </div>
     );
 };

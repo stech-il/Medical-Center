@@ -24,7 +24,6 @@ const ReportsPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const role = location.state;
-    console.log(role)
     const fetchAllReports = async () => {
         try {
             const response = await getAllReports();

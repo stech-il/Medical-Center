@@ -27,13 +27,13 @@ const Login = () => {
     };
 
     const handleUserLogin = async (e) => {
-        e.preventDefault();
-        console.log(1,user)
-        try {
-            const userData = await userLogin(user);
-            console.log(2,userData)
+        console.log(1)
 
-            if (userData) {
+        e.preventDefault();
+        try {
+
+            const userData = await userLogin(user);
+            if (userData!=null) {
                 sessionStorage.setItem('email', userData.data.Email);
                 sessionStorage.setItem('name', userData.data.Name);
 
@@ -42,9 +42,9 @@ const Login = () => {
                 if (userData.data.RoleID === 1) {
                     navigate('/admin', { state: 1 });
                 } else if (userData.data.RoleID === 2) {
-                    navigate('/rooms', { state: 2 });
+                    navigate('/pagesNavigate', { state: 2 });
                 } else {
-                    navigate('/admin' , { state: 3 });
+                    navigate('/pagesNavigate' , { state: 3 });
                 }
             }
         } catch (error) {
