@@ -54,8 +54,10 @@ exports.userLogin = async (emailAddress, password) => {
             if (passwordMatch) {
                 return user;
             }
-            else
+            else {
                 return null;
+            }
+
         }
         else
             return null;

@@ -12,7 +12,6 @@ import { getAllRooms, getRoomById } from '../../clientServices/RoomService.js';
 import EmergencyDoctorAlertModal from '../QueuesManagment/modals/EmergencyDoctorAlert.jsx';
 import DeletePatientModal from '../QueuesManagment/modals/DeletePatient.jsx';
 import Role from '../Role/role.jsx';
-
 const DoctorPage = () => {
 
 
@@ -133,7 +132,7 @@ const DoctorPage = () => {
 
     return (
         <div className='doctorPageContainer'>
-            {roomData.Name === "קבלה" && (<SidebarMenu role={role} />)}
+            {role=== 2 && (<SidebarMenu role={role} />)}
             <div className='queuesCont'>
                 <h2>חדר {roomData.Name}</h2>
                 <div className='queueDetails'>

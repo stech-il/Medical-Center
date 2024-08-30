@@ -35,7 +35,6 @@ const QueueManagmentPage = () => {
 
     const location = useLocation();
     const role = location.state;
-    console.log(role)
     const handleSelectPatient = (patient) => {
         setSelectedPatient(patient);
     };

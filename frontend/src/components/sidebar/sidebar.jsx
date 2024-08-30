@@ -12,7 +12,6 @@ import './sidebar.css'
 
 function SidebarMenu(props) {
   const [collapsed, setCollapsed] = useState(true);
-  console.log(props.role)
   const navigate = useNavigate();
 
   const handleToggleSidebar = () => {
@@ -48,11 +47,19 @@ function SidebarMenu(props) {
   const goToPagesNavigation = () => {
     navigate('/pagesNavigate', { state: props.role });
   };
+
+  const goToReceptionRoom =()  => {
+    navigate('/doctorPage/1', { state: props.role });
+  };
+
   return (
     <div className='sidebarContainer'>
       <Sidebar className='sidebar' rtl={true} collapsed={collapsed} style={{ height: "100vh" }}>
         <Menu >
-          <MenuItem icon={<Home className='icon' />} onClick={goToHomePage}>בית</MenuItem>
+        {props.role === 1 && ( <MenuItem icon={<Home className='icon' />} onClick={goToHomePage}>בית</MenuItem>)}
+        {props.role === 2 && ( <MenuItem icon={<Home className='icon' />} onClick={goToReceptionRoom}>בית</MenuItem>)}
+
+
           {props.role === 1 && (
             <MenuItem icon={<PeopleAltIcon className='icon' />} onClick={goToUsersPage}>משתמשים</MenuItem>
           )}

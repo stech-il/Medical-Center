@@ -94,8 +94,12 @@ exports.userLogin = async (req, res) => {
                 message: 'Login successful'
             });
         }
-        else
+        else {
+            console.log("problem!!")
             return null;
+
+        }
+
     } catch (error) {
         console.log("בעיה מוזרה!!!!")
 
