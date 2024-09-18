@@ -12,6 +12,10 @@ const RoomModel = db.define("rooms", {
         type: DataTypes.STRING,
         allowNull: false
     },
+    // RoomNumber: {
+    //     type:DataTypes.INTEGER,
+    //     allowNull: false
+    // },
     Status: {
         type: DataTypes.BOOLEAN,
         allowNull: false,

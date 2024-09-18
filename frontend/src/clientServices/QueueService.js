@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8000/queues';
+
+const server_url = process.env.USE_URL == true ? process.env.NODE_SERVER_URL : 'http://localhost:8000'
+const API_URL = `${server_url}/queues`;
 
 // Fetch all queues
 export const getAllQueues = async () => {

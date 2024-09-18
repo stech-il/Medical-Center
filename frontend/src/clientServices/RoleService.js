@@ -1,7 +1,8 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8000/roles';
 
+const server_url = process.env.USE_URL == true ? process.env.NODE_SERVER_URL : 'http://localhost:8000'
+const API_URL = `${server_url}/roles`;
 export const getRoles = async () => {
   const response = await axios.get(API_URL);
   return response.data;

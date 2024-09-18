@@ -142,6 +142,7 @@ const createSocketServer = (app) => {
                     let patient;
                     if (!room) {
                         console.log("enter patient", room);
+                        console.log("tz display----------------------------------------------------------------- :",tz)
                         patient = await PatientsService.createPatient(firstName, lastName, HMOid, phone, tz);
                     }
                     else {

@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8000/reports'; // Adjust the base URL as necessary
+
+const server_url = process.env.USE_URL == true ? process.env.NODE_SERVER_URL : 'http://localhost:8000'
+const API_URL = `${server_url}/reports`;
 
 // Fetch a single report by ID
 export const getReportById = async (id) => {

@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react';
 import socketIO from 'socket.io-client';
 
 const useMessagesSocket = () => {
+    const server_url = process.env.USE_URL == true ? process.env.NODE_SERVER_URL : 'http://localhost:8000'
 
     const socketRef = useRef(null);
 
