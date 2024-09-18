@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8000/messages';
+
+const server_url = process.env.USE_URL == true ? process.env.NODE_SERVER_URL : 'http://localhost:8000'
+const API_URL = `${server_url}/messages`;
 
 export const getAllMessages = async () => {
     return axios.get(API_URL);

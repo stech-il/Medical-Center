@@ -7,6 +7,9 @@ const useRoomSocket = (roomId, currentPatient, setCurrentPatient, nextPatient, s
     const [alertMessage, setAlertMessage] = useState('');
     const socketRef = useRef(null);
 
+
+    const server_url = process.env.USE_URL == true ? process.env.NODE_SERVER_URL : 'http://localhost:8000'
+
     const handleAlertClose = () => {
         setAlertOpen(false);
     };
@@ -35,7 +38,7 @@ const useRoomSocket = (roomId, currentPatient, setCurrentPatient, nextPatient, s
         socketRef.current.on("Emergencymessage", (message) => {
             setAlertMessage(message);
             setAlertOpen(true);
-             console.log(message);
+            console.log(message);
         });
 
         return () => {

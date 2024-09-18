@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8000/HMOs'; // Adjust the base URL as necessary
+const server_url = process.env.USE_URL == true ? process.env.NODE_SERVER_URL : 'http://localhost:8000'
+const API_URL = `${server_url}/HMOs`;
 
 // Fetch a single HMO by ID
 export const getHMOById = async (id) => {

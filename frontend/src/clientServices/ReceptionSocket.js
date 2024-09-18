@@ -1,8 +1,11 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import socketIO from 'socket.io-client';
+
+
 
 const useReceptionSocket = (setSelectedPatient, patients, setPatients) => {
     const socketRef = useRef(null);
+    const server_url = process.env.USE_URL == true ? process.env.NODE_SERVER_URL : 'http://localhost:8000'
 
     useEffect(() => {
         socketRef.current = socketIO("http://localhost:8000", {

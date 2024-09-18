@@ -7,8 +7,10 @@ import MonitorMessages from './MonitorMessages';
 import background from "./background.jpg";
 
 const MonitorPage = () => {
+    const server_url = process.env.USE_URL == true ? process.env.NODE_SERVER_URL : 'http://localhost:8000'
+
     const [rooms, setRooms] = useState([]);
-    const socketUrl = "http://localhost:8000"; 
+    const socketUrl = server_url; 
     const [messages, setMessages]=useState([]);
     const { subscribeToRoom, queuesByRoom,socket } = useMonitorSocket(socketUrl,messages,setMessages);
     const [currentDate, setCurrentDate] = useState('');
