@@ -169,6 +169,7 @@ function AddUserModal({ open, handleClose, user, createOrUpdate }) {
             if (user.Name === sessionStorage.getItem('name'))
                 sessionStorage.setItem('name', newUser.Name);
             handleClose();
+            window.location.reload();
         }
         catch (error) {
             console.error('Error updating user:', error);
