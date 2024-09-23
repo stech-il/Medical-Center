@@ -151,6 +151,7 @@ function AddUserModal({ open, handleClose, user, createOrUpdate }) {
             else {
                 await createUser(newUser);
                 handleClose();
+                window.location.reload();
             }
 
         } catch (error) {
@@ -356,6 +357,7 @@ const UsersControl = () => {
             await deleteUser(selectedUserInTable.ID);
 
             alert('המשתמש נמחק בהצלחה');
+            window.location.reload();
             setSelectedUserInTable(null);
             handleCloseUserDeleteModal();
         } catch (error) {

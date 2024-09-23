@@ -1,7 +1,6 @@
 import {
   TextField,
   Checkbox,
-  CheckCircle,
   Table,
   TableBody,
   TableCell,
@@ -15,6 +14,7 @@ import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { getUsers, updateUser } from "../../../../clientServices/UserService";
 import { getRoles } from "../../../../clientServices/RoleService";
 import CancelIcon from '@mui/icons-material/Cancel';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const UsersTable = forwardRef((props, ref) => {
   const { onSelectUserInTable } = props;
@@ -174,7 +174,7 @@ const UsersTable = forwardRef((props, ref) => {
                   {getRoleNameById(user.RoleID)}
                 </TableCell>
                 <TableCell align="center">
-                  {user.Status ? <CheckCircle color="success" /> : <CancelIcon color="error" />}
+                  {user.Status ? <CheckCircleIcon color="success" /> : <CancelIcon color="error" />}
                 </TableCell>
               </TableRow>
             ))}
